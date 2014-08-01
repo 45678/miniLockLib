@@ -163,8 +163,7 @@ miniLockLib.encrypt = (params) ->
       worker.terminate()
       callback undefined, {
         name: message.data.saveName
-        data: new Blob([message.data.blob])
-        type: 'application/minilock'
+        data: new Blob [message.data.blob], type: 'application/minilock'
         senderID: message.data.senderID
       }
   
@@ -213,7 +212,6 @@ miniLockLib.decrypt = (params) ->
       callback undefined, {
         name: message.data.name,
         data: new Blob([message.data.blob])
-        type: ''
         senderID: message.data.senderID
       }
   

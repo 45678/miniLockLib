@@ -40,10 +40,11 @@ T['Encrypt private file for Alice'] = function(test) {
 			keys: Alice.keys,
 			miniLockIDs: [Alice.miniLockID],
 			callback: function(error, encrypted) {
-				test.same(Object.keys(encrypted), ['name', 'data', 'type', 'senderID'])
+				test.same(Object.keys(encrypted), ['name', 'data', 'senderID'])
 				test.same(encrypted.name, 'alice.txt.minilock')
 				test.ok(encrypted.data)
 				test.same(encrypted.data.size, 962)
+				test.same(encrypted.data.type, 'application/minilock')
 				test.same(encrypted.senderID, Alice.miniLockID)
 				test.done(error)
 			}
@@ -60,10 +61,11 @@ T['Encrypt file for Alice & Bobby'] = function(test) {
 			keys: Alice.keys,
 			miniLockIDs: [Alice.miniLockID, Bobby.miniLockID],
 			callback: function(error, encrypted) {
-				test.same(Object.keys(encrypted), ['name', 'data', 'type', 'senderID'])
+				test.same(Object.keys(encrypted), ['name', 'data', 'senderID'])
 				test.same(encrypted.name, 'alice_and_bobby.txt.minilock')
 				test.ok(encrypted.data)
 				test.same(encrypted.data.size, 1508)
+				test.same(encrypted.data.type, 'application/minilock')
 				test.same(encrypted.senderID, Alice.miniLockID)
 				test.done(error)
 			}
@@ -79,7 +81,7 @@ T['Alice can decrypt file her private file'] = function(test) {
 			keys: Alice.keys,
 			callback: function(error, decrypted) {
 				test.ok(decrypted)
-				test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])
+				test.same(Object.keys(decrypted), ['name', 'data', 'senderID'])
 				test.same(decrypted.name, 'basic.txt')
 				test.ok(decrypted.data, '')
 				test.same(decrypted.data.size, 20)
@@ -98,7 +100,7 @@ T['Alice can decrypt file for Alice & Bobby'] = function(test) {
 			keys: Alice.keys,
 			callback: function(error, decrypted) {
 				test.ok(decrypted)
-				test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])
+				test.same(Object.keys(decrypted), ['name', 'data', 'senderID'])
 				test.same(decrypted.name, 'basic.txt')
 				test.ok(decrypted.data, '')
 				test.same(decrypted.data.size, 20)
@@ -117,7 +119,7 @@ T['Bobby can decrypt file for Alice & Bobby'] = function(test) {
 			keys: Bobby.keys,
 			callback: function(error, decrypted) {
 				test.ok(decrypted)
-				test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])
+				test.same(Object.keys(decrypted), ['name', 'data', 'senderID'])
 				test.same(decrypted.name, 'basic.txt')
 				test.ok(decrypted.data, '')
 				test.same(decrypted.data.size, 20)

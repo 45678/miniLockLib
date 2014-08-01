@@ -3789,8 +3789,9 @@ if (typeof module !== "undefined") module.exports = scrypt;
                 worker.terminate();
                 return callback(void 0, {
                     name: message.data.saveName,
-                    data: new Blob([ message.data.blob ]),
-                    type: "application/minilock",
+                    data: new Blob([ message.data.blob ], {
+                        type: "application/minilock"
+                    }),
                     senderID: message.data.senderID
                 });
             }
@@ -3829,7 +3830,6 @@ if (typeof module !== "undefined") module.exports = scrypt;
                 return callback(void 0, {
                     name: message.data.name,
                     data: new Blob([ message.data.blob ]),
-                    type: "",
                     senderID: message.data.senderID
                 });
             }

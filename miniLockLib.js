@@ -3721,6 +3721,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
     scrypt = this.scrypt;
     zxcvbn = this.zxcvbn;
     miniLockLib = this.miniLockLib = {};
+    miniLockLib.pathToScripts = ".";
     miniLockLib.secretPhraseIsAcceptable = function(secretPhrase) {
         return secretPhrase.length >= 32 && zxcvbn(secretPhrase).entropy >= 100;
     };
@@ -3779,7 +3780,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
         var callback, file, i, miniLockIDs, name, senderID, senderSecretKey, worker;
         file = params.file, name = params.name, miniLockIDs = params.miniLockIDs, senderID = params.senderID, 
         senderSecretKey = params.senderSecretKey, callback = params.callback;
-        worker = new Worker("miniLockCryptoWorker.js");
+        worker = new Worker(miniLockLib.pathToScripts + "/miniLockCryptoWorker.js");
         worker.onmessage = function(message) {
             if (message.error != null) {
                 worker.terminate();
@@ -3819,7 +3820,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
         var callback, file, myMiniLockID, mySecretKey, worker;
         file = params.file, myMiniLockID = params.myMiniLockID, mySecretKey = params.mySecretKey, 
         callback = params.callback;
-        worker = new Worker("miniLockCryptoWorker.js");
+        worker = new Worker(miniLockLib.pathToScripts + "/miniLockCryptoWorker.js");
         worker.onmessage = function(message) {
             if (message.error != null) {
                 worker.terminate();

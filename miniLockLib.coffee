@@ -7,6 +7,17 @@ zxcvbn  = this.zxcvbn
 miniLockLib = this.miniLockLib = {}
 
 
+# -----
+# Setup
+# -----
+#
+# Set `miniLockLib.pathToScripts` to the location of the miniLockLib scripts
+# on your web host. This path is required to resolve `miniLockCryptoWorker.js` 
+# when a worker is created durring `encrypt` and `decrypt`.
+#
+miniLockLib.pathToScripts = '.'
+
+
 # --------------
 # Secret Phrases
 # --------------
@@ -143,7 +154,7 @@ miniLockLib.makeID = (publicKey) ->
 miniLockLib.encrypt = (params) ->
   {file, name, miniLockIDs, senderID, senderSecretKey, callback} = params
 
-  worker = new Worker('miniLockCryptoWorker.js')
+  worker = new Worker(miniLockLib.pathToScripts+'/miniLockCryptoWorker.js')
   
   worker.onmessage = (message) ->
     if message.error?
@@ -194,7 +205,7 @@ miniLockLib.encrypt = (params) ->
 miniLockLib.decrypt = (params) ->
   {file, myMiniLockID, mySecretKey, callback} = params
 
-  worker = new Worker('miniLockCryptoWorker.js')
+  worker = new Worker(miniLockLib.pathToScripts+'/miniLockCryptoWorker.js')
   
   worker.onmessage = (message) ->
     if message.error?

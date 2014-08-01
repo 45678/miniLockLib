@@ -130,6 +130,25 @@ miniLockLib.makeID = (publicKey) ->
       throw 'miniLockLib.makeID() public key parameter was too long.'
 
 
+
+
+# -------
+# Encrypt
+# -------
+#
+#     miniLockLib.encrypt
+#       file: buffer,
+#       name: 'alice_and_bobby.txt'
+#       miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
+#       senderID: Alice.miniLockID
+#       senderSecretKey: Alice.secretKey
+#       callback: (error, encrypted) ->
+#         error is undefined or it is a message String
+#         encrypted.name is 'alice_and_bobby.txt.minilock'
+#         encrypted.data.constructor is Blob
+#         encrypted.data.size.constructor is Number
+#         encrypted.senderID is Alice.miniLockID
+#
 miniLockLib.encrypt = (params) ->
   {file, name, miniLockIDs, senderID, senderSecretKey, callback} = params
 
@@ -165,6 +184,22 @@ miniLockLib.encrypt = (params) ->
 
 
 
+# -------
+# Decrypt
+# -------
+#
+#     miniLockLib.decrypt
+#       file: buffer,
+#       name: 'alice_and_bobby.txt.minilock'
+#       myMiniLockID: Alice.miniLockID
+#       mySecretKey: Alice.secretKey
+#       callback: (error, decrypted) ->
+#         error is undefined or it is a message String
+#         encrypted.name is 'alice_and_bobby.txt'
+#         encrypted.data.constructor is Blob
+#         encrypted.data.size.constructor is Number
+#         encrypted.senderID is Alice.miniLockID
+#
 miniLockLib.decrypt = (params) ->
   {file, myMiniLockID, mySecretKey, callback} = params
 

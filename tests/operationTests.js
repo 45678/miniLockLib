@@ -1,12 +1,22 @@
 new(function(){
 
-Alice = {}
-Alice.secretPhrase = 'lions and tigers are not the only ones i am worried about'
-Alice.emailAddress = 'alice@example.com'
-Alice.publicKey    = Base58.decode('3dz7VdGxZYTDQHHgXij2wgV3GRBu4GzJ8SLuwmAVB4kR')
-Alice.secretKey    = Base58.decode('DsMtZntcp7riiWy9ng1xZ29tMPZQ9ioHNzk2i1UyChkF')
+var Alice = window.testFixtures.Alice
+var Bobby = window.testFixtures.Bobby
 
 var T = window.operationTests = this
+
+function readFileFixture(name, callback) {
+	var request = new XMLHttpRequest
+	request.open('GET', '/tests/'+name, true)
+	request.responseType = 'blob'
+	request.onreadystatechange = function(event) {
+		if (request.readyState === 4) {
+			request.response.name = name
+			readFileAsArrayBuffer(request.response, callback)
+		}
+	}
+	request.send()
+}
 
 function readFileAsArrayBuffer(file, callback, errorCallback) {
 	var reader = new FileReader()
@@ -21,132 +31,111 @@ function readFileAsArrayBuffer(file, callback, errorCallback) {
 	reader.readAsArrayBuffer(file)
 }
 
-function readFixture(name, callback) {
-	var request = new XMLHttpRequest
-	request.open('GET', '/tests/'+name, true)
-	request.responseType = 'blob'
-	request.onreadystatechange = function(event) {
-		if (request.readyState === 4) {
-			request.response.name = name
-			readFileAsArrayBuffer(request.response, callback)
-		}
-	}
-	request.send()
-}
-
-
-T['test.txt filesize is 20 bytes'] = function(test){
-	readFixture('test.txt', function(error, buffer){
-		test.same(buffer.size, 20)
-		test.done(error)
-	})
-}
-
-T['test.txt.minilock filesize is 962 bytes'] = function(test){
-	readFixture('test.txt.minilock', function(error, buffer){
-		test.same(buffer.size, 962)
-		test.done(error)
-	})
-}
-
-T['encrypt simple test file'] = function(test) {
-	readFixture('test.txt', function(error, buffer){
+T['Encrypt private file for Alice'] = function(test) {
+	readFileFixture('basic.txt', function(error, buffer){
 		if (error) return test.done(error)
 		miniLockLib.encrypt({
 			file: buffer,
-			name: 'test.txt',
-			miniLockIDs: ['CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw'],
-			senderID: 'CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw',
+			name: 'alice.txt',
+			miniLockIDs: [Alice.miniLockID],
+			senderID: Alice.miniLockID,
 			senderSecretKey: Alice.secretKey,
 			callback: function(error, encrypted) {
 				test.same(Object.keys(encrypted), ['name', 'data', 'type', 'senderID'])
-				test.same(encrypted.name, 'test.txt.minilock')
+				test.same(encrypted.name, 'alice.txt.minilock')
 				test.ok(encrypted.data)
 				test.same(encrypted.data.size, 962)
-				test.same(encrypted.senderID, 'CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw')
+				test.same(encrypted.senderID, Alice.miniLockID)
 				test.done(error)
 			}
 		})
 	})
 }
 
-T['decrypt simple test file'] = function(test) {
-	readFixture('test.txt.minilock', function(error, buffer){
+T['Encrypt file for Alice & Bobby'] = function(test) {
+	readFileFixture('basic.txt', function(error, buffer){
+		if (error) return test.done(error)
+		miniLockLib.encrypt({
+			file: buffer,
+			name: 'alice_and_bobby.txt',
+			miniLockIDs: [Alice.miniLockID, Bobby.miniLockID],
+			senderID: Alice.miniLockID,
+			senderSecretKey: Alice.secretKey,
+			callback: function(error, encrypted) {
+				test.same(Object.keys(encrypted), ['name', 'data', 'type', 'senderID'])
+				test.same(encrypted.name, 'alice_and_bobby.txt.minilock')
+				test.ok(encrypted.data)
+				test.same(encrypted.data.size, 1508)
+				test.same(encrypted.senderID, Alice.miniLockID)
+				test.done(error)
+			}
+		})
+	})
+}
+
+T['Alice can decrypt file her private file'] = function(test) {
+	readFileFixture('alice.txt.minilock', function(error, buffer){
 		if (error) return test.done(error)
 		miniLockLib.decrypt({
 			file: buffer,
-			myMiniLockID: 'CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw',
+			myMiniLockID: Alice.miniLockID,
 			mySecretKey: Alice.secretKey,
 			callback: function(error, decrypted) {
 				test.ok(decrypted)
 				test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])
-				test.same(decrypted.name, 'test.txt')
+				test.same(decrypted.name, 'basic.txt')
 				test.ok(decrypted.data, '')
-				test.same(decrypted.type, '')
-				test.same(decrypted.senderID, 'CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw')
+				test.same(decrypted.data.size, 20)
+				test.same(decrypted.senderID, Alice.miniLockID)
 				test.done(error)
 			}
 		})
 	})
 }
 
-T['encrypt official miniLock test.jpg'] = function(test) {
-	readFixture('test.jpg', function(error, buffer){
+T['Alice can decrypt file for Alice & Bobby'] = function(test) {
+	readFileFixture('alice_and_bobby.txt.minilock', function(error, buffer){
 		if (error) return test.done(error)
-		miniLockLib.encrypt({
+		miniLockLib.decrypt({
 			file: buffer,
-			name: 'test.jpg',
-			miniLockIDs: ['dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF', 'PHD4eUWB982LUexKj1oYoQryayreUeW1NJ6gmsTY7Xe12'],
-			senderID: 'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF',
-			senderSecretKey: Base58.decode('7S4YTmjkexJ2yeMAtoEKYc2wNMHseMqDH6YyBqKKkUon'),
-			callback: function(error, encrypted) {
-				test.same(Object.keys(encrypted), ['name', 'data', 'type', 'senderID'])
-				test.same(encrypted.name, 'test.jpg.minilock')
-				test.ok(encrypted.data)
-				test.same(encrypted.data.size, 349779)
-				test.same(encrypted.senderID, 'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF')
+			myMiniLockID: Bobby.miniLockID,
+			mySecretKey: Bobby.secretKey,
+			callback: function(error, decrypted) {
+				test.ok(decrypted)
+				test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])
+				test.same(decrypted.name, 'basic.txt')
+				test.ok(decrypted.data, '')
+				test.same(decrypted.data.size, 20)
+				test.same(decrypted.senderID, Alice.miniLockID)
 				test.done(error)
 			}
 		})
 	})
 }
 
+T['Bobby can decrypt file for Alice & Bobby'] = function(test) {
+	readFileFixture('alice_and_bobby.txt.minilock', function(error, buffer){
+		if (error) return test.done(error)
+		miniLockLib.decrypt({
+			file: buffer,
+			myMiniLockID: Bobby.miniLockID,
+			mySecretKey: Bobby.secretKey,
+			callback: function(error, decrypted) {
+				test.ok(decrypted)
+				test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])
+				test.same(decrypted.name, 'basic.txt')
+				test.ok(decrypted.data, '')
+				test.same(decrypted.data.size, 20)
+				test.same(decrypted.senderID, Alice.miniLockID)
+				test.done(error)
+			}
+		})
+	})
+}
 
-
-// T['decrypt miniLock test.jpg'] = function(test){
-// 	readFixture('test.jpg', function(error, file){
-// 		if (error) return test.done(error)
-// 		miniLockLib.encrypt({
-// 			file: file,
-// 			name: 'test.jpg',
-// 			audience: ['dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF', 'PHD4eUWB982LUexKj1oYoQryayreUeW1NJ6gmsTY7Xe12'],
-// 			senderID: 'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF',
-// 			senderSecretKey: Base58.decode('7S4YTmjkexJ2yeMAtoEKYc2wNMHseMqDH6YyBqKKkUon'),
-// 			callback: function(error, encrypted){
-// 				if (error) return test.done(error)
-// 				
-// 				var reader = new FileReader
-// 				reader.readAsArrayBuffer(encrypted.data)
-// 				reader.onload = function(event){
-// 					var arrayBuffer = event.target.result
-// 					miniLockLib.decrypt({
-// 						file: arrayBuffer,
-// 						myMiniLockId: 'PHD4eUWB982LUexKj1oYoQryayreUeW1NJ6gmsTY7Xe12',
-// 						mySecretKey: Base58.decode('B47Ez1ftjTPSL5Mu74YaQ33WAbDjNcBwYWnx7Fp6kvmr'),
-// 						callback: function(error, decrypted){
-// 							test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])
-// 							test.same(decrypted.name, 'test.jpg')
-// 							test.ok(encrypted.data)
-// 							test.same(decrypted.data.size, 348291)
-// 							test.same(decrypted.senderID, 'dJYs5sVfSSvccahyEYPwXp7n3pbXeoTnuBWHEmEgi95fF')
-// 							test.done(error)
-// 						}
-// 					})
-// 				}
-// 			}
-// 		})
-// 	})
-// }
-
+// window.URL = window.webkitURL || window.URL		
+// $(document.body).append('<a class="fileSaveLink">Download</a>')
+// $('a.fileSaveLink').attr('download', encrypted.name)
+// $('a.fileSaveLink').attr('href', window.URL.createObjectURL(encrypted.data))
 
 }) // End of top-level function body.

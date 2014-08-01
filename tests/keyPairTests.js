@@ -1,10 +1,7 @@
 new(function(){
 
-Alice = {}
-Alice.secretPhrase = 'lions and tigers are not the only ones i am worried about'
-Alice.emailAddress = 'alice@example.com'
-Alice.publicKey    = Base58.decode('3dz7VdGxZYTDQHHgXij2wgV3GRBu4GzJ8SLuwmAVB4kR')
-Alice.secretKey    = Base58.decode('DsMtZntcp7riiWy9ng1xZ29tMPZQ9ioHNzk2i1UyChkF')
+var Alice = window.testFixtures.Alice
+var Bobby = window.testFixtures.Bobby
 
 var T = window.keyPairTests = this
 
@@ -13,12 +10,17 @@ T['Alice’s secret phrase is acceptable to miniLock'] = function(test) {
 	test.done()
 }
 
-T['short secret phrase is unacceptable'] = function(test) {
+T['Bobby’s secret phrase is acceptable to miniLock'] = function(test) {
+	test.ok(miniLockLib.secretPhraseIsAcceptable(Bobby.secretPhrase))
+	test.done()
+}
+
+T['Short secret phrase is unacceptable'] = function(test) {
 	test.same(miniLockLib.secretPhraseIsAcceptable('My password is password'), false)
 	test.done()
 }
 
-T['compute Alice’s keys from her secret phrase and email address'] = function(test) {
+T['Compute Alice’s keys from her secret phrase and email address'] = function(test) {
 	miniLockLib.getKeyPair(Alice.secretPhrase, Alice.emailAddress, function(keys){
 		test.same(Object.keys(keys), ['publicKey', 'secretKey'])
 		test.same(keys.publicKey, Alice.publicKey)
@@ -27,13 +29,28 @@ T['compute Alice’s keys from her secret phrase and email address'] = function(
 	})
 }
 
-T['make ID for Alice’s public key'] = function(test) {
+T['Compute Bobby’s keys from his secret phrase and email address'] = function(test) {
+	miniLockLib.getKeyPair(Bobby.secretPhrase, Bobby.emailAddress, function(keys){
+		test.same(Object.keys(keys), ['publicKey', 'secretKey'])
+		test.same(keys.publicKey, Bobby.publicKey)
+		test.same(keys.secretKey, Bobby.secretKey)
+		test.done()
+	})
+}
+
+T['Make ID for Alice’s public key'] = function(test) {
 	id = miniLockLib.makeID(Alice.publicKey)
-	test.same(id, 'CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw')
+	test.same(id, Alice.miniLockID)
 	test.done()
 }
 
-T['can’t make ID for undefined key'] = function(test) {
+T['Make ID for Bobby’s public key'] = function(test) {
+	id = miniLockLib.makeID(Alice.publicKey)
+	test.same(id, Alice.miniLockID)
+	test.done()
+}
+
+T['Can’t make ID for undefined key'] = function(test) {
 	try {
 		miniLockLib.makeID(undefined)
 	}
@@ -43,7 +60,7 @@ T['can’t make ID for undefined key'] = function(test) {
 	}
 }
 
-T['can’t make ID for key that is too short'] = function(test) {
+T['Can’t make ID for key that is too short'] = function(test) {
 	try {
 		miniLockLib.makeID(new Uint8Array(16))
 	}
@@ -53,7 +70,7 @@ T['can’t make ID for key that is too short'] = function(test) {
 	}
 }
 
-T['can’t make ID for key that is too long'] = function(test) {
+T['Can’t make ID for key that is too long'] = function(test) {
 	try {
 		miniLockLib.makeID(new Uint8Array(64))
 	}

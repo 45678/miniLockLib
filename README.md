@@ -1,4 +1,4 @@
-miniLockLib is a fly-by-the-seat-of-your-pants implementation of the [miniLock]:http://minilock.io/ file encryption specification. It is designed for use in your own Javascript programs when you want to perform miniLock encryption and decryption operations.
+miniLockLib is a fly-by-the-seat-of-your-pants implementation of the [miniLock](http://minilock.io/) file encryption specification. It is designed for use in your own Javascript programs when you want to perform miniLock encryption and decryption operations.
 
 To get started place the `miniLockLib.js` and `miniLockCryptoWorker.js` files on your web host and then include `miniLockLib.js` in a script tag on your web page, like this:
 

@@ -1,0 +1,20 @@
+<html>
+  <head>
+		<meta charset="utf-8">
+    <title>miniLockLib Tests</title>
+		<link rel="stylesheet" href="node_modules/nodeunit/share/nodeunit.css">
+    <script src="node_modules/nodeunit/examples/browser/nodeunit.js"></script>
+    <script src="miniLockLib.js"></script>
+    <script src="tests/keyPairTests.js"></script>
+    <script src="tests/operationTests.js"></script>
+  </head>
+  <body>
+    <h1 id="nodeunit-header">miniLockLib Tests</h1>
+    <script>
+      nodeunit.run({
+        '1': this.keyPairTests,
+        '2': this.operationTests
+      });
+    </script>
+  </body>
+</html>

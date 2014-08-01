@@ -37,9 +37,8 @@ T['Encrypt private file for Alice'] = function(test) {
 		miniLockLib.encrypt({
 			file: buffer,
 			name: 'alice.txt',
+			keys: Alice.keys,
 			miniLockIDs: [Alice.miniLockID],
-			senderID: Alice.miniLockID,
-			senderSecretKey: Alice.secretKey,
 			callback: function(error, encrypted) {
 				test.same(Object.keys(encrypted), ['name', 'data', 'type', 'senderID'])
 				test.same(encrypted.name, 'alice.txt.minilock')
@@ -58,9 +57,8 @@ T['Encrypt file for Alice & Bobby'] = function(test) {
 		miniLockLib.encrypt({
 			file: buffer,
 			name: 'alice_and_bobby.txt',
+			keys: Alice.keys,
 			miniLockIDs: [Alice.miniLockID, Bobby.miniLockID],
-			senderID: Alice.miniLockID,
-			senderSecretKey: Alice.secretKey,
 			callback: function(error, encrypted) {
 				test.same(Object.keys(encrypted), ['name', 'data', 'type', 'senderID'])
 				test.same(encrypted.name, 'alice_and_bobby.txt.minilock')
@@ -78,8 +76,7 @@ T['Alice can decrypt file her private file'] = function(test) {
 		if (error) return test.done(error)
 		miniLockLib.decrypt({
 			file: buffer,
-			myMiniLockID: Alice.miniLockID,
-			mySecretKey: Alice.secretKey,
+			keys: Alice.keys,
 			callback: function(error, decrypted) {
 				test.ok(decrypted)
 				test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])
@@ -98,8 +95,7 @@ T['Alice can decrypt file for Alice & Bobby'] = function(test) {
 		if (error) return test.done(error)
 		miniLockLib.decrypt({
 			file: buffer,
-			myMiniLockID: Bobby.miniLockID,
-			mySecretKey: Bobby.secretKey,
+			keys: Alice.keys,
 			callback: function(error, decrypted) {
 				test.ok(decrypted)
 				test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])
@@ -118,8 +114,7 @@ T['Bobby can decrypt file for Alice & Bobby'] = function(test) {
 		if (error) return test.done(error)
 		miniLockLib.decrypt({
 			file: buffer,
-			myMiniLockID: Bobby.miniLockID,
-			mySecretKey: Bobby.secretKey,
+			keys: Bobby.keys,
 			callback: function(error, decrypted) {
 				test.ok(decrypted)
 				test.same(Object.keys(decrypted), ['name', 'data', 'type', 'senderID'])

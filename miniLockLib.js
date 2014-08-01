@@ -3777,9 +3777,9 @@ if (typeof module !== "undefined") module.exports = scrypt;
         }
     };
     miniLockLib.encrypt = function(params) {
-        var callback, file, i, miniLockIDs, name, senderID, senderSecretKey, worker;
-        file = params.file, name = params.name, miniLockIDs = params.miniLockIDs, senderID = params.senderID, 
-        senderSecretKey = params.senderSecretKey, callback = params.callback;
+        var callback, file, i, keys, miniLockIDs, name, worker;
+        file = params.file, name = params.name, miniLockIDs = params.miniLockIDs, keys = params.keys, 
+        callback = params.callback;
         worker = new Worker(miniLockLib.pathToScripts + "/miniLockCryptoWorker.js");
         worker.onmessage = function(message) {
             if (message.error != null) {
@@ -3812,14 +3812,13 @@ if (typeof module !== "undefined") module.exports = scrypt;
             }(),
             ephemeral: nacl.box.keyPair(),
             miniLockIDs: miniLockIDs,
-            myMiniLockID: senderID,
-            mySecretKey: senderSecretKey
+            myMiniLockID: miniLockLib.makeID(keys.publicKey),
+            mySecretKey: keys.secretKey
         });
     };
     miniLockLib.decrypt = function(params) {
-        var callback, file, myMiniLockID, mySecretKey, worker;
-        file = params.file, myMiniLockID = params.myMiniLockID, mySecretKey = params.mySecretKey, 
-        callback = params.callback;
+        var callback, file, keys, worker;
+        file = params.file, keys = params.keys, callback = params.callback;
         worker = new Worker(miniLockLib.pathToScripts + "/miniLockCryptoWorker.js");
         worker.onmessage = function(message) {
             if (message.error != null) {
@@ -3838,8 +3837,8 @@ if (typeof module !== "undefined") module.exports = scrypt;
         return worker.postMessage({
             operation: "decrypt",
             data: new Uint8Array(file.data),
-            myMiniLockID: myMiniLockID,
-            mySecretKey: mySecretKey
+            myMiniLockID: miniLockLib.makeID(keys.publicKey),
+            mySecretKey: keys.secretKey
         });
     };
     WorkerErrorMessages = {

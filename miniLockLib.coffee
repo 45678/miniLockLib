@@ -141,9 +141,8 @@ miniLockLib.makeID = (publicKey) ->
 #     miniLockLib.encrypt
 #       file: buffer,
 #       name: 'alice_and_bobby.txt'
+#       keys: {publicKey: Uint8Array, secretKey: Uint8Array}
 #       miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
-#       senderID: Alice.miniLockID
-#       senderSecretKey: Alice.secretKey
 #       callback: (error, encrypted) ->
 #         error is undefined or it is a message String
 #         encrypted.name is 'alice_and_bobby.txt.minilock'
@@ -152,7 +151,7 @@ miniLockLib.makeID = (publicKey) ->
 #         encrypted.senderID is Alice.miniLockID
 #
 miniLockLib.encrypt = (params) ->
-  {file, name, miniLockIDs, senderID, senderSecretKey, callback} = params
+  {file, name, miniLockIDs, keys, callback} = params
 
   worker = new Worker(miniLockLib.pathToScripts+'/miniLockCryptoWorker.js')
   
@@ -179,8 +178,8 @@ miniLockLib.encrypt = (params) ->
     decryptInfoNonces: (nacl.randomBytes(24) for i in [0..miniLockIDs.length])
     ephemeral: nacl.box.keyPair()
     miniLockIDs: miniLockIDs
-    myMiniLockID: senderID
-    mySecretKey: senderSecretKey
+    myMiniLockID: miniLockLib.makeID(keys.publicKey)
+    mySecretKey: keys.secretKey
   })
 
 
@@ -192,18 +191,16 @@ miniLockLib.encrypt = (params) ->
 #
 #     miniLockLib.decrypt
 #       file: buffer,
-#       name: 'alice_and_bobby.txt.minilock'
-#       myMiniLockID: Alice.miniLockID
-#       mySecretKey: Alice.secretKey
+#       keys: {publicKey: Uint8Array, secretKey: Uint8Array}
 #       callback: (error, decrypted) ->
 #         error is undefined or it is a message String
-#         encrypted.name is 'alice_and_bobby.txt'
-#         encrypted.data.constructor is Blob
-#         encrypted.data.size.constructor is Number
-#         encrypted.senderID is Alice.miniLockID
+#         decrypted.name is 'alice_and_bobby.txt'
+#         decrypted.data.constructor is Blob
+#         decrypted.data.size.constructor is Number
+#         decrypted.senderID is Alice.miniLockID
 #
 miniLockLib.decrypt = (params) ->
-  {file, myMiniLockID, mySecretKey, callback} = params
+  {file, keys, callback} = params
 
   worker = new Worker(miniLockLib.pathToScripts+'/miniLockCryptoWorker.js')
   
@@ -223,8 +220,8 @@ miniLockLib.decrypt = (params) ->
   worker.postMessage({
     operation: 'decrypt'
     data: new Uint8Array(file.data)
-    myMiniLockID: myMiniLockID
-    mySecretKey: mySecretKey
+    myMiniLockID: miniLockLib.makeID(keys.publicKey)
+    mySecretKey: keys.secretKey
   })
 
 

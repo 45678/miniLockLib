@@ -3714,7 +3714,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
 })();
 
 (function() {
-    var BLAKE2HashDigest, BLAKE2s, Base58, EmailAddressPattern, WorkerErrorMessages, calculateCurve25519KeysFor, miniLockLib, nacl, scrypt, zxcvbn;
+    var BLAKE2HashDigest, BLAKE2s, Base58, CryptoWorker, EmailAddressPattern, calculateCurve25519KeysFor, miniLockLib, nacl, scrypt, zxcvbn;
     Base58 = this.Base58;
     BLAKE2s = this.BLAKE2s;
     nacl = this.nacl;
@@ -3780,11 +3780,11 @@ if (typeof module !== "undefined") module.exports = scrypt;
         var callback, file, i, keys, miniLockIDs, name, worker;
         file = params.file, name = params.name, miniLockIDs = params.miniLockIDs, keys = params.keys, 
         callback = params.callback;
-        worker = new Worker(miniLockLib.pathToScripts + "/miniLockCryptoWorker.js");
+        worker = new CryptoWorker();
         worker.onmessage = function(message) {
             if (message.error != null) {
                 worker.terminate();
-                return callback(WorkerErrorMessages[message.error]);
+                return callback(CryptoWorker.ErrorMessages[message.error]);
             } else if (message.data.blob != null) {
                 worker.terminate();
                 return callback(void 0, {
@@ -3820,11 +3820,11 @@ if (typeof module !== "undefined") module.exports = scrypt;
     miniLockLib.decrypt = function(params) {
         var callback, file, keys, worker;
         file = params.file, keys = params.keys, callback = params.callback;
-        worker = new Worker(miniLockLib.pathToScripts + "/miniLockCryptoWorker.js");
+        worker = new CryptoWorker();
         worker.onmessage = function(message) {
             if (message.error != null) {
                 worker.terminate();
-                return callback(WorkerErrorMessages[message.error]);
+                return callback(CryptoWorker.ErrorMessages[message.error]);
             } else if (message.data.blob != null) {
                 worker.terminate();
                 return callback(void 0, {
@@ -3841,7 +3841,10 @@ if (typeof module !== "undefined") module.exports = scrypt;
             mySecretKey: keys.secretKey
         });
     };
-    WorkerErrorMessages = {
+    CryptoWorker = function() {
+        return new Worker(miniLockLib.pathToScripts + "/miniLockCryptoWorker.js");
+    };
+    CryptoWorker.ErrorMessages = {
         1: "miniLock could not encrypt this file.",
         2: "miniLock could not decrypt this file.",
         3: "miniLock could not decrypt this file — it might be corrupt.",

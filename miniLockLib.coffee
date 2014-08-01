@@ -153,12 +153,12 @@ miniLockLib.makeID = (publicKey) ->
 miniLockLib.encrypt = (params) ->
   {file, name, miniLockIDs, keys, callback} = params
 
-  worker = new Worker(miniLockLib.pathToScripts+'/miniLockCryptoWorker.js')
+  worker = new CryptoWorker
   
   worker.onmessage = (message) ->
     if message.error?
       worker.terminate()
-      callback WorkerErrorMessages[message.error]
+      callback CryptoWorker.ErrorMessages[message.error]
     else if message.data.blob?
       worker.terminate()
       callback undefined, {
@@ -200,12 +200,12 @@ miniLockLib.encrypt = (params) ->
 miniLockLib.decrypt = (params) ->
   {file, keys, callback} = params
 
-  worker = new Worker(miniLockLib.pathToScripts+'/miniLockCryptoWorker.js')
+  worker = new CryptoWorker
   
   worker.onmessage = (message) ->
     if message.error?
       worker.terminate()
-      callback WorkerErrorMessages[message.error]
+      callback CryptoWorker.ErrorMessages[message.error]
     else if message.data.blob?
       worker.terminate()
       callback undefined, {
@@ -223,7 +223,11 @@ miniLockLib.decrypt = (params) ->
 
 
 
-WorkerErrorMessages =
+# Construct a new worker to perform an encrypt or decrypt operation.
+CryptoWorker = ->
+  new Worker(miniLockLib.pathToScripts+'/miniLockCryptoWorker.js')
+
+CryptoWorker.ErrorMessages =
   1: 'miniLock could not encrypt this file.'
   2: 'miniLock could not decrypt this file.'
   3: 'miniLock could not decrypt this file — it might be corrupt.'
@@ -233,7 +237,7 @@ WorkerErrorMessages =
   7: 'The integrity of this file could not be verified.'
 
 
-# Returns a BLAKE2 hash digest of `input`. Specify the digest `length` as a `Number`.
+# Construct a BLAKE2 hash digest of `input`. Specify the digest `length` as a `Number`.
 BLAKE2HashDigest = (input, options={}) ->
   hash = new BLAKE2s(options.length)
   hash.update(input)

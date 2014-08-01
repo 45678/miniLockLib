@@ -167,11 +167,11 @@ miniLockLib.encrypt = (params) ->
         senderID: message.data.senderID
       }
   
-  worker.postMessage({
+  worker.postMessage
     operation: 'encrypt'
     data: new Uint8Array(file.data)
     name: file.name
-    saveName: name + '.minilock'
+    saveName: name+'.minilock'
     fileKey: nacl.randomBytes(32)
     fileNonce: nacl.randomBytes(24).subarray(0, 16)
     decryptInfoNonces: (nacl.randomBytes(24) for i in [0..miniLockIDs.length])
@@ -179,7 +179,6 @@ miniLockLib.encrypt = (params) ->
     miniLockIDs: miniLockIDs
     myMiniLockID: miniLockLib.makeID(keys.publicKey)
     mySecretKey: keys.secretKey
-  })
 
 
 
@@ -215,12 +214,11 @@ miniLockLib.decrypt = (params) ->
         senderID: message.data.senderID
       }
   
-  worker.postMessage({
+  worker.postMessage
     operation: 'decrypt'
     data: new Uint8Array(file.data)
     myMiniLockID: miniLockLib.makeID(keys.publicKey)
     mySecretKey: keys.secretKey
-  })
 
 
 

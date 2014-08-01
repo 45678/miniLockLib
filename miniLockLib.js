@@ -3715,21 +3715,12 @@ if (typeof module !== "undefined") module.exports = scrypt;
 
 (function() {
     var BLAKE2HashDigest, BLAKE2s, Base58, EmailAddressPattern, WorkerErrorMessages, calculateCurve25519KeysFor, miniLockLib, nacl, scrypt, zxcvbn;
-    if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null && (typeof require !== "undefined" && require !== null)) {
-        Base58 = require("../lib/base58");
-        BLAKE2s = require("../lib/blake2s");
-        nacl = require("tweetnacl");
-        scrypt = require("../lib/scrypt-async");
-        zxcvbn = require("zxcvbn");
-        miniLockLib = module.exports = {};
-    } else {
-        Base58 = this.Base58;
-        BLAKE2s = this.BLAKE2s;
-        nacl = this.nacl;
-        scrypt = this.scrypt;
-        zxcvbn = this.zxcvbn;
-        miniLockLib = this.miniLockLib = {};
-    }
+    Base58 = this.Base58;
+    BLAKE2s = this.BLAKE2s;
+    nacl = this.nacl;
+    scrypt = this.scrypt;
+    zxcvbn = this.zxcvbn;
+    miniLockLib = this.miniLockLib = {};
     miniLockLib.secretPhraseIsAcceptable = function(secretPhrase) {
         return secretPhrase.length >= 32 && zxcvbn(secretPhrase).entropy >= 100;
     };

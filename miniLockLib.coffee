@@ -1,19 +1,10 @@
-if module?.exports? and require?
-  Base58      = require '../lib/base58'
-  BLAKE2s     = require '../lib/blake2s'
-  nacl        = require 'tweetnacl'
-  scrypt      = require '../lib/scrypt-async'
-  zxcvbn      = require 'zxcvbn'
-  miniLockLib = module.exports = {}
-else
-  Base58      = this.Base58
-  BLAKE2s     = this.BLAKE2s
-  nacl        = this.nacl
-  scrypt      = this.scrypt
-  zxcvbn      = this.zxcvbn
-  miniLockLib = this.miniLockLib = {}
+Base58  = this.Base58
+BLAKE2s = this.BLAKE2s
+nacl    = this.nacl
+scrypt  = this.scrypt
+zxcvbn  = this.zxcvbn
 
-
+miniLockLib = this.miniLockLib = {}
 
 
 # --------------
@@ -31,7 +22,7 @@ miniLockLib.secretPhraseIsAcceptable = (secretPhrase) ->
 # Email Addresses
 # ---------------
 #
-# miniLock only accepts standards compliant email addresses.
+# miniLock only accepts relatively standards compliant email addresses.
 #
 miniLockLib.emailAddressIsAcceptable = (emailAddress) ->
   EmailAddressPattern.test(emailAddress)
@@ -113,7 +104,7 @@ calculateCurve25519KeysFor = (secret, salt, callback) ->
 # The last number is a checksum that was is derived by hashing your public key with BLAKE2 
 # with a 1-byte output. 
 # After constructing the 33 bytes of the miniLock ID, it is encoded 
-# into a Base58 representation, meant to be easily communicable via email or instant messaging.
+# into a Base58 representation.
 #
 miniLockLib.makeID = (publicKey) ->
   if publicKey?.length is 32

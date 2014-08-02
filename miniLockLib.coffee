@@ -75,11 +75,11 @@ miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
   hashDigestOfSecretPhrase = BLAKE2HashDigest(secretPhrase, length: 32)
   
   # Calculate keys for the secret phrase digest and email address salt.
-  calculateCurve25519KeysFor hashDigestOfSecretPhrase, emailAddress, callback
+  calculateCurve25519Keys hashDigestOfSecretPhrase, emailAddressBytes, callback
 
 
 # Calculate a curve25519 key pair for the given `secret` and `salt`.
-calculateCurve25519KeysFor = (secret, salt, callback) ->
+calculateCurve25519Keys = (secret, salt, callback) ->
   # Decode and unpack the keys when the task is complete.
   whenKeysAreReady = (encodedBytes) ->
     decodedBytes = nacl.util.decodeBase64(encodedBytes)

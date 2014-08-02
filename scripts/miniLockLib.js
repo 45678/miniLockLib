@@ -3714,7 +3714,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
 })();
 
 (function() {
-    var BLAKE2HashDigest, BLAKE2s, Base58, CryptoWorker, EmailAddressPattern, calculateCurve25519KeysFor, miniLockLib, nacl, scrypt, zxcvbn;
+    var BLAKE2HashDigest, BLAKE2s, Base58, CryptoWorker, EmailAddressPattern, calculateCurve25519Keys, miniLockLib, nacl, scrypt, zxcvbn;
     Base58 = this.Base58;
     BLAKE2s = this.BLAKE2s;
     nacl = this.nacl;
@@ -3736,21 +3736,21 @@ if (typeof module !== "undefined") module.exports = scrypt;
         hashDigestOfSecretPhrase = BLAKE2HashDigest(secretPhrase, {
             length: 32
         });
-        return calculateCurve25519KeysFor(hashDigestOfSecretPhrase, emailAddress, callback);
+        return calculateCurve25519Keys(hashDigestOfSecretPhrase, emailAddress, callback);
     };
-    calculateCurve25519KeysFor = function(secret, salt, callback) {
+    calculateCurve25519Keys = function(secret, salt, callback) {
         var dkLen, encoding, interruptStep, logN, r, whenKeysAreReady;
-        logN = 17;
-        r = 8;
-        dkLen = 32;
-        interruptStep = 1e3;
-        encoding = "base64";
         whenKeysAreReady = function(encodedBytes) {
             var decodedBytes, keys;
             decodedBytes = nacl.util.decodeBase64(encodedBytes);
             keys = nacl.box.keyPair.fromSecretKey(decodedBytes);
             return callback(keys);
         };
+        logN = 17;
+        r = 8;
+        dkLen = 32;
+        interruptStep = 1e3;
+        encoding = "base64";
         return scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding);
     };
     miniLockLib.makeID = function(publicKey) {

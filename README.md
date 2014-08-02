@@ -76,11 +76,12 @@ miniLockLib.decrypt({
 
 `zxcvbn.js` is an unmodified copy of Dropbox’s [zxcvbn password strength estimator](https://github.com/dropbox/zxcvbn). `miniLockLib` uses this library to calculate the entropy present in secret phrases.
 
-#### Making changes
+#### Digging In
 
-Run `npm start` to automatically re-compile the CoffeeScript source when it changes.
+Run `npm install git+https://git@github.com/45678/miniLockLib.git` to get the source code.
 
-#### Running tests
+Run `make` to build the `scripts`. Most modified source files are saved in `lib`.
 
-Run `npm test` to `make` the project and launch the test kit in Google Chrome.
+Run `npm start` to begin watching CoffeeScript files. Your saved changes will trigger compilation automatically.
 
+Run `npm test` launch the test kit in Google Chrome.

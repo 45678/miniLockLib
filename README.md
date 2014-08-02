@@ -66,7 +66,7 @@ miniLockLib.decrypt({
 
 #### Sources
 
-`miniLockLib` is composed of code from six dandy little projects:
+`miniLockLib` is composed of code from seven dandy little projects:
 
 `miniLockCryptoWorker.js` is a copy of the crypto worker from the [official miniLock repository](https://github.com/kaepora/miniLock) created and maintained by Nadim Kobeissi. It has been modified to import `miniLockLib.js` instead of importing all its dependencies individually. The worker is responsible for processing `encrypt` and `decrypt` operations in the background.
 

@@ -219,13 +219,15 @@ CryptoWorker = ->
 
 # Explanations of miniLock’s numeric error codes.
 CryptoWorker.ErrorMessages =
-  1: 'miniLock could not encrypt this file.'
-  2: 'miniLock could not decrypt this file.'
-  3: 'miniLock could not decrypt this file — it might be corrupt.'
-  4: 'This file seems to be encrypted for another version of miniLock.'
-  5: 'miniLock could not determine the sender of this file.'
-  6: 'This file does not seem to be encrypted for your miniLock ID. Check that you are logged in with the correct miniLock ID.'
-  7: 'The integrity of this file could not be verified.'
+  # Encryption errors
+  1: 'General encryption error'
+  # Decryption errors
+  2: 'General decryption error'
+  3: 'Could not parse header'
+  4: 'Invalid header version'
+  5: 'Could not validate sender ID'
+  6: 'File is not encrypted for this recipient'
+  7: 'Could not validate ciphertext hash'
 
 
 # Construct a BLAKE2 hash digest of `input`. Specify digest `length` as a `Number`.

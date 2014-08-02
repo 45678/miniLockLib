@@ -5,21 +5,6 @@ var Bobby = window.testFixtures.Bobby
 
 var T = window.keyPairTests = this
 
-T['Alice’s secret phrase is acceptable to miniLock'] = function(test) {
-  test.ok(miniLockLib.secretPhraseIsAcceptable(Alice.secretPhrase))
-  test.done()
-}
-
-T['Bobby’s secret phrase is acceptable to miniLock'] = function(test) {
-  test.ok(miniLockLib.secretPhraseIsAcceptable(Bobby.secretPhrase))
-  test.done()
-}
-
-T['Short secret phrase is unacceptable'] = function(test) {
-  test.same(miniLockLib.secretPhraseIsAcceptable('My password is password'), false)
-  test.done()
-}
-
 T['Compute Alice’s keys from her secret phrase and email address'] = function(test) {
   miniLockLib.getKeyPair(Alice.secretPhrase, Alice.emailAddress, function(keys){
     test.same(Object.keys(keys), ['publicKey', 'secretKey'])

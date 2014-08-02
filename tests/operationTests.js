@@ -121,7 +121,7 @@ T['Bobby can’t decrypt Alices’s private file'] = function(test) {
 
 function readFileFixture(name, callback) {
   var request = new XMLHttpRequest
-  request.open('GET', '/tests/fixtures/'+name, true)
+  request.open('GET', '/tests/_fixtures/'+name, true)
   request.responseType = 'blob'
   request.onreadystatechange = function(event) {
     if (request.readyState === 4) {

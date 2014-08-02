@@ -5,7 +5,8 @@
 		<link rel="stylesheet" href="node_modules/nodeunit/share/nodeunit.css">
 		<script src="node_modules/nodeunit/examples/browser/nodeunit.js"></script>
     <script src="scripts/miniLockLib.js"></script>
-    <script src="tests/fixtures.js"></script>
+    <script src="tests/_fixtures.js"></script>
+    <script src="tests/acceptabilityTests.js"></script>
     <script src="tests/keyPairTests.js"></script>
     <script src="tests/operationTests.js"></script>
   </head>
@@ -14,8 +15,9 @@
     <script>
       miniLockLib.pathToScripts = 'scripts'
       nodeunit.run({
-        '1': this.keyPairTests,
-        '2': this.operationTests
+        '1': this.acceptabilityTests,
+        '2': this.keyPairTests,
+        '3': this.operationTests
       });
     </script>
   </body>

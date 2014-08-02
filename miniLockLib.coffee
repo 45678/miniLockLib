@@ -55,16 +55,12 @@ EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\\.[A-Z]{2,20}/i
 # acts as the key derivation salt to ensure your key pair is unique just in 
 # case someone else uses the same secret phrase as you do.
 #
-# Call `miniLockLib.getKeyPair` to calculate a key pair from a secret phrase 
-# and email address.
-# Why are both inputs decoded?
-# Why is the secret phrase hashed?
-#
-# Your `callback` receives a pair of `keys` like this:
+# Call `miniLockLib.getKeyPair` to generate a set of keys from a secret phrase 
+# and email address. Your `callback` receives a pair of `keys` like this:
 #
 #     miniLockLib.getKeyPair secretPhrase, emailAddress, (keys) ->
-#        keys.publicKey is [32-bit Uint8Array]
-#        keys.secretKey is [32-bit Uint8Array]
+#        keys.publicKey is a Uint8Array
+#        keys.secretKey is a Uint8Array
 #
 miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
   # Decode each input into a Uint8Array of bytes.
@@ -107,10 +103,9 @@ calculateCurve25519Keys = (secret, salt, callback) ->
 # miniLock IDs are meant to be easily communicable via email or instant messaging.
 # A miniLock ID is a Base58 encoded string of a list of 33 numbers. 
 # The first 32 numbers of your ID correspond to your curve25519 public key. 
-# The last number is a checksum that was is derived by hashing your public key with BLAKE2 
-# with a 1-byte output. 
-# After constructing the 33 bytes of the miniLock ID, it is encoded 
-# into a Base58 representation.
+# The last number is a checksum that was is derived by hashing your public key 
+# with BLAKE2  with a 1-byte output. After constructing the 33 bytes of the 
+# miniLock ID, it is encoded into a Base58 representation.
 #
 miniLockLib.makeID = (publicKey) ->
   if publicKey?.length is 32
@@ -222,6 +217,7 @@ miniLockLib.decrypt = (params) ->
 CryptoWorker = ->
   new Worker(miniLockLib.pathToScripts+'/miniLockCryptoWorker.js')
 
+# Explanations of miniLock’s numeric error codes.
 CryptoWorker.ErrorMessages =
   1: 'miniLock could not encrypt this file.'
   2: 'miniLock could not decrypt this file.'
@@ -232,7 +228,7 @@ CryptoWorker.ErrorMessages =
   7: 'The integrity of this file could not be verified.'
 
 
-# Construct a BLAKE2 hash digest of `input`. Specify the digest `length` as a `Number`.
+# Construct a BLAKE2 hash digest of `input`. Specify digest `length` as a `Number`.
 BLAKE2HashDigest = (input, options={}) ->
   hash = new BLAKE2s(options.length)
   hash.update(input)

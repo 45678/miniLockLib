@@ -29,7 +29,7 @@ miniLockLib.getKeyPair(secretPhrase, emailAddress, function(keys){
 })
 ```
 
-Pass `file`, `name`, `keys` and `miniLockIDs` arguments when you `encrypt` a file:
+Pass `file`, `name`, `keys` and `miniLockIDs` when you `encrypt` a file:
 
 ```
 miniLockLib.encrypt({
@@ -47,7 +47,7 @@ miniLockLib.encrypt({
 })
 ```
 
-Pass `file` and `keys` arguments when you `decrypt` a file:
+Pass `file` and `keys` when you `decrypt` a file:
 
 ```
 miniLockLib.decrypt({

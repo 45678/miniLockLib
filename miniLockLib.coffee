@@ -67,15 +67,16 @@ EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\\.[A-Z]{2,20}/i
 #        keys.secretKey is [32-bit Uint8Array]
 #
 miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
-  # Sanitize both inputs against unexpected characters.
-  secretPhrase = nacl.util.decodeUTF8(secretPhrase)
-  emailAddress = nacl.util.decodeUTF8(emailAddress)
+  # Decode each input into a Uint8Array of bytes.
+  decodedSecretPhrase = nacl.util.decodeUTF8(secretPhrase)
+  decodedEmailAddress = nacl.util.decodeUTF8(emailAddress)
   
-  # Create a 32-byte BLAKE2 hash digest of the secret phrase. WHY???
-  hashDigestOfSecretPhrase = BLAKE2HashDigest(secretPhrase, length: 32)
+  # Create a hash digest of the decoded secret phrase.
+  # (Why? Because the miniLock specification says so.)
+  hashOfDecodedSecretPhrase = BLAKE2HashDigest(decodedSecretPhrase, length: 32)
   
-  # Calculate keys for the secret phrase digest and email address salt.
-  calculateCurve25519Keys hashDigestOfSecretPhrase, emailAddressBytes, callback
+  # Calculate keys for the hash of the secret phrase and email address salt.
+  calculateCurve25519Keys hashOfDecodedSecretPhrase, decodedEmailAddress, callback
 
 
 # Calculate a curve25519 key pair for the given `secret` and `salt`.

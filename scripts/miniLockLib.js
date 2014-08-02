@@ -3730,13 +3730,13 @@ if (typeof module !== "undefined") module.exports = scrypt;
     };
     EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\\.[A-Z]{2,20}/i;
     miniLockLib.getKeyPair = function(secretPhrase, emailAddress, callback) {
-        var hashDigestOfSecretPhrase;
-        secretPhrase = nacl.util.decodeUTF8(secretPhrase);
-        emailAddress = nacl.util.decodeUTF8(emailAddress);
-        hashDigestOfSecretPhrase = BLAKE2HashDigest(secretPhrase, {
+        var decodedEmailAddress, decodedSecretPhrase, hashOfDecodedSecretPhrase;
+        decodedSecretPhrase = nacl.util.decodeUTF8(secretPhrase);
+        decodedEmailAddress = nacl.util.decodeUTF8(emailAddress);
+        hashOfDecodedSecretPhrase = BLAKE2HashDigest(decodedSecretPhrase, {
             length: 32
         });
-        return calculateCurve25519Keys(hashDigestOfSecretPhrase, emailAddress, callback);
+        return calculateCurve25519Keys(hashOfDecodedSecretPhrase, decodedEmailAddress, callback);
     };
     calculateCurve25519Keys = function(secret, salt, callback) {
         var dkLen, encoding, interruptStep, logN, r, whenKeysAreReady;

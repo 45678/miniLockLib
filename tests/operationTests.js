@@ -137,7 +137,6 @@ T['Bobby can’t decrypt Alices’s private file'] = function(test) {
 			file: buffer,
 			keys: Bobby.keys,
 			callback: function(error, decrypted) {
-				console.info(error)
 				test.same(error, 'This file does not seem to be encrypted for your miniLock ID. Check that you are logged in with the correct miniLock ID.')
 				test.same(decrypted, undefined)
 				test.done()

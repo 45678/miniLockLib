@@ -2,7 +2,7 @@
 
 #### Setup
 
-To get started place the `miniLockLib.js` and `miniLockCryptoWorker.js` files on your web host and then include `miniLockLib.js` in a script tag on your web page, like this:
+To get started place the [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/miniLockLib.js) and [`miniLockCryptoWorker.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/miniLockCryptoWorker.js) files on your web host and then include `miniLockLib.js` in a script tag on your web page, like this:
 
 ```
 <script src="/scripts/miniLockLib.js"></script>

@@ -3723,12 +3723,12 @@ if (typeof module !== "undefined") module.exports = scrypt;
     miniLockLib = this.miniLockLib = {};
     miniLockLib.pathToScripts = ".";
     miniLockLib.secretPhraseIsAcceptable = function(secretPhrase) {
-        return secretPhrase.length >= 32 && zxcvbn(secretPhrase).entropy >= 100;
+        return (secretPhrase != null ? secretPhrase.length : void 0) >= 32 && zxcvbn(secretPhrase).entropy >= 100;
     };
     miniLockLib.emailAddressIsAcceptable = function(emailAddress) {
         return EmailAddressPattern.test(emailAddress);
     };
-    EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\\.[A-Z]{2,20}/i;
+    EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i;
     miniLockLib.getKeyPair = function(secretPhrase, emailAddress, callback) {
         var decodedEmailAddress, decodedSecretPhrase, hashOfDecodedSecretPhrase;
         decodedSecretPhrase = nacl.util.decodeUTF8(secretPhrase);

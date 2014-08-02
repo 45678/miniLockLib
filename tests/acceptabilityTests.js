@@ -30,14 +30,34 @@ T['Short secret phrase is unacceptable'] = function(test) {
   test.done()
 }
 
-T['Can’t determine acceptability of undefined secret phrase'] = function(test) {
-  try {
-    test.same(miniLockLib.secretPhraseIsAcceptable(undefined), false)
-  }
-  catch (error) {
-    test.ok(error)
-    test.done()
-  }
+T['Undefined secret phrase is unacceptable'] = function(test) {
+  test.same(miniLockLib.secretPhraseIsAcceptable(undefined), false)
+  test.done()
+}
+
+T['Alice’s email address is acceptable to miniLock'] = function(test) {
+  test.ok(miniLockLib.emailAddressIsAcceptable(Alice.emailAddress))
+  test.done()
+}
+
+T['Bobby’s email address is acceptable to miniLock'] = function(test) {
+  test.ok(miniLockLib.emailAddressIsAcceptable(Bobby.emailAddress))
+  test.done()
+}
+
+T['Empty email address is unacceptable'] = function(test) {
+  test.same(miniLockLib.emailAddressIsAcceptable(''), false)
+  test.done()
+}
+
+T['Blank email address is unacceptable'] = function(test) {
+  test.same(miniLockLib.emailAddressIsAcceptable('  '), false)
+  test.done()
+}
+
+T['Undefined email address is unacceptable'] = function(test) {
+  test.same(miniLockLib.emailAddressIsAcceptable(undefined), false)
+  test.done()
 }
 
 }) // End of top-level function body.

@@ -26,7 +26,7 @@ miniLockLib.pathToScripts = '.'
 # and have at least 100 bits of entropy.
 #
 miniLockLib.secretPhraseIsAcceptable = (secretPhrase) ->
-  secretPhrase.length >= 32 and zxcvbn(secretPhrase).entropy >= 100
+  secretPhrase?.length >= 32 and zxcvbn(secretPhrase).entropy >= 100
 
 
 # ---------------
@@ -38,7 +38,7 @@ miniLockLib.secretPhraseIsAcceptable = (secretPhrase) ->
 miniLockLib.emailAddressIsAcceptable = (emailAddress) ->
   EmailAddressPattern.test(emailAddress)
 
-EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\\.[A-Z]{2,20}/i
+EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i
 
 
 

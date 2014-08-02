@@ -3782,9 +3782,9 @@ if (typeof module !== "undefined") module.exports = scrypt;
         callback = params.callback;
         worker = new CryptoWorker();
         worker.onmessage = function(message) {
-            if (message.error != null) {
+            if (message.data.error != null) {
                 worker.terminate();
-                return callback(CryptoWorker.ErrorMessages[message.error]);
+                return callback(CryptoWorker.ErrorMessages[message.data.error]);
             } else if (message.data.blob != null) {
                 worker.terminate();
                 return callback(void 0, {
@@ -3822,9 +3822,9 @@ if (typeof module !== "undefined") module.exports = scrypt;
         file = params.file, keys = params.keys, callback = params.callback;
         worker = new CryptoWorker();
         worker.onmessage = function(message) {
-            if (message.error != null) {
+            if (message.data.error != null) {
                 worker.terminate();
-                return callback(CryptoWorker.ErrorMessages[message.error]);
+                return callback(CryptoWorker.ErrorMessages[message.data.error]);
             } else if (message.data.blob != null) {
                 worker.terminate();
                 return callback(void 0, {

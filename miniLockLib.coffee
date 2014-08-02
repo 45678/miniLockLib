@@ -156,9 +156,9 @@ miniLockLib.encrypt = (params) ->
   worker = new CryptoWorker
   
   worker.onmessage = (message) ->
-    if message.error?
+    if message.data.error?
       worker.terminate()
-      callback CryptoWorker.ErrorMessages[message.error]
+      callback CryptoWorker.ErrorMessages[message.data.error]
     else if message.data.blob?
       worker.terminate()
       callback undefined, {
@@ -203,9 +203,9 @@ miniLockLib.decrypt = (params) ->
   worker = new CryptoWorker
   
   worker.onmessage = (message) ->
-    if message.error?
+    if message.data.error?
       worker.terminate()
-      callback CryptoWorker.ErrorMessages[message.error]
+      callback CryptoWorker.ErrorMessages[message.data.error]
     else if message.data.blob?
       worker.terminate()
       callback undefined, {

@@ -130,6 +130,22 @@ T['Bobby can decrypt file for Alice & Bobby'] = function(test) {
 	})
 }
 
+T['Bobby can’t decrypt Alices’s private file'] = function(test) {
+	readFileFixture('alice.txt.minilock', function(error, buffer){
+		if (error) return test.done(error)
+		miniLockLib.decrypt({
+			file: buffer,
+			keys: Bobby.keys,
+			callback: function(error, decrypted) {
+				console.info(error)
+				test.same(error, 'This file does not seem to be encrypted for your miniLock ID. Check that you are logged in with the correct miniLock ID.')
+				test.same(decrypted, undefined)
+				test.done()
+			}
+		})
+	})
+}
+
 // window.URL = window.webkitURL || window.URL		
 // $(document.body).append('<a class="fileSaveLink">Download</a>')
 // $('a.fileSaveLink').attr('download', encrypted.name)

@@ -2,7 +2,6 @@
 
 #### Setup
 
-
 Download
  [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/scripts/miniLockLib.js) and [`miniLockCryptoWorker.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/scripts/miniLockCryptoWorker.js) and place them on your web server. Be aware that miniLockLib will not work with the `file://` protocol because it uses a `Worker` for background tasks.
  

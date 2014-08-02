@@ -86,7 +86,7 @@ miniLockLib.decrypt({
 
 Run `npm install git+https://git@github.com/45678/miniLockLib.git` to get the source code.
 
-Run `make` to build the `scripts`. Most modified source files are saved in `lib`.
+Run `make` to build the `scripts`. All the source files for `miniLockLib.js` are saved in `lib`.
 
 Run `npm start` to begin watching CoffeeScript files. Your saved changes will trigger compilation automatically.
 

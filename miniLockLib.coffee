@@ -78,13 +78,7 @@ miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
   calculateCurve25519KeysFor hashDigestOfSecretPhrase, emailAddress, callback
 
 
-# Calculate curve25519 key pair for the given `secret` and `salt`. When the 
-# task is complete `callback` receives its `keys` like this:
-#
-#     calculateCurve25519KeysFor secret, salt, (keys) ->
-#       keys.publicKey is [32-bit Uint8Array]
-#       keys.secretKey is [32-bit Uint8Array]
-#
+# Calculate a curve25519 key pair for the given `secret` and `salt`.
 calculateCurve25519KeysFor = (secret, salt, callback) ->
   # Define miniLock `scrypt` parameters for the calculation task:
   logN          = 17       # CPU/memory cost parameter (1 to 31).

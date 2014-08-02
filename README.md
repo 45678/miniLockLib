@@ -24,8 +24,8 @@ Call `getKeyPair` with `secretPhrase` and `emailAddress` to get a pair of `keys`
 
 ```
 miniLockLib.getKeyPair(secretPhrase, emailAddress, function(keys){
-   keys.publicKey is a 32-bit Uint8Array
-   keys.secretKey is a 32-bit Uint8Array
+   keys.publicKey is a Uint8Array
+   keys.secretKey is a Uint8Array
 })
 ```
 

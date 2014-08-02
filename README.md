@@ -2,13 +2,17 @@
 
 #### Setup
 
-To get started place the [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/scripts/miniLockLib.js) and [`miniLockCryptoWorker.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/scripts/miniLockCryptoWorker.js) files on your web host and then include `miniLockLib.js` in a script tag on your web page, like this:
+
+Download
+ [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/scripts/miniLockLib.js) and [`miniLockCryptoWorker.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/scripts/miniLockCryptoWorker.js) and place them on your web server. Be aware that miniLockLib will not work with the `file://` protocol because it uses a `Worker` for background tasks.
+ 
+Include `miniLockLib.js` with a script tag on your web page:
 
 ```
-<script src="/scripts/miniLockLib.js"></script>
+<script src="/scripts/miniLockLib.js" charset="utf-8"></script>
 ```
 
-You will also need to setup `miniLockLib.pathToScripts` so that the crypto worker can be loaded reliably. Add a line like this to your program to configure it: 
+You should also redefine `miniLockLib.pathToScripts` so that the crypto worker can be loaded reliably on your site. Add a line like this to your program to configure it:
 
 ```
 miniLockLib.pathToScripts = '/scripts'
@@ -57,6 +61,8 @@ miniLockLib.decrypt({
   }
 })
 ```
+
+[Find more examples, and all the documentation, in the source code](https://github.com/45678/miniLockLib/blob/master/miniLockLib.coffee).
 
 #### Sources
 

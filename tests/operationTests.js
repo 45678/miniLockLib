@@ -121,7 +121,7 @@ T['Bobby can’t decrypt Alices’s private file'] = function(test) {
 
 function readFileFixture(name, callback) {
   var request = new XMLHttpRequest
-  request.open('GET', '/tests/'+name, true)
+  request.open('GET', '/tests/fixtures/'+name, true)
   request.responseType = 'blob'
   request.onreadystatechange = function(event) {
     if (request.readyState === 4) {
@@ -132,7 +132,7 @@ function readFileFixture(name, callback) {
   request.send()
 }
 
-function readFileAsArrayBuffer(file, callback, errorCallback) {
+function readFileAsArrayBuffer(file, callback) {
   var reader = new FileReader()
   reader.onload = function(readerEvent) {
     callback(undefined, {
@@ -147,7 +147,8 @@ function readFileAsArrayBuffer(file, callback, errorCallback) {
 
 }) // End of top-level function body.
 
-// // Paste the follwoing into a test to download a file after an operation.
-// $('body).append('<a id="download_file">Download</a>')
-// $('#download_file').attr('download', encrypted.name)
-// $('#download_file').attr('href', window.URL.createObjectURL(encrypted.data))
+// Paste the follwoing into a test to download a file after an operation.
+// document.body.innerHTML += '<a id="download_file">Download</a>'
+// var a = document.getElementById('download_file')
+// a.setAttribute('download', encrypted.name)
+// a.setAttribute('href', window.URL.createObjectURL(encrypted.data))

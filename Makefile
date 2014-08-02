@@ -1,6 +1,6 @@
 default: miniLockLib.js miniLockCryptoWorker.js
 
-miniLockLib.js: dependencies/miniLockLib.js dependencies/Base58.js dependencies/BLAKE2s.js dependencies/nacl.js dependencies/scrypt-async.js
+miniLockLib.js: miniLockLib.coffee dependencies/Base58.js dependencies/BLAKE2s.js dependencies/nacl.js dependencies/scrypt-async.js
 	# Combine source files to create `miniLockLib.js` script.
 	uglifyjs dependencies/base58.js \
 	  dependencies/blake2s.js \

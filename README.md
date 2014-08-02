@@ -84,10 +84,10 @@ miniLockLib.decrypt({
 
 #### Digging In
 
-Run `npm install git+https://git@github.com/45678/miniLockLib.git` to get the source code.
+`npm install git+https://git@github.com/45678/miniLockLib.git` to get the source code.
 
-Run `make` to build the `scripts`. All the source files for `miniLockLib.js` are saved in `lib`.
+`make` to build the `scripts`. All the source files for `miniLockLib.js` are saved in `lib`.
 
-Run `npm start` to begin watching CoffeeScript files. Your saved changes will trigger automatic re-compilation.
+`npm start` to begin watching CoffeeScript files. Your saved changes will trigger automatic re-compilation.
 
-Run `npm test` launch the test kit in Google Chrome.
+`npm test` launch the test kit in Google Chrome.

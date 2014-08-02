@@ -80,18 +80,18 @@ miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
 
 # Calculate a curve25519 key pair for the given `secret` and `salt`.
 calculateCurve25519KeysFor = (secret, salt, callback) ->
+  # Decode and unpack the keys when the task is complete.
+  whenKeysAreReady = (encodedBytes) ->
+    decodedBytes = nacl.util.decodeBase64(encodedBytes)
+    keys = nacl.box.keyPair.fromSecretKey(decodedBytes)
+    callback(keys)
+  
   # Define miniLock `scrypt` parameters for the calculation task:
   logN          = 17       # CPU/memory cost parameter (1 to 31).
   r             = 8        # Block size parameter. (I don’t know about this).
   dkLen         = 32       # Length of derived keys. (A miniLock key is 32 numbers).
   interruptStep = 1000     # Steps to split calculation with timeouts (default 1000).
   encoding      = 'base64' # Output encoding ('base64', 'hex', or null).
-  
-  # Decode and unpack the keys when the task is complete.
-  whenKeysAreReady = (encodedBytes) ->
-    decodedBytes = nacl.util.decodeBase64(encodedBytes)
-    keys = nacl.box.keyPair.fromSecretKey(decodedBytes)
-    callback(keys)
   
   # Send the task to `scrypt` for processing...
   scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding)

@@ -3714,7 +3714,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
 })();
 
 (function() {
-    var BLAKE2HashDigest, BLAKE2s, Base58, CryptoWorker, EmailAddressPattern, ID, calculateCurve25519Keys, miniLockLib, nacl, scrypt, zxcvbn;
+    var BLAKE2HashDigest, BLAKE2s, Base58, CryptoWorker, EmailAddressPattern, calculateCurve25519Keys, miniLockLib, nacl, scrypt, zxcvbn;
     Base58 = this.Base58;
     BLAKE2s = this.BLAKE2s;
     nacl = this.nacl;
@@ -3753,26 +3753,11 @@ if (typeof module !== "undefined") module.exports = scrypt;
         encoding = "base64";
         return scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding);
     };
-    ID = miniLockLib.ID = {};
-    ID.isAcceptable = function(id) {
-        if ((id != null ? id.length : void 0) == null) {
-            return false;
-        }
-        if (id.length > ID.max) {
-            return false;
-        }
-        if (id.length < ID.min) {
-            return false;
-        }
-        if (ID.pattern.test(id) === false) {
-            return false;
-        }
-        return ID.decode(id) != null;
+    miniLockLib.ID = {};
+    miniLockLib.ID.isAcceptable = function(id) {
+        return /^[1-9A-Za-z]{40,55}$/.test(id) && miniLockLib.ID.decode(id) != null;
     };
-    ID.min = 40;
-    ID.max = 55;
-    ID.pattern = /^[1-9ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$/;
-    ID.encode = function(publicKey) {
+    miniLockLib.ID.encode = function(publicKey) {
         var index, slots, _i;
         if ((publicKey != null ? publicKey.length : void 0) === 32) {
             slots = new Uint8Array(33);
@@ -3787,7 +3772,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             return void 0;
         }
     };
-    ID.decode = function(id) {
+    miniLockLib.ID.decode = function(id) {
         var encodedChecksum, publicKey, slots, trueChecksum;
         slots = Base58.decode(id);
         if (slots.length === 33) {

@@ -23,46 +23,4 @@ T['Compute Bobby’s keys from his secret phrase and email address'] = function(
   })
 }
 
-T['Make ID for Alice’s public key'] = function(test) {
-  id = miniLockLib.makeID(Alice.publicKey)
-  test.same(id, Alice.miniLockID)
-  test.done()
-}
-
-T['Make ID for Bobby’s public key'] = function(test) {
-  id = miniLockLib.makeID(Alice.publicKey)
-  test.same(id, Alice.miniLockID)
-  test.done()
-}
-
-T['Can’t make ID for undefined key'] = function(test) {
-  try {
-    miniLockLib.makeID(undefined)
-  }
-  catch (error) {
-    test.same(error, 'miniLockLib.makeID() received undefined public key.', error)
-    test.done()
-  }
-}
-
-T['Can’t make ID for key that is too short'] = function(test) {
-  try {
-    miniLockLib.makeID(new Uint8Array(16))
-  }
-  catch (error) {
-    test.same(error, 'miniLockLib.makeID() public key parameter was too short.', error)
-    test.done()
-  }
-}
-
-T['Can’t make ID for key that is too long'] = function(test) {
-  try {
-    miniLockLib.makeID(new Uint8Array(64))
-  }
-  catch (error) {
-    test.same(error, 'miniLockLib.makeID() public key parameter was too long.', error)
-    test.done()
-  }
-}
-
 }) // End of top-level function body.

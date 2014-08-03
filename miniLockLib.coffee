@@ -99,27 +99,33 @@ calculateCurve25519Keys = (secret, salt, callback) ->
 # ------------
 # miniLock IDs
 # ------------
-#
-# miniLock IDs are meant to be easily communicable via email or instant messaging.
-# A miniLock ID is a Base58 encoded string of a list of 33 numbers. 
-# The first 32 numbers of your ID correspond to your curve25519 public key. 
-# The last number is a checksum that was is derived by hashing your public key 
-# with BLAKE2  with a 1-byte output. After constructing the 33 bytes of the 
-# miniLock ID, it is encoded into a Base58 representation.
-#
-miniLockLib.makeID = (publicKey) ->
+
+miniLockLib.ID = {}
+
+miniLockLib.ID.isAcceptable = (id) ->
+  /^[1-9A-Za-z]{40,55}$/.test(id) and miniLockLib.ID.decode(id)?
+
+
+# Encode a 32-bit public key as a miniLockID.
+miniLockLib.ID.encode = (publicKey) ->
   if publicKey?.length is 32
     slots = new Uint8Array(33)
     slots[index] = publicKey[index] for index in [0..32]
-    slots[32] = BLAKE2HashDigest(publicKey, length: 1)
+    slots[32] = BLAKE2HashDigest(publicKey, length: 1)[0]
     Base58.encode(slots)
   else
-    if publicKey is undefined
-      throw 'miniLockLib.makeID() received undefined public key.'
-    if publicKey.length < 32
-      throw 'miniLockLib.makeID() public key parameter was too short.'
-    if publicKey.length > 32
-      throw 'miniLockLib.makeID() public key parameter was too long.'
+    undefined
+
+
+# Decode a 32-bit public key from a miniLockID.
+miniLockLib.ID.decode = (id) ->
+  slots = Base58.decode(id)
+  if slots.length is 33
+    publicKey = slots.subarray(0, 32)
+    encodedChecksum = slots[32]
+    trueChecksum = BLAKE2HashDigest(publicKey, length: 1)[0]
+    return publicKey if encodedChecksum is trueChecksum
+  undefined
 
 
 
@@ -167,7 +173,7 @@ miniLockLib.encrypt = (params) ->
     decryptInfoNonces: (nacl.randomBytes(24) for i in [0..miniLockIDs.length])
     ephemeral: nacl.box.keyPair()
     miniLockIDs: miniLockIDs
-    myMiniLockID: miniLockLib.makeID(keys.publicKey)
+    myMiniLockID: miniLockLib.ID.encode(keys.publicKey)
     mySecretKey: keys.secretKey
 
 
@@ -207,7 +213,7 @@ miniLockLib.decrypt = (params) ->
   worker.postMessage
     operation: 'decrypt'
     data: new Uint8Array(file.data)
-    myMiniLockID: miniLockLib.makeID(keys.publicKey)
+    myMiniLockID: miniLockLib.ID.encode(keys.publicKey)
     mySecretKey: keys.secretKey
 
 

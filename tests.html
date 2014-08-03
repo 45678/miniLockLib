@@ -7,6 +7,7 @@
     <script src="scripts/miniLockLib.js"></script>
     <script src="tests/_fixtures.js"></script>
     <script src="tests/acceptabilityTests.js"></script>
+    <script src="tests/identificationTests.js"></script>
     <script src="tests/keyPairTests.js"></script>
     <script src="tests/operationTests.js"></script>
   </head>
@@ -16,8 +17,9 @@
       miniLockLib.pathToScripts = 'scripts'
       nodeunit.run({
         '1': this.acceptabilityTests,
-        '2': this.keyPairTests,
-        '3': this.operationTests
+        '2': this.identificationTests,
+        '3': this.keyPairTests,
+        '4': this.operationTests
       });
     </script>
   </body>

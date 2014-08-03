@@ -3714,7 +3714,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
 })();
 
 (function() {
-    var BLAKE2HashDigest, BLAKE2s, Base58, CryptoWorker, EmailAddressPattern, calculateCurve25519Keys, miniLockLib, nacl, scrypt, zxcvbn;
+    var BLAKE2HashDigest, BLAKE2s, Base58, CryptoWorker, EmailAddressPattern, ID, calculateCurve25519Keys, miniLockLib, nacl, scrypt, zxcvbn;
     Base58 = this.Base58;
     BLAKE2s = this.BLAKE2s;
     nacl = this.nacl;
@@ -3753,7 +3753,26 @@ if (typeof module !== "undefined") module.exports = scrypt;
         encoding = "base64";
         return scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding);
     };
-    miniLockLib.makeID = function(publicKey) {
+    ID = miniLockLib.ID = {};
+    ID.isAcceptable = function(id) {
+        if ((id != null ? id.length : void 0) == null) {
+            return false;
+        }
+        if (id.length > ID.max) {
+            return false;
+        }
+        if (id.length < ID.min) {
+            return false;
+        }
+        if (ID.pattern.test(id) === false) {
+            return false;
+        }
+        return ID.decode(id) != null;
+    };
+    ID.min = 40;
+    ID.max = 55;
+    ID.pattern = /^[1-9ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$/;
+    ID.encode = function(publicKey) {
         var index, slots, _i;
         if ((publicKey != null ? publicKey.length : void 0) === 32) {
             slots = new Uint8Array(33);
@@ -3762,19 +3781,26 @@ if (typeof module !== "undefined") module.exports = scrypt;
             }
             slots[32] = BLAKE2HashDigest(publicKey, {
                 length: 1
-            });
+            })[0];
             return Base58.encode(slots);
         } else {
-            if (publicKey === void 0) {
-                throw "miniLockLib.makeID() received undefined public key.";
-            }
-            if (publicKey.length < 32) {
-                throw "miniLockLib.makeID() public key parameter was too short.";
-            }
-            if (publicKey.length > 32) {
-                throw "miniLockLib.makeID() public key parameter was too long.";
+            return void 0;
+        }
+    };
+    ID.decode = function(id) {
+        var encodedChecksum, publicKey, slots, trueChecksum;
+        slots = Base58.decode(id);
+        if (slots.length === 33) {
+            publicKey = slots.subarray(0, 32);
+            encodedChecksum = slots[32];
+            trueChecksum = BLAKE2HashDigest(publicKey, {
+                length: 1
+            })[0];
+            if (encodedChecksum === trueChecksum) {
+                return publicKey;
             }
         }
+        return void 0;
     };
     miniLockLib.encrypt = function(params) {
         var callback, file, i, keys, miniLockIDs, name, worker;
@@ -3813,7 +3839,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             }(),
             ephemeral: nacl.box.keyPair(),
             miniLockIDs: miniLockIDs,
-            myMiniLockID: miniLockLib.makeID(keys.publicKey),
+            myMiniLockID: miniLockLib.ID.encode(keys.publicKey),
             mySecretKey: keys.secretKey
         });
     };
@@ -3837,7 +3863,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
         return worker.postMessage({
             operation: "decrypt",
             data: new Uint8Array(file.data),
-            myMiniLockID: miniLockLib.makeID(keys.publicKey),
+            myMiniLockID: miniLockLib.ID.encode(keys.publicKey),
             mySecretKey: keys.secretKey
         });
     };

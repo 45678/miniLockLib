@@ -10,17 +10,21 @@
     <script src="tests/_compiled/identificationTests.js"></script>
     <script src="tests/_compiled/keyPairTests.js"></script>
     <script src="tests/_compiled/operationTests.js"></script>
+    <script src="tests/_compiled/EncryptOperationTests.js"></script>
+    <script src="tests/_compiled/DecryptOperationTests.js"></script>
   </head>
   <body>
     <h1 id="nodeunit-header">miniLockLib Tests</h1>
     <script>
-      miniLockLib.pathToScripts = 'scripts'
       nodeunit.run({
         '1': this.acceptabilityTests,
         '2': this.identificationTests,
         '3': this.keyPairTests,
-        '4': this.operationTests
+        '4': this.operationTests,
+        '5': this.EncryptOperationTests,
+        '6': this.DecryptOperationTests
       });
     </script>
+		<a id="link_to_download"></a>
   </body>
 </html>

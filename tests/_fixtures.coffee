@@ -15,3 +15,12 @@ Bobby.miniLockID   = '2CtUp8U3iGykxaqyEDkGJjgZTsEtzzYQCd8NVmLspM4i2b'
 Bobby.publicKey    = Base58.decode('GqNFkqGZv1dExFGTZLmhiqqbBUcoDarD9e1nwTFgj9zn')
 Bobby.secretKey    = Base58.decode('A699ac6jesP643rkM71jAxs33wY9mk6VoYDQrG9B3Kw7')
 Bobby.keys         = {publicKey: Bobby.publicKey, secretKey: Bobby.secretKey}
+
+window.testFixtures.readFileAsBlob = (name, callback) ->
+  request = new XMLHttpRequest
+  request.open "GET", "/tests/_fixtures/" + name, true
+  request.responseType = "blob"
+  request.onreadystatechange = (event) ->
+    if request.readyState is 4
+      callback undefined, request.response
+  request.send()

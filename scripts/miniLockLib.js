@@ -1912,11 +1912,11 @@ var BLAKE2s = function() {
         M(q[3], X, Y);
         scalarmult(p, q, s);
     }
-    function crypto_sign_keypair(pk, sk) {
+    function crypto_sign_keypair(pk, sk, seeded) {
         var d = new Uint8Array(64);
         var p = [ gf(), gf(), gf(), gf() ];
         var i;
-        randombytes(sk, 32);
+        if (!seeded) randombytes(sk, 32);
         crypto_hash(d, sk, 32);
         d[0] &= 248;
         d[31] &= 127;
@@ -2262,6 +2262,18 @@ var BLAKE2s = function() {
             secretKey: secretKey
         };
     };
+    nacl.sign.keyPair.fromSeed = function(seed) {
+        checkArrayTypes(seed);
+        if (seed.length !== 32) throw new Error("bad seed size");
+        var pk = new Uint8Array(crypto_sign_PUBLICKEYBYTES);
+        var sk = new Uint8Array(crypto_sign_SECRETKEYBYTES);
+        for (var i = 0; i < 32; i++) sk[i] = seed[i];
+        crypto_sign_keypair(pk, sk, true);
+        return {
+            publicKey: pk,
+            secretKey: sk
+        };
+    };
     nacl.sign.publicKeyLength = crypto_sign_PUBLICKEYBYTES;
     nacl.sign.secretKeyLength = crypto_sign_SECRETKEYBYTES;
     nacl.sign.signatureLength = crypto_sign_BYTES;
@@ -2306,7 +2318,7 @@ var BLAKE2s = function() {
             }
         }
     })();
-})(typeof module !== "undefined" && module.exports ? module.exports : this.nacl = {});
+})(typeof module !== "undefined" && module.exports ? module.exports : window.nacl = window.nacl || {});
 
 (function(root, f) {
     "use strict";
@@ -3714,14 +3726,13 @@ if (typeof module !== "undefined") module.exports = scrypt;
 })();
 
 (function() {
-    var BLAKE2HashDigest, BLAKE2s, Base58, CryptoWorker, EmailAddressPattern, calculateCurve25519Keys, miniLockLib, nacl, scrypt, zxcvbn;
+    var BLAKE2HashDigest, BLAKE2s, Base58, EmailAddressPattern, calculateCurve25519Keys, miniLockLib, nacl, scrypt, zxcvbn;
     Base58 = this.Base58;
     BLAKE2s = this.BLAKE2s;
     nacl = this.nacl;
     scrypt = this.scrypt;
     zxcvbn = this.zxcvbn;
     miniLockLib = this.miniLockLib = {};
-    miniLockLib.pathToScripts = ".";
     miniLockLib.secretPhraseIsAcceptable = function(secretPhrase) {
         return (secretPhrase != null ? secretPhrase.length : void 0) >= 32 && zxcvbn(secretPhrase).entropy >= 100;
     };
@@ -3788,74 +3799,30 @@ if (typeof module !== "undefined") module.exports = scrypt;
         return void 0;
     };
     miniLockLib.encrypt = function(params) {
-        var callback, file, i, keys, miniLockIDs, name, worker;
-        file = params.file, name = params.name, miniLockIDs = params.miniLockIDs, keys = params.keys, 
+        var callback, data, keys, miniLockIDs, name;
+        data = params.data, name = params.name, miniLockIDs = params.miniLockIDs, keys = params.keys, 
         callback = params.callback;
-        worker = new CryptoWorker();
-        worker.onmessage = function(message) {
-            if (message.data.error != null) {
-                worker.terminate();
-                return callback(CryptoWorker.ErrorMessages[message.data.error]);
-            } else if (message.data.blob != null) {
-                worker.terminate();
-                return callback(void 0, {
-                    name: message.data.saveName,
-                    data: new Blob([ message.data.blob ], {
-                        type: "application/minilock"
-                    }),
-                    senderID: message.data.senderID
-                });
-            }
-        };
-        return worker.postMessage({
-            operation: "encrypt",
-            data: new Uint8Array(file.data),
-            name: file.name,
-            saveName: name + ".minilock",
-            fileKey: nacl.randomBytes(32),
-            fileNonce: nacl.randomBytes(24).subarray(0, 16),
-            decryptInfoNonces: function() {
-                var _i, _ref, _results;
-                _results = [];
-                for (i = _i = 0, _ref = miniLockIDs.length; 0 <= _ref ? _i <= _ref : _i >= _ref; i = 0 <= _ref ? ++_i : --_i) {
-                    _results.push(nacl.randomBytes(24));
-                }
-                return _results;
-            }(),
-            ephemeral: nacl.box.keyPair(),
+        return new miniLockLib.EncryptOperation({
+            data: data,
+            name: name,
+            keys: keys,
             miniLockIDs: miniLockIDs,
-            myMiniLockID: miniLockLib.ID.encode(keys.publicKey),
-            mySecretKey: keys.secretKey
+            saveName: name + ".minilock",
+            callback: callback,
+            start: true
         });
     };
     miniLockLib.decrypt = function(params) {
-        var callback, file, keys, worker;
-        file = params.file, keys = params.keys, callback = params.callback;
-        worker = new CryptoWorker();
-        worker.onmessage = function(message) {
-            if (message.data.error != null) {
-                worker.terminate();
-                return callback(CryptoWorker.ErrorMessages[message.data.error]);
-            } else if (message.data.blob != null) {
-                worker.terminate();
-                return callback(void 0, {
-                    name: message.data.name,
-                    data: new Blob([ message.data.blob ]),
-                    senderID: message.data.senderID
-                });
-            }
-        };
-        return worker.postMessage({
-            operation: "decrypt",
-            data: new Uint8Array(file.data),
-            myMiniLockID: miniLockLib.ID.encode(keys.publicKey),
-            mySecretKey: keys.secretKey
+        var callback, data, keys;
+        data = params.data, keys = params.keys, callback = params.callback;
+        return new miniLockLib.DecryptOperation({
+            data: data,
+            keys: keys,
+            callback: callback,
+            start: true
         });
     };
-    CryptoWorker = function() {
-        return new Worker(miniLockLib.pathToScripts + "/miniLockCryptoWorker.js");
-    };
-    CryptoWorker.ErrorMessages = {
+    miniLockLib.ErrorMessages = {
         1: "General encryption error",
         2: "General decryption error",
         3: "Could not parse header",
@@ -3863,6 +3830,26 @@ if (typeof module !== "undefined") module.exports = scrypt;
         5: "Could not validate sender ID",
         6: "File is not encrypted for this recipient",
         7: "Could not validate ciphertext hash"
+    };
+    miniLockLib.numberToByteArray = function(n) {
+        var byteArray, index, _i;
+        byteArray = new Uint8Array(4);
+        for (index = _i = 0; _i <= 4; index = ++_i) {
+            byteArray[index] = n & 255;
+            n = n >> 8;
+        }
+        return byteArray;
+    };
+    miniLockLib.byteArrayToNumber = function(byteArray) {
+        var index, n, _i;
+        n = 0;
+        for (index = _i = 3; _i >= 0; index = --_i) {
+            n += byteArray[index];
+            if (index !== 0) {
+                n = n << 8;
+            }
+        }
+        return n;
     };
     BLAKE2HashDigest = function(input, options) {
         var hash;
@@ -3873,4 +3860,469 @@ if (typeof module !== "undefined") module.exports = scrypt;
         hash.update(input);
         return hash.digest();
     };
+}).call(this);
+
+(function() {
+    var __bind = function(fn, me) {
+        return function() {
+            return fn.apply(me, arguments);
+        };
+    };
+    miniLockLib.BasicOperation = function() {
+        BasicOperation.prototype.chunkSize = 1024 * 1024;
+        function BasicOperation(params) {
+            this.end = __bind(this.end, this);
+            this.start = __bind(this.start, this);
+            if (params.start != null) {
+                this.start();
+            }
+        }
+        BasicOperation.prototype.start = function(callback) {
+            if (callback != null) {
+                this.callback = callback;
+            }
+            if (this.callback === void 0) {
+                throw "Can’t start operation without a callback";
+            }
+            return this.run();
+        };
+        BasicOperation.prototype.run = function() {
+            return this.end();
+        };
+        BasicOperation.prototype.end = function(error, blob) {
+            if (error) {
+                return this.onerror(error);
+            } else {
+                return this.oncomplete(blob);
+            }
+        };
+        BasicOperation.prototype.onerror = function(error) {
+            return console.info("onerror", error);
+        };
+        BasicOperation.prototype.oncomplete = function(blob) {
+            return console.info("oncomplete", blob);
+        };
+        BasicOperation.prototype.readSliceOfData = function(start, end, callback) {
+            if (this.fileReader == null) {
+                this.fileReader = new FileReader();
+            }
+            this.fileReader.readAsArrayBuffer(this.data.slice(start, end));
+            this.fileReader.onabort = function(event) {
+                console.error("@fileReader.onabort", event);
+                return callback("File read abort");
+            };
+            this.fileReader.onerror = function(event) {
+                console.error("@fileReader.onerror", event);
+                return callback("File read error");
+            };
+            return this.fileReader.onload = function(event) {
+                var sliceOfBytes;
+                sliceOfBytes = new Uint8Array(event.target.result);
+                return callback(void 0, sliceOfBytes);
+            };
+        };
+        return BasicOperation;
+    }();
+}).call(this);
+
+(function() {
+    var __bind = function(fn, me) {
+        return function() {
+            return fn.apply(me, arguments);
+        };
+    }, __hasProp = {}.hasOwnProperty, __extends = function(child, parent) {
+        for (var key in parent) {
+            if (__hasProp.call(parent, key)) child[key] = parent[key];
+        }
+        function ctor() {
+            this.constructor = child;
+        }
+        ctor.prototype = parent.prototype;
+        child.prototype = new ctor();
+        child.__super__ = parent.prototype;
+        return child;
+    };
+    miniLockLib.DecryptOperation = function(_super) {
+        __extends(DecryptOperation, _super);
+        function DecryptOperation(params) {
+            if (params == null) {
+                params = {};
+            }
+            this.end = __bind(this.end, this);
+            this.data = params.data, this.keys = params.keys, this.callback = params.callback;
+            this.decryptedChunks = [];
+            DecryptOperation.__super__.constructor.call(this, params);
+        }
+        DecryptOperation.prototype.run = function() {
+            return this.decryptName(function(_this) {
+                return function(error, nameWasDecrypted, startPositionOfDataBytes) {
+                    if (nameWasDecrypted != null) {
+                        return _this.decryptData(startPositionOfDataBytes, _this.end);
+                    } else {
+                        return _this.end(error);
+                    }
+                };
+            }(this));
+        };
+        DecryptOperation.prototype.end = function(error, blob) {
+            if (this.streamDecryptor != null) {
+                this.streamDecryptor.clean();
+            }
+            return DecryptOperation.__super__.end.call(this, error, blob);
+        };
+        DecryptOperation.prototype.oncomplete = function(blob) {
+            return this.callback(void 0, {
+                data: blob,
+                name: this.name,
+                senderID: this.permit.senderID,
+                recipientID: this.permit.recipientID
+            });
+        };
+        DecryptOperation.prototype.onerror = function(error) {
+            return this.callback(error);
+        };
+        DecryptOperation.prototype.decryptName = function(callback) {
+            return this.constructStreamDecryptor(function(_this) {
+                return function(error, lengthOfHeader) {
+                    var endPosition, startPosition;
+                    if (error) {
+                        return callback(error);
+                    }
+                    startPosition = 12 + lengthOfHeader;
+                    endPosition = 12 + lengthOfHeader + 256 + 4 + 16;
+                    return _this.readSliceOfData(startPosition, endPosition, function(error, sliceOfBytes) {
+                        var byte, fixedLengthNameAsBytes, nameAsBytes;
+                        if (error) {
+                            return callback(error);
+                        }
+                        fixedLengthNameAsBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false);
+                        if (fixedLengthNameAsBytes) {
+                            nameAsBytes = function() {
+                                var _i, _len, _results;
+                                _results = [];
+                                for (_i = 0, _len = fixedLengthNameAsBytes.length; _i < _len; _i++) {
+                                    byte = fixedLengthNameAsBytes[_i];
+                                    if (byte !== 0) {
+                                        _results.push(byte);
+                                    }
+                                }
+                                return _results;
+                            }();
+                            _this.name = nacl.util.encodeUTF8(nameAsBytes);
+                            return callback(void 0, _this.name != null, endPosition);
+                        } else {
+                            return callback("@streamEncryptor.decryptChunk failed to decrypt name");
+                        }
+                    });
+                };
+            }(this));
+        };
+        DecryptOperation.prototype.decryptData = function(position, callback) {
+            return this.constructStreamDecryptor(function(_this) {
+                return function(error, lengthOfHeader) {
+                    var endPosition, startPosition;
+                    if (error) {
+                        return callback(error);
+                    }
+                    startPosition = position;
+                    endPosition = position + _this.chunkSize + 4 + 16;
+                    return _this.readSliceOfData(startPosition, endPosition, function(error, sliceOfBytes) {
+                        var decryptedChunk, isLast;
+                        isLast = position + sliceOfBytes.length === _this.data.size;
+                        decryptedChunk = _this.streamDecryptor.decryptChunk(sliceOfBytes, isLast);
+                        if (decryptedChunk) {
+                            _this.decryptedChunks.push(decryptedChunk);
+                            if (isLast) {
+                                return callback(void 0, new Blob(_this.decryptedChunks));
+                            } else {
+                                return _this.decryptData(endPosition, callback);
+                            }
+                        } else {
+                            return callback("@streamEncryptor.decryptChunk failed to decrypt chunk");
+                        }
+                    });
+                };
+            }(this));
+        };
+        DecryptOperation.prototype.constructStreamDecryptor = function(callback) {
+            return this.decryptUniqueNonceAndPermit(function(_this) {
+                return function(error, uniqueNonce, permit, lengthOfHeader) {
+                    if (error) {
+                        return callback(error);
+                    }
+                    _this.uniqueNonce = uniqueNonce;
+                    _this.permit = permit;
+                    _this.fileKey = permit.fileInfo.fileKey;
+                    _this.fileNonce = permit.fileInfo.fileNonce;
+                    _this.streamDecryptor = nacl.stream.createDecryptor(_this.fileKey, _this.fileNonce, _this.chunkSize);
+                    _this.constructStreamDecryptor = function(callback) {
+                        return callback(void 0, lengthOfHeader);
+                    };
+                    return _this.constructStreamDecryptor(callback);
+                };
+            }(this));
+        };
+        DecryptOperation.prototype.decryptUniqueNonceAndPermit = function(callback) {
+            return this.readHeader(function(_this) {
+                return function(error, header, lengthOfHeader) {
+                    var permit, returned, uniqueNonce;
+                    if (error) {
+                        return callback(error);
+                    } else {
+                        returned = _this.findUniqueNonceAndPermit(header);
+                        if (returned) {
+                            uniqueNonce = returned[0], permit = returned[1];
+                            return callback(void 0, uniqueNonce, permit, lengthOfHeader);
+                        } else {
+                            return callback("File is not encrypted for this recipient");
+                        }
+                    }
+                };
+            }(this));
+        };
+        DecryptOperation.prototype.findUniqueNonceAndPermit = function(header) {
+            var decodedEncryptedPermit, encodedEncryptedPermit, encodedUniqueNonce, ephemeral, permit, uniqueNonce, _ref;
+            ephemeral = nacl.util.decodeBase64(header.ephemeral);
+            _ref = header.decryptInfo;
+            for (encodedUniqueNonce in _ref) {
+                encodedEncryptedPermit = _ref[encodedUniqueNonce];
+                uniqueNonce = nacl.util.decodeBase64(encodedUniqueNonce);
+                decodedEncryptedPermit = nacl.util.decodeBase64(encodedEncryptedPermit);
+                permit = this.decryptPermit(decodedEncryptedPermit, uniqueNonce, ephemeral);
+                if (permit) {
+                    return [ uniqueNonce, permit ];
+                }
+            }
+            return void 0;
+        };
+        DecryptOperation.prototype.decryptPermit = function(decodedEncryptedPermit, uniqueNonce, ephemeral) {
+            var decodedEncryptedFileInfo, decryptedPermit, decryptedPermitAsBytes, decryptedPermitAsString, senderPublicKey;
+            decryptedPermitAsBytes = nacl.box.open(decodedEncryptedPermit, uniqueNonce, ephemeral, this.keys.secretKey);
+            if (decryptedPermitAsBytes) {
+                decryptedPermitAsString = nacl.util.encodeUTF8(decryptedPermitAsBytes);
+                decryptedPermit = JSON.parse(decryptedPermitAsString);
+                decodedEncryptedFileInfo = nacl.util.decodeBase64(decryptedPermit.fileInfo);
+                senderPublicKey = miniLockLib.ID.decode(decryptedPermit.senderID);
+                decryptedPermit.fileInfo = this.decryptFileInfo(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey);
+                return decryptedPermit;
+            } else {
+                return void 0;
+            }
+        };
+        DecryptOperation.prototype.decryptFileInfo = function(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey) {
+            var decryptedFileInfo, decryptedFileInfoAsBytes, decryptedFileInfoAsString;
+            decryptedFileInfoAsBytes = nacl.box.open(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey, this.keys.secretKey);
+            if (decryptedFileInfoAsBytes) {
+                decryptedFileInfoAsString = nacl.util.encodeUTF8(decryptedFileInfoAsBytes);
+                decryptedFileInfo = JSON.parse(decryptedFileInfoAsString);
+                return {
+                    fileHash: decryptedFileInfo.fileHash,
+                    fileKey: nacl.util.decodeBase64(decryptedFileInfo.fileKey),
+                    fileNonce: nacl.util.decodeBase64(decryptedFileInfo.fileNonce)
+                };
+                return decryptedFileInfo;
+            } else {
+                return void 0;
+            }
+        };
+        DecryptOperation.prototype.readHeader = function(callback) {
+            return this.readLengthOfHeader(function(_this) {
+                return function(error, lengthOfHeader) {
+                    if (error) {
+                        return callback(error);
+                    }
+                    return _this.readSliceOfData(12, lengthOfHeader + 12, function(error, sliceOfBytes) {
+                        var header, headerAsString;
+                        if (error) {
+                            return callback(error);
+                        }
+                        headerAsString = nacl.util.encodeUTF8(sliceOfBytes);
+                        header = JSON.parse(headerAsString);
+                        return callback(void 0, header, lengthOfHeader);
+                    });
+                };
+            }(this));
+        };
+        DecryptOperation.prototype.readLengthOfHeader = function(callback) {
+            return this.readSliceOfData(8, 12, function(error, sliceOfBytes) {
+                var lengthOfHeader;
+                if (error) {
+                    return callback(error);
+                }
+                lengthOfHeader = miniLockLib.byteArrayToNumber(sliceOfBytes);
+                return callback(void 0, lengthOfHeader);
+            });
+        };
+        return DecryptOperation;
+    }(miniLockLib.BasicOperation);
+}).call(this);
+
+(function() {
+    var __hasProp = {}.hasOwnProperty, __extends = function(child, parent) {
+        for (var key in parent) {
+            if (__hasProp.call(parent, key)) child[key] = parent[key];
+        }
+        function ctor() {
+            this.constructor = child;
+        }
+        ctor.prototype = parent.prototype;
+        child.prototype = new ctor();
+        child.__super__ = parent.prototype;
+        return child;
+    }, __slice = [].slice;
+    miniLockLib.EncryptOperation = function(_super) {
+        __extends(EncryptOperation, _super);
+        function EncryptOperation(params) {
+            if (params == null) {
+                params = {};
+            }
+            this.data = params.data, this.name = params.name, this.miniLockIDs = params.miniLockIDs, 
+            this.callback = params.callback;
+            this.author = {
+                keys: params.keys
+            };
+            this.ephemeral = nacl.box.keyPair();
+            this.fileKey = nacl.randomBytes(32);
+            this.fileNonce = nacl.randomBytes(24).subarray(0, 16);
+            this.hash = new BLAKE2s(32);
+            this.ciphertextBytes = [];
+            EncryptOperation.__super__.constructor.call(this, params);
+        }
+        EncryptOperation.prototype.run = function() {
+            this.encryptName();
+            return this.encryptData(0, function(_this) {
+                return function(error, dataWasEncrypted) {
+                    var fileFormat;
+                    if (dataWasEncrypted != null) {
+                        _this.constructHeader();
+                        fileFormat = [ "miniLock", _this.lengthOfHeaderIn4Bytes, _this.headerJSONBytes ].concat(__slice.call(_this.ciphertextBytes));
+                        return _this.end(error, new Blob(fileFormat, {
+                            type: "application/minilock"
+                        }));
+                    } else {
+                        return _this.end(error);
+                    }
+                };
+            }(this));
+        };
+        EncryptOperation.prototype.end = function(error, blob) {
+            if (this.streamEncryptor != null) {
+                this.streamEncryptor.clean();
+            }
+            return EncryptOperation.__super__.end.call(this, error, blob);
+        };
+        EncryptOperation.prototype.oncomplete = function(blob) {
+            return this.callback(void 0, {
+                data: blob,
+                name: this.name + ".minilock",
+                senderID: miniLockLib.ID.encode(this.author.keys.publicKey)
+            });
+        };
+        EncryptOperation.prototype.onerror = function(error) {
+            return this.callback(error);
+        };
+        EncryptOperation.prototype.encryptName = function() {
+            var encryptedBytes;
+            this.constructStreamEncryptor();
+            if (encryptedBytes = this.streamEncryptor.encryptChunk(this.fixedLengthDecodedName(), false)) {
+                this.hash.update(encryptedBytes);
+                return this.ciphertextBytes.push(encryptedBytes);
+            } else {
+                throw "@streamEncryptor.encryptChunk failed to encrypt name";
+            }
+        };
+        EncryptOperation.prototype.encryptData = function(position, callback) {
+            this.constructStreamEncryptor();
+            return this.readSliceOfData(position, position + this.chunkSize, function(_this) {
+                return function(error, sliceOfBytes) {
+                    var encryptedBytes, isLastSlice;
+                    if (error) {
+                        return callback(error);
+                    }
+                    isLastSlice = position + sliceOfBytes.length === _this.data.size;
+                    if (encryptedBytes = _this.streamEncryptor.encryptChunk(sliceOfBytes, isLastSlice)) {
+                        _this.hash.update(encryptedBytes);
+                        _this.ciphertextBytes.push(encryptedBytes);
+                        if (isLastSlice) {
+                            _this.hash.digest();
+                            return callback(void 0, _this.hash.isFinished);
+                        } else {
+                            return _this.encryptData(position + _this.chunkSize, callback);
+                        }
+                    } else {
+                        return callback("@streamEncryptor.encryptChunk failed to ");
+                    }
+                };
+            }(this));
+        };
+        EncryptOperation.prototype.constructHeader = function() {
+            var headerJSON;
+            this.header = {
+                version: 1,
+                ephemeral: nacl.util.encodeBase64(this.ephemeral.publicKey),
+                decryptInfo: this.encodedEncryptedPermits()
+            };
+            headerJSON = JSON.stringify(this.header);
+            this.lengthOfHeaderIn4Bytes = miniLockLib.numberToByteArray(headerJSON.length);
+            this.headerJSONBytes = nacl.util.decodeUTF8(headerJSON);
+            return this.header;
+        };
+        EncryptOperation.prototype.constructStreamEncryptor = function() {
+            return this.streamEncryptor != null ? this.streamEncryptor : this.streamEncryptor = nacl.stream.createEncryptor(this.fileKey, this.fileNonce, this.chunkSize);
+        };
+        EncryptOperation.prototype.fixedLengthDecodedName = function() {
+            var decodedName, fixedLength;
+            fixedLength = new Uint8Array(256);
+            decodedName = nacl.util.decodeUTF8(this.name);
+            if (decodedName.length > fixedLength.length) {
+                throw "file name is too long";
+            }
+            fixedLength.set(decodedName);
+            return fixedLength;
+        };
+        EncryptOperation.prototype.encodedEncryptedPermits = function() {
+            var encodedEncryptedPermit, encodedUniqueNonce, encryptedPermit, miniLockID, permits, uniqueNonce, _i, _len, _ref, _ref1;
+            permits = {};
+            _ref = this.miniLockIDs;
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                miniLockID = _ref[_i];
+                _ref1 = this.encryptedPermit(miniLockID), uniqueNonce = _ref1[0], encryptedPermit = _ref1[1];
+                encodedUniqueNonce = nacl.util.encodeBase64(uniqueNonce);
+                encodedEncryptedPermit = nacl.util.encodeBase64(encryptedPermit);
+                permits[encodedUniqueNonce] = encodedEncryptedPermit;
+            }
+            return permits;
+        };
+        EncryptOperation.prototype.encryptedPermit = function(miniLockID) {
+            var decodedPermitJSON, encryptedPermit, permit, recipientPublicKey, uniqueNonce, _ref;
+            _ref = this.permit(miniLockID), uniqueNonce = _ref[0], permit = _ref[1];
+            decodedPermitJSON = nacl.util.decodeUTF8(JSON.stringify(permit));
+            recipientPublicKey = Base58.decode(miniLockID).subarray(0, 32);
+            encryptedPermit = nacl.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, this.ephemeral.secretKey);
+            return [ uniqueNonce, encryptedPermit ];
+        };
+        EncryptOperation.prototype.permit = function(miniLockID) {
+            var uniqueNonce;
+            uniqueNonce = nacl.randomBytes(24);
+            return [ uniqueNonce, {
+                senderID: miniLockLib.ID.encode(this.author.keys.publicKey),
+                recipientID: miniLockID,
+                fileInfo: nacl.util.encodeBase64(this.encryptedFileInfo(miniLockID, uniqueNonce))
+            } ];
+        };
+        EncryptOperation.prototype.encryptedFileInfo = function(miniLockID, uniqueNonce) {
+            var decodedFileInfoJSON, recipientPublicKey;
+            decodedFileInfoJSON = nacl.util.decodeUTF8(JSON.stringify(this.permitFileInfo()));
+            recipientPublicKey = Base58.decode(miniLockID).subarray(0, 32);
+            return nacl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, this.author.keys.secretKey);
+        };
+        EncryptOperation.prototype.permitFileInfo = function() {
+            return {
+                fileKey: nacl.util.encodeBase64(this.fileKey),
+                fileNonce: nacl.util.encodeBase64(this.fileNonce),
+                fileHash: nacl.util.encodeBase64(this.hash.digest())
+            };
+        };
+        return EncryptOperation;
+    }(miniLockLib.BasicOperation);
 }).call(this);

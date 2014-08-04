@@ -1,27 +1,21 @@
-default: scripts tests
+default: scripts/miniLockLib.js tests
 
-scripts: scripts/miniLockLib.js scripts/miniLockCryptoWorker.js
-
-scripts/miniLockLib.js: miniLockLib.coffee lib/Base58.js lib/BLAKE2s.js lib/nacl.js lib/nacl-stream.js lib/scrypt-async.js lib/zxcvbn.js
-	# Combine all the source files in `lib` to create miniLockLib.js in `scripts`.
-	coffee --compile --output lib miniLockLib.coffee
+scripts/miniLockLib.js: index.coffee BasicOperation.coffee DecryptOperation.coffee EncryptOperation.coffee lib/Base58.js lib/BLAKE2s.js lib/nacl.js lib/nacl-stream.js lib/scrypt-async.js lib/zxcvbn.js
+	# Compile source to Javascript in `lib`.
+	coffee --compile --output lib *.coffee
+	# Combine Javascript files in `lib` to create miniLockLib.js in `scripts`.
 	uglifyjs lib/base58.js \
 	  lib/blake2s.js \
 	  lib/nacl.js \
 	  lib/nacl-stream.js \
 	  lib/scrypt-async.js \
 	  lib/zxcvbn.js \
-	  lib/miniLockLib.js \
+	  lib/index.js \
+	  lib/BasicOperation.js \
+	  lib/DecryptOperation.js \
+	  lib/EncryptOperation.js \
 	  --beautify --screw-ie8 \
 	  > scripts/miniLockLib.js
-
-scripts/miniLockCryptoWorker.js:
-	# Make a copy of the official miniLock crypto worker and replace numerous 
-	# importScripts(...) statements with one importScripts('miniLockLib.js').
-	cat node_modules/miniLock/src/js/workers/crypto.js \
-	  | sed "s/var window = {}/importScripts('miniLockLib.js')/" \
-	  | sed "9,17d" \
-	  > scripts/miniLockCryptoWorker.js
 
 lib/Base58.js:
 	# Download bs58.js. Modify it to work in a window or a worker. And then rename
@@ -47,10 +41,8 @@ lib/BLAKE2s.js:
 	  > lib/BLAKE2s.js
 
 lib/nacl.js:
-	# Make a copy of nacl.js in `lib` that assigns itself to `this` instead of 
-	# `window` so that it can be imported seamlessly into a `Worker`.
+	# Make a copy of nacl.js in `lib`.
 	cat node_modules/tweetnacl/nacl.js \
-	  | sed 's/window.nacl = window.nacl || {}/this.nacl = {}/' \
 	  > lib/nacl.js
 
 lib/nacl-stream.js:
@@ -69,17 +61,19 @@ lib/zxcvbn.js:
 	  > lib/zxcvbn.js
 
 tests: tests/*.coffee
+	# Compile all tests to Javascript in `tests/_compiled`
 	coffee --compile --output tests/_compiled tests/*.coffee
 
 clean:
 	rm -f lib/*.js
-	rm -f scripts/miniLockLib.js
-	rm -f scripts/miniLockCryptoWorker.js
+	rm -f scripts/*.js
 	rm -f tests/_compiled/*.js
 	
 install:
+	# Setup POW to serve http://minilocklib.dev/tests.html
 	mkdir ~/.pow/minilocklib
 	ln -s $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST)))) ~/.pow/minilocklib/public
 
 uninstall:
+	# Remove POW config.
 	rm -rf ~/.pow/minilocklib

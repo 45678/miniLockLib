@@ -2,7 +2,7 @@
   "name": "miniLockLib",
   "version": "0.0.0",
   "description": "Do miniLock file encryption operations on a web page of your own.",
-  "main": "miniLockLib.js",
+  "main": "scripts/miniLockLib.js",
   "scripts": {
     "start": "wr make *.coffee tests/*.coffee",
     "test": "make && open -a 'Google Chrome' http://minilocklib.dev/tests.html"
@@ -15,11 +15,10 @@
   "license": "Public Domain",
   "devDependencies": {
     "coffee-script": "^1.7.1",
-    "miniLock": "git+ssh://git@github.com:kaepora/miniLock.git",
     "nacl-stream": "git+ssh://git@github.com:dchest/nacl-stream-js.git",
     "nodeunit": "^0.9.0",
     "scrypt": "^3.0.1",
-    "tweetnacl": "^0.10.1",
+    "tweetnacl": "^0.11.0",
     "uglify-js": "^2.4.15",
     "wr": "^1.3.1",
     "zxcvbn": "git+ssh://git@github.com:dropbox/zxcvbn.git"

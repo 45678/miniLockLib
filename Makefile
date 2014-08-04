@@ -1,4 +1,6 @@
-default: scripts/miniLockLib.js scripts/miniLockCryptoWorker.js
+default: scripts tests
+
+scripts: scripts/miniLockLib.js scripts/miniLockCryptoWorker.js
 
 scripts/miniLockLib.js: miniLockLib.coffee lib/Base58.js lib/BLAKE2s.js lib/nacl.js lib/nacl-stream.js lib/scrypt-async.js lib/zxcvbn.js
 	# Combine all the source files in `lib` to create miniLockLib.js in `scripts`.
@@ -66,10 +68,14 @@ lib/zxcvbn.js:
 	cat node_modules/zxcvbn/zxcvbn.js \
 	  > lib/zxcvbn.js
 
+tests: tests/*.coffee
+	coffee --compile --output tests/_compiled tests/*.coffee
+
 clean:
 	rm -f lib/*.js
 	rm -f scripts/miniLockLib.js
 	rm -f scripts/miniLockCryptoWorker.js
+	rm -f tests/_compiled/*.js
 	
 install:
 	mkdir ~/.pow/minilocklib

@@ -3882,7 +3882,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
                 this.callback = callback;
             }
             if (this.callback === void 0) {
-                throw "Can’t start operation without a callback";
+                throw "Can’t start operation without a callback.";
             }
             return this.run();
         };
@@ -3909,11 +3909,11 @@ if (typeof module !== "undefined") module.exports = scrypt;
             this.fileReader.readAsArrayBuffer(this.data.slice(start, end));
             this.fileReader.onabort = function(event) {
                 console.error("@fileReader.onabort", event);
-                return callback("File read abort");
+                return callback("File read abort.");
             };
             this.fileReader.onerror = function(event) {
                 console.error("@fileReader.onerror", event);
-                return callback("File read error");
+                return callback("File read error.");
             };
             return this.fileReader.onload = function(event) {
                 var sliceOfBytes;
@@ -4011,7 +4011,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
                             _this.name = nacl.util.encodeUTF8(nameAsBytes);
                             return callback(void 0, _this.name != null, endPosition);
                         } else {
-                            return callback("@streamEncryptor.decryptChunk failed to decrypt name");
+                            return callback("DecryptOperation failed to decrypt file name.");
                         }
                     });
                 };
@@ -4038,7 +4038,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
                                 return _this.decryptData(endPosition, callback);
                             }
                         } else {
-                            return callback("@streamEncryptor.decryptChunk failed to decrypt chunk");
+                            return callback("DecryptOperation failed to decrypt file data.");
                         }
                     });
                 };
@@ -4047,18 +4047,19 @@ if (typeof module !== "undefined") module.exports = scrypt;
         DecryptOperation.prototype.constructStreamDecryptor = function(callback) {
             return this.decryptUniqueNonceAndPermit(function(_this) {
                 return function(error, uniqueNonce, permit, lengthOfHeader) {
-                    if (error) {
+                    if (uniqueNonce && permit && lengthOfHeader) {
+                        _this.uniqueNonce = uniqueNonce;
+                        _this.permit = permit;
+                        _this.fileKey = permit.fileInfo.fileKey;
+                        _this.fileNonce = permit.fileInfo.fileNonce;
+                        _this.streamDecryptor = nacl.stream.createDecryptor(_this.fileKey, _this.fileNonce, _this.chunkSize);
+                        _this.constructStreamDecryptor = function(callback) {
+                            return callback(void 0, lengthOfHeader);
+                        };
+                        return _this.constructStreamDecryptor(callback);
+                    } else {
                         return callback(error);
                     }
-                    _this.uniqueNonce = uniqueNonce;
-                    _this.permit = permit;
-                    _this.fileKey = permit.fileInfo.fileKey;
-                    _this.fileNonce = permit.fileInfo.fileNonce;
-                    _this.streamDecryptor = nacl.stream.createDecryptor(_this.fileKey, _this.fileNonce, _this.chunkSize);
-                    _this.constructStreamDecryptor = function(callback) {
-                        return callback(void 0, lengthOfHeader);
-                    };
-                    return _this.constructStreamDecryptor(callback);
                 };
             }(this));
         };
@@ -4228,7 +4229,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
                 this.hash.update(encryptedBytes);
                 return this.ciphertextBytes.push(encryptedBytes);
             } else {
-                throw "@streamEncryptor.encryptChunk failed to encrypt name";
+                throw "EncryptOperation failed to encrypt file name.";
             }
         };
         EncryptOperation.prototype.encryptData = function(position, callback) {
@@ -4250,7 +4251,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
                             return _this.encryptData(position + _this.chunkSize, callback);
                         }
                     } else {
-                        return callback("@streamEncryptor.encryptChunk failed to ");
+                        return callback("EncryptOperation failed to encrypt file data.");
                     }
                 };
             }(this));
@@ -4275,7 +4276,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             fixedLength = new Uint8Array(256);
             decodedName = nacl.util.decodeUTF8(this.name);
             if (decodedName.length > fixedLength.length) {
-                throw "file name is too long";
+                throw "EncryptOperation file name is too long. 256-characters max please.";
             }
             fixedLength.set(decodedName);
             return fixedLength;

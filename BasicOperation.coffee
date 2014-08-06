@@ -7,7 +7,7 @@ class miniLockLib.BasicOperation
   start: (callback) =>
     @callback = callback if callback?
     if @callback is undefined
-      throw 'Can’t start operation without a callback'
+      throw 'Can’t start operation without a callback.'
     @run()
   
   run: ->
@@ -30,10 +30,10 @@ class miniLockLib.BasicOperation
     @fileReader.readAsArrayBuffer(@data.slice(start, end))
     @fileReader.onabort = (event) ->
       console.error('@fileReader.onabort', event)
-      callback 'File read abort'
+      callback 'File read abort.'
     @fileReader.onerror = (event) -> 
       console.error('@fileReader.onerror', event)
-      callback 'File read error'
+      callback 'File read error.'
     @fileReader.onload = (event) ->
       sliceOfBytes = new Uint8Array(event.target.result)
       callback(undefined, sliceOfBytes)

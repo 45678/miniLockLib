@@ -39,7 +39,7 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
           @name = nacl.util.encodeUTF8(nameAsBytes)
           callback(undefined, @name?, endPosition)
         else
-          callback '@streamEncryptor.decryptChunk failed to decrypt name'
+          callback('DecryptOperation failed to decrypt file name.')
 
   decryptData: (position, callback) ->
     @constructStreamDecryptor (error, lengthOfHeader) =>
@@ -56,18 +56,20 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
           else
             @decryptData(endPosition, callback)
         else
-          callback '@streamEncryptor.decryptChunk failed to decrypt chunk'
+          callback('DecryptOperation failed to decrypt file data.')
 
   constructStreamDecryptor: (callback) ->
     @decryptUniqueNonceAndPermit (error, uniqueNonce, permit, lengthOfHeader) =>
-      if error then return callback(error)
-      @uniqueNonce = uniqueNonce
-      @permit = permit
-      @fileKey = permit.fileInfo.fileKey
-      @fileNonce = permit.fileInfo.fileNonce
-      @streamDecryptor = nacl.stream.createDecryptor(@fileKey, @fileNonce, @chunkSize)
-      @constructStreamDecryptor = (callback) -> callback(undefined, lengthOfHeader)
-      @constructStreamDecryptor(callback)
+      if uniqueNonce and permit and lengthOfHeader
+        @uniqueNonce = uniqueNonce
+        @permit = permit
+        @fileKey = permit.fileInfo.fileKey
+        @fileNonce = permit.fileInfo.fileNonce
+        @streamDecryptor = nacl.stream.createDecryptor(@fileKey, @fileNonce, @chunkSize)
+        @constructStreamDecryptor = (callback) -> callback(undefined, lengthOfHeader)
+        @constructStreamDecryptor(callback)
+      else
+        callback(error)
       
   decryptUniqueNonceAndPermit: (callback) ->
     @readHeader (error, header, lengthOfHeader) =>

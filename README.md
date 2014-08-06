@@ -52,7 +52,7 @@ miniLockLib.decrypt({
 })
 ```
 
-[Find more examples, and all the documentation, in the source code](https://github.com/45678/miniLockLib/blob/master/miniLockLib.coffee).
+[Find more examples, and all the documentation, in the source code](https://github.com/45678/miniLockLib/blob/master/index.coffee).
 
 __Sources__
 

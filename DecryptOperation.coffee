@@ -39,7 +39,7 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
           @name = nacl.util.encodeUTF8(nameAsBytes)
           callback(undefined, @name?, endPosition)
         else
-          callback('DecryptOperation failed to decrypt file name.')
+          callback("DecryptOperation failed to decrypt file name.")
 
   decryptData: (position, callback) ->
     @constructStreamDecryptor (error, lengthOfHeader) =>
@@ -56,7 +56,7 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
           else
             @decryptData(endPosition, callback)
         else
-          callback('DecryptOperation failed to decrypt file data.')
+          callback("DecryptOperation failed to decrypt file data.")
 
   constructStreamDecryptor: (callback) ->
     @decryptUniqueNonceAndPermit (error, uniqueNonce, permit, lengthOfHeader) =>
@@ -81,7 +81,7 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
           [uniqueNonce, permit] = returned
           callback(undefined, uniqueNonce, permit, lengthOfHeader)
         else
-          callback('File is not encrypted for this recipient')
+          callback("File is not encrypted for this recipient")
 
   findUniqueNonceAndPermit: (header) ->
     ephemeral = nacl.util.decodeBase64(header.ephemeral)

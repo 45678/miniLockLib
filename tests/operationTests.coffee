@@ -16,10 +16,10 @@ T["Encrypt a file for Alice"] = (test) ->
         test.ok encrypted.data.type is "application/minilock"
         test.ok encrypted.senderID is Alice.miniLockID
         test.done()
-        # a = document.getElementById('link_to_download')
-        # a.setAttribute('href', window.URL.createObjectURL(encrypted.data))
-        # a.setAttribute('download', encrypted.name)
-        # a.innerHTML = 'Download: '+encrypted.name
+        # a = document.getElementById("link_to_download")
+        # a.setAttribute("href", window.URL.createObjectURL(encrypted.data))
+        # a.setAttribute("download", encrypted.name)
+        # a.innerHTML = "Download: "+encrypted.name
 
 T["Alice can decrypt file that was encrypted for her"] = (test) ->
   read "alice.txt.minilock", (blob) ->
@@ -58,10 +58,10 @@ T["Encrypt a file for Alice & Bobby"] = (test) ->
         test.ok encrypted.data.type is "application/minilock"
         test.ok encrypted.senderID is Alice.miniLockID
         test.done()
-        # a = document.getElementById('link_to_download')
-        # a.setAttribute('href', window.URL.createObjectURL(encrypted.data))
-        # a.setAttribute('download', encrypted.name)
-        # a.innerHTML = 'Download: '+encrypted.name
+        # a = document.getElementById("link_to_download")
+        # a.setAttribute("href", window.URL.createObjectURL(encrypted.data))
+        # a.setAttribute("download", encrypted.name)
+        # a.innerHTML = "Download: "+encrypted.name
 
 T["Alice can decrypt file that was encrypted for Alice & Bobby"] = (test) ->
   read "alice_and_bobby.txt.minilock", (blob) ->

@@ -15,12 +15,12 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
       if dataWasEncrypted?
         @constructHeader()
         fileFormat = [
-          'miniLock'
+          "miniLock"
           @lengthOfHeaderIn4Bytes
           @headerJSONBytes
           @ciphertextBytes...
         ]
-        @end(error, new Blob fileFormat, type: 'application/minilock')
+        @end(error, new Blob fileFormat, type: "application/minilock")
       else
         @end(error)
 
@@ -44,7 +44,7 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
       @hash.update(encryptedBytes)
       @ciphertextBytes.push(encryptedBytes)
     else
-      throw 'EncryptOperation failed to encrypt file name.'
+      throw "EncryptOperation failed to encrypt file name."
 
   encryptData: (position, callback) ->
     @constructStreamEncryptor()
@@ -60,7 +60,7 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
         else
           @encryptData(position+@chunkSize, callback)
       else
-        callback 'EncryptOperation failed to encrypt file data.'
+        callback "EncryptOperation failed to encrypt file data."
 
   constructHeader: ->
     @header =
@@ -79,7 +79,7 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
     fixedLength = new Uint8Array(256)
     decodedName = nacl.util.decodeUTF8(@name)
     if decodedName.length > fixedLength.length
-      throw 'EncryptOperation file name is too long. 256-characters max please.'
+      throw "EncryptOperation file name is too long. 256-characters max please."
     fixedLength.set(decodedName)
     return fixedLength
 

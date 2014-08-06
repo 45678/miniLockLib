@@ -59,7 +59,7 @@ T["encrypt name of a file"] = (test) ->
   test.ok decryptedChunk?
   decryptedName = nacl.util.encodeUTF8(decryptedChunk)
   test.ok decryptedName.length is 256
-  test.ok decryptedName.indexOf('untitled.txt') is 0
+  test.ok decryptedName.indexOf("untitled.txt") is 0
   test.done()
 
 T["construct a permit to decrypt for a recipient"] = (test) ->
@@ -70,7 +70,7 @@ T["construct a permit to decrypt for a recipient"] = (test) ->
   test.ok permit.senderID is Alice.miniLockID
   test.ok permit.recipientID is Bobby.miniLockID
   test.ok permit.fileInfo.constructor is String
-  test.ok permit.fileInfo isnt ''
+  test.ok permit.fileInfo isnt ""
   test.done()
   
 T["recipient can decrypt the key, nonce and hash of the file encoded in their permit"] = (test) ->
@@ -82,7 +82,7 @@ T["recipient can decrypt the key, nonce and hash of the file encoded in their pe
   fileInfo = JSON.parse(nacl.util.encodeUTF8(decryptedFileInfo))
   test.ok fileInfo.fileKey?
   test.ok fileInfo.fileNonce?
-  test.ok fileInfo.fileHash is 'aSF6MHmQgJThESHQQjVKfB9VtkgsoaUeGyUN/R7Q7vk='
+  test.ok fileInfo.fileHash is "aSF6MHmQgJThESHQQjVKfB9VtkgsoaUeGyUN/R7Q7vk="
   test.done()
 
 T["header specifies version 1 of the miniLock file format"] = (test) ->
@@ -118,10 +118,10 @@ T["header for two recipients has two permits"] = (test) ->
   test.done()
 
 T["encrypt 1MB file for Alice"] = (test) ->
-  readFromNetwork '1MB.tiff', (blob) ->
+  readFromNetwork "1MB.tiff", (blob) ->
     operation = new miniLockLib.EncryptOperation
       data: blob
-      name: 'alice.1MB.tiff'
+      name: "alice.1MB.tiff"
       keys: Alice.keys
       miniLockIDs: [Alice.miniLockID]
     operation.start (error, encrypted) ->
@@ -130,13 +130,13 @@ T["encrypt 1MB file for Alice"] = (test) ->
       test.ok encrypted.name is "alice.1MB.tiff.minilock"
       test.ok encrypted.senderID is Alice.miniLockID
       test.done()
-      console.info('encrypted', encrypted.name, encrypted)
+      console.info("encrypted", encrypted.name, encrypted)
 
 T["encrypt 4MB file for Alice"] = (test) ->
-  readFromNetwork '4MB.tiff', (blob) ->
+  readFromNetwork "4MB.tiff", (blob) ->
     operation = new miniLockLib.EncryptOperation
       data: blob
-      name: 'alice.4MB.tiff'
+      name: "alice.4MB.tiff"
       keys: Alice.keys
       miniLockIDs: [Alice.miniLockID]
     operation.start (error, encrypted) ->
@@ -145,5 +145,5 @@ T["encrypt 4MB file for Alice"] = (test) ->
       test.ok encrypted.name is "alice.4MB.tiff.minilock"
       test.ok encrypted.senderID is Alice.miniLockID
       test.done()
-      console.info('encrypted', encrypted.name, encrypted)
+      console.info("encrypted", encrypted.name, encrypted)
 

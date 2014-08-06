@@ -79,7 +79,7 @@ calculateCurve25519Keys = (secret, salt, callback) ->
   r             = 8        # Block size parameter. (I don’t know about this).
   dkLen         = 32       # Length of derived keys. (A miniLock key is 32 numbers).
   interruptStep = 1000     # Steps to split calculation with timeouts (default 1000).
-  encoding      = 'base64' # Output encoding ('base64', 'hex', or null).
+  encoding      = "base64" # Output encoding ("base64", "hex", or null).
   
   # Send the task to `scrypt` for processing...
   scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding)
@@ -126,12 +126,12 @@ miniLockLib.ID.decode = (id) ->
 #
 #     miniLockLib.encrypt
 #       data: blob,
-#       name: 'alice_and_bobby.txt' 
+#       name: "alice_and_bobby.txt" 
 #       keys: {publicKey: Uint8Array, secretKey: Uint8Array}
 #       miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
 #       callback: (error, encrypted) ->
 #         error is undefined or it is a message String
-#         encrypted.name is 'alice_and_bobby.txt.minilock'
+#         encrypted.name is "alice_and_bobby.txt.minilock"
 #         encrypted.data.constructor is Blob
 #         encrypted.data.size.constructor is Number
 #         encrypted.senderID is Alice.miniLockID
@@ -143,7 +143,7 @@ miniLockLib.encrypt = (params) ->
     name: name
     keys: keys
     miniLockIDs: miniLockIDs
-    saveName: name+'.minilock'
+    saveName: name+".minilock"
     callback: callback
     start: yes
 
@@ -159,7 +159,7 @@ miniLockLib.encrypt = (params) ->
 #       keys: {publicKey: Uint8Array, secretKey: Uint8Array}
 #       callback: (error, decrypted) ->
 #         error is undefined or it is a message String
-#         decrypted.name is 'alice_and_bobby.txt'
+#         decrypted.name is "alice_and_bobby.txt"
 #         decrypted.data.constructor is Blob
 #         decrypted.data.size.constructor is Number
 #         decrypted.senderID is Alice.miniLockID
@@ -178,14 +178,14 @@ miniLockLib.decrypt = (params) ->
 # Explanations of miniLock’s numeric error codes.
 miniLockLib.ErrorMessages =
   # Encryption errors
-  1: 'General encryption error'
+  1: "General encryption error"
   # Decryption errors
-  2: 'General decryption error'
-  3: 'Could not parse header'
-  4: 'Invalid header version'
-  5: 'Could not validate sender ID'
-  6: 'File is not encrypted for this recipient'
-  7: 'Could not validate ciphertext hash'
+  2: "General decryption error"
+  3: "Could not parse header"
+  4: "Invalid header version"
+  5: "Could not validate sender ID"
+  6: "File is not encrypted for this recipient"
+  7: "Could not validate ciphertext hash"
 
 # Convert a Number to a 4-byte little-endian Uint8Array
 miniLockLib.numberToByteArray = (n) ->

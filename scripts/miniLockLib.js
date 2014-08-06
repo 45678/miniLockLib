@@ -3953,7 +3953,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             }
             this.end = __bind(this.end, this);
             this.data = params.data, this.keys = params.keys, this.callback = params.callback;
-            this.decryptedChunks = [];
+            this.decryptedBytes = [];
             DecryptOperation.__super__.constructor.call(this, params);
         }
         DecryptOperation.prototype.run = function() {
@@ -4033,13 +4033,13 @@ if (typeof module !== "undefined") module.exports = scrypt;
                     startPosition = position;
                     endPosition = position + _this.chunkSize + 4 + 16;
                     return _this.readSliceOfData(startPosition, endPosition, function(error, sliceOfBytes) {
-                        var decryptedChunk, isLast;
+                        var decryptedBytes, isLast;
                         isLast = position + sliceOfBytes.length === _this.data.size;
-                        decryptedChunk = _this.streamDecryptor.decryptChunk(sliceOfBytes, isLast);
-                        if (decryptedChunk) {
-                            _this.decryptedChunks.push(decryptedChunk);
+                        decryptedBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, isLast);
+                        if (decryptedBytes) {
+                            _this.decryptedBytes.push(decryptedBytes);
                             if (isLast) {
-                                return callback(void 0, new Blob(_this.decryptedChunks));
+                                return callback(void 0, new Blob(_this.decryptedBytes));
                             } else {
                                 return _this.decryptData(endPosition, callback);
                             }

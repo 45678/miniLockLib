@@ -1,7 +1,7 @@
 class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
   constructor: (params={}) ->
     {@data, @keys, @callback} = params
-    @decryptedChunks = []
+    @decryptedBytes = []
     super(params)
 
   run: ->
@@ -51,11 +51,11 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
       endPosition   = position+@chunkSize+4+16
       @readSliceOfData startPosition, endPosition, (error, sliceOfBytes) =>
         isLast = position+sliceOfBytes.length is @data.size
-        decryptedChunk = @streamDecryptor.decryptChunk(sliceOfBytes, isLast)
-        if decryptedChunk
-          @decryptedChunks.push(decryptedChunk)
+        decryptedBytes = @streamDecryptor.decryptChunk(sliceOfBytes, isLast)
+        if decryptedBytes
+          @decryptedBytes.push(decryptedBytes)
           if isLast
-            callback(undefined, new Blob @decryptedChunks)
+            callback(undefined, new Blob @decryptedBytes)
           else
             @decryptData(endPosition, callback)
         else

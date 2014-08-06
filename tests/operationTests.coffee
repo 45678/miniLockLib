@@ -115,7 +115,7 @@ T["Bobby can decrypt file encrypted for Alice & Bobby"] = (test) ->
         test.ok decrypted.recipientID is Bobby.miniLockID
         test.done()
 
-T["Bobby can’t decrypt file encrypted for Alices"] = (test) ->
+T["Bobby can’t decrypt file encrypted for Alice"] = (test) ->
   readFileAsBlob "basic.txt.encrypted_with_minilocklib.minilock", (error, blob) ->
     if error then return test.done(error)
     miniLockLib.decrypt

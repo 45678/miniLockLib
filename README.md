@@ -8,7 +8,7 @@ Download [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/
 
 Now you are ready to call methods on `miniLockLib` from your Javascript program...
 
-#### Examples
+*Examples*
 
 Call `getKeyPair` with `secretPhrase` and `emailAddress` to get a pair of `keys`:
 
@@ -54,7 +54,7 @@ miniLockLib.decrypt({
 
 [Find more examples, and all the documentation, in the source code](https://github.com/45678/miniLockLib/blob/master/miniLockLib.coffee).
 
-#### Sources
+*Sources*
 
 `miniLockLib` is composed of code from six dandy little projects:
 
@@ -70,7 +70,7 @@ miniLockLib.decrypt({
 
 `zxcvbn.js` is an unmodified copy of Dropbox’s [zxcvbn password strength estimator](https://github.com/dropbox/zxcvbn). `miniLockLib` uses this library to calculate the entropy present in secret phrases. 
 
-#### Digging In
+*Digging In*
 
 `npm install git+https://git@github.com/45678/miniLockLib.git` to get the source code.
 

@@ -3884,12 +3884,15 @@ if (typeof module !== "undefined") module.exports = scrypt;
             if (this.callback === void 0) {
                 throw "Can’t start operation without a callback.";
             }
+            this.startedAt = Date.now();
             return this.run();
         };
         BasicOperation.prototype.run = function() {
             return this.end();
         };
         BasicOperation.prototype.end = function(error, blob) {
+            this.endedAt = Date.now();
+            this.duration = this.endedAt - this.startedAt;
             if (error) {
                 return this.onerror(error);
             } else {
@@ -3975,7 +3978,10 @@ if (typeof module !== "undefined") module.exports = scrypt;
                 data: blob,
                 name: this.name,
                 senderID: this.permit.senderID,
-                recipientID: this.permit.recipientID
+                recipientID: this.permit.recipientID,
+                duration: this.duration,
+                startedAt: this.startedAt,
+                endedAt: this.endedAt
             });
         };
         DecryptOperation.prototype.onerror = function(error) {
@@ -4216,7 +4222,10 @@ if (typeof module !== "undefined") module.exports = scrypt;
             return this.callback(void 0, {
                 data: blob,
                 name: this.name + ".minilock",
-                senderID: miniLockLib.ID.encode(this.author.keys.publicKey)
+                senderID: miniLockLib.ID.encode(this.author.keys.publicKey),
+                duration: this.duration,
+                startedAt: this.startedAt,
+                endedAt: this.endedAt
             });
         };
         EncryptOperation.prototype.onerror = function(error) {

@@ -8,12 +8,15 @@ class miniLockLib.BasicOperation
     @callback = callback if callback?
     if @callback is undefined
       throw "Can’t start operation without a callback."
+    @startedAt = Date.now()
     @run()
   
   run: ->
     @end()
     
   end: (error, blob) =>
+    @endedAt = Date.now()
+    @duration = @endedAt - @startedAt
     if error
       @onerror(error)
     else

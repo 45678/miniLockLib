@@ -33,6 +33,9 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
       data: blob
       name: @name + ".minilock"
       senderID: miniLockLib.ID.encode(@author.keys.publicKey)
+      duration: @duration
+      startedAt: @startedAt
+      endedAt: @endedAt
     })
 
   onerror: (error) ->

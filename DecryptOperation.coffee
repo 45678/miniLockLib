@@ -21,6 +21,9 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
       name: @name
       senderID: @permit.senderID
       recipientID: @permit.recipientID
+      duration: @duration
+      startedAt: @startedAt
+      endedAt: @endedAt
     })
 
   onerror: (error) ->

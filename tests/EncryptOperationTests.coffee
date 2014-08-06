@@ -1,7 +1,6 @@
-Alice = window.testFixtures.Alice
-Bobby = window.testFixtures.Bobby
+window.testCases.push(T={})
 
-T = window.EncryptOperationTests = {}
+{Alice, Bobby, read, readFromNetwork} = window.testFixtures
 
 T["construct a blank encrypt operation"] = (test) ->
   operation = new miniLockLib.EncryptOperation
@@ -118,23 +117,33 @@ T["header for two recipients has two permits"] = (test) ->
   test.ok Object.keys(operation.header.decryptInfo).length is 2
   test.done()
 
-T["encrypt a blob"] = (test) ->
-  Alice = window.testFixtures.Alice
-  operation = new miniLockLib.EncryptOperation
-    data: new Blob ["This is only a test!"], type: 'text/plain'
-    name: "untitled.txt"
-    keys: Alice.keys
-    miniLockIDs: [Alice.miniLockID]
+T["encrypt 1MB file for Alice"] = (test) ->
+  readFromNetwork '1MB.tiff', (blob) ->
+    operation = new miniLockLib.EncryptOperation
+      data: blob
+      name: 'alice.1MB.tiff'
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
+    operation.start (error, encrypted) ->
+      if error? then return test.done(error)
+      test.ok encrypted.data.size is 1049788
+      test.ok encrypted.name is "alice.1MB.tiff.minilock"
+      test.ok encrypted.senderID is Alice.miniLockID
+      test.done()
+      console.info('encrypted', encrypted.name, encrypted)
 
-  operation.start (error, encrypted) ->
-    return test.done(error) if error?
-    test.same encrypted.name, "untitled.txt.minilock"
-    test.ok encrypted.data.constructor is Blob
-    test.ok encrypted.data.size is 962
-    test.ok encrypted.data.type is "application/minilock"
-    test.ok encrypted.senderID is Alice.miniLockID
-    test.done()
-    # a = document.getElementById('link_to_download')
-    # a.setAttribute('href', window.URL.createObjectURL(encrypted.data))
-    # a.setAttribute('download', encrypted.name)
-    # a.innerHTML = 'Download: '+encrypted.name
+T["encrypt 4MB file for Alice"] = (test) ->
+  readFromNetwork '4MB.tiff', (blob) ->
+    operation = new miniLockLib.EncryptOperation
+      data: blob
+      name: 'alice.4MB.tiff'
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
+    operation.start (error, encrypted) ->
+      if error? then return test.done(error)
+      test.ok encrypted.data.size is 4195768
+      test.ok encrypted.name is "alice.4MB.tiff.minilock"
+      test.ok encrypted.senderID is Alice.miniLockID
+      test.done()
+      console.info('encrypted', encrypted.name, encrypted)
+

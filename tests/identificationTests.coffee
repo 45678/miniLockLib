@@ -1,7 +1,6 @@
-Alice = window.testFixtures.Alice
-Bobby = window.testFixtures.Bobby
+window.testCases.push(T={})
 
-T = window.identificationTests = {}
+{Alice, Bobby} = window.testFixtures
 
 T["Alice’s ID is acceptable"] = (test) ->
   test.same miniLockLib.ID.isAcceptable(Alice.miniLockID), true

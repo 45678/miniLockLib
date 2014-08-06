@@ -1,3 +1,4 @@
+window.testCases = []
 window.testFixtures = {}
 
 Alice = window.testFixtures.Alice = {}
@@ -16,11 +17,37 @@ Bobby.publicKey    = Base58.decode('GqNFkqGZv1dExFGTZLmhiqqbBUcoDarD9e1nwTFgj9zn
 Bobby.secretKey    = Base58.decode('A699ac6jesP643rkM71jAxs33wY9mk6VoYDQrG9B3Kw7')
 Bobby.keys         = {publicKey: Bobby.publicKey, secretKey: Bobby.secretKey}
 
-window.testFixtures.readFileAsBlob = (name, callback) ->
+read = window.testFixtures.read = (name, callback) ->
+  read.files[name] (error, processed) -> 
+    if error then throw error
+    callback(processed.data)
+
+read.files = 
+  "basic.txt": (callback) ->
+    callback undefined,
+      data: new Blob ["This is only a test!"], type: "text/plain"
+      name: "basic.txt"
+  "alice.txt.minilock": (callback) ->
+    miniLockLib.encrypt
+      data: new Blob ["This is only a test!"], type: "text/plain"
+      name: "alice.txt"
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
+      callback: callback
+  "alice_and_bobby.txt.minilock": (callback) ->
+    miniLockLib.encrypt
+      data: new Blob ["This is only a test!"], type: "text/plain"
+      name: "alice_and_bobby.txt"
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
+      callback: callback
+
+readFromNetwork = window.testFixtures.readFromNetwork = (name, callback) ->
   request = new XMLHttpRequest
   request.open "GET", "/tests/_fixtures/" + name, true
   request.responseType = "blob"
   request.onreadystatechange = (event) ->
     if request.readyState is 4
-      callback undefined, request.response
+      callback request.response
   request.send()
+

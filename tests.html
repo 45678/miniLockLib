@@ -16,14 +16,7 @@
   <body>
     <h1 id="nodeunit-header">miniLockLib Tests</h1>
     <script>
-      nodeunit.run({
-        '1': this.acceptabilityTests,
-        '2': this.identificationTests,
-        '3': this.keyPairTests,
-        '4': this.operationTests,
-        '5': this.EncryptOperationTests,
-        '6': this.DecryptOperationTests
-      });
+			nodeunit.run(window.testCases)
     </script>
 		<a id="link_to_download"></a>
   </body>

@@ -1,7 +1,6 @@
-Alice = window.testFixtures.Alice
-Bobby = window.testFixtures.Bobby
+window.testCases.push(T={})
 
-T = window.acceptabilityTests = {}
+{Alice, Bobby} = window.testFixtures
 
 T["Alice’s secret phrase is acceptable"] = (test) ->
   test.ok miniLockLib.secretPhraseIsAcceptable(Alice.secretPhrase)

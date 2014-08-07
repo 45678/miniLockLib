@@ -1,23 +1,127 @@
 <html>
-  <head>
-		<meta charset="utf-8">
-    <title>miniLockLib Tests</title>
-		<link rel="stylesheet" href="node_modules/nodeunit/share/nodeunit.css">
-		<script src="node_modules/nodeunit/examples/browser/nodeunit.js"></script>
-    <script src="scripts/miniLockLib.js"></script>
-    <script src="tests/_compiled/_fixtures.js"></script>
-    <script src="tests/_compiled/acceptabilityTests.js"></script>
-    <script src="tests/_compiled/identificationTests.js"></script>
-    <script src="tests/_compiled/keyPairTests.js"></script>
-    <script src="tests/_compiled/operationTests.js"></script>
-    <script src="tests/_compiled/EncryptOperationTests.js"></script>
-    <script src="tests/_compiled/DecryptOperationTests.js"></script>
-  </head>
+  <meta charset="utf-8">
+  <title>miniLockLib Tests</title>
+  <style type="text/css" media="screen">
+    body, header, h1, div, pre { margin: 0; padding: 0; position:relative; }
+    body, body * { font: 15px/20px Consolas, monospace; }
+    body {
+      background-color:hsl(0, 0%, 33%);
+      margin: 5px 5px 45px;
+    }
+    
+    footer {
+      position: fixed;
+      padding: 10px;
+      bottom: 0; left: 0; right: 0;
+      background: black;
+      color: white;
+      height: 20px;
+    }
+    
+    #summary {
+      position: absolute;
+      left: 110px;
+    }
+    
+    body #running,
+    body #done {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+    }
+    
+    body.running #running {
+      visibility: visible;
+      transition: visibility 0s linear 0s;
+    }
+
+    body.stopped #running {
+      visibility: hidden;
+      transition: visibility 0s linear 100ms;
+    }
+    
+    body #done {
+      visibility: hidden;
+      transition: visibility 0s linear 0s;
+    }
+
+    body.stopped #done {
+      visibility: visible;
+      transition: visibility 0s linear 100ms;
+    }
+    
+    div.test {
+      z-index: -1;
+      padding: 5px;
+      margin: 1px;
+    }
+    div.test          { background-color:hsl(000, 00%, 55%); }
+    div.test.started  { background-color:hsl(055, 66%, 66%); }
+    div.test.ok       { background-color:hsl(135, 45%, 60%); }
+    div.test.failed   { background-color:hsl(350, 66%, 66%); }
+    
+    div.failure pre {
+      margin-top: 20px;
+    }
+    
+    div.id {
+      position: absolute;
+      left: 5px;
+      top: 5px;
+      opacity: 0.5;
+    }
+
+    div.duration {
+      position: absolute;
+      left: 50px;
+      top: 5px;
+      opacity: 0.5;
+    }
+
+    div.name_and_assertions {
+      padding-left: 100px;
+    }
+
+    div.test div.name_and_assertions {
+      opacity: 0.5;
+    }
+    div.test.started div.name_and_assertions,
+    div.test.ok div.name_and_assertions,
+    div.test.failed div.name_and_assertions {
+      opacity: 1;
+    }
+    
+    span.assertions {
+      margin-left: 5px;
+    }
+
+    b.assertion {
+      margin: 0px 2px;
+    }
+  </style>
   <body>
-    <h1 id="nodeunit-header">miniLockLib Tests</h1>
-    <script>
-			nodeunit.run(window.testCases)
-    </script>
-		<a id="link_to_download"></a>
+    <footer>
+      <em id="running">Running...</em>
+      <em id="done">Done.</em>
+      <div id="summary"><b id="number_of_tests">No</b> tests completed. <b id="number_of_failed_tests">No</b> tests failed.</div>
+      <a id="link_to_download"></a>
+    </footer>
+    <div id="templates" hidden>
+      <div id="test_template" class="test">
+        <div class="name_and_assertions"><span class="name"></span><span class="assertions"></span></div>
+        <div class="id"></div>
+        <div class="duration"></div>
+      </div>
+      <b id="assertion_template" class="assertion">•</b>
+      <div id="failure_template" class="failure">
+        <pre class="received">Received: </pre>
+        <pre class="expected">Expected: </pre>
+        <pre class="at"></pre>
+        <pre class="error_stack"></pre>
+      </div>
+    </div>
+    
   </body>
+  <script src="scripts/miniLockLib.js"></script>
+  <script src="scripts/miniLockLib_tests.js"></script>
 </html>

@@ -1,8 +1,8 @@
-window.testCases.push(T={})
+{Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
 
-{Alice, Bobby, read} = window.testFixtures
+tape "Operation Tests", (test) -> test.end()
 
-T["Encrypt a file for Alice"] = (test) ->
+tape "Encrypt a file for Alice", (test) ->
   read "basic.txt", (blob) ->
     miniLockLib.encrypt
       data: blob
@@ -10,41 +10,41 @@ T["Encrypt a file for Alice"] = (test) ->
       keys: Alice.keys
       miniLockIDs: [Alice.miniLockID]
       callback: (error, encrypted) ->
-        if error? then return test.done(error)
+        if error? then return test.end(error)
         test.ok encrypted.name is "alice.txt.minilock"
         test.ok encrypted.data.size is 962
         test.ok encrypted.data.type is "application/minilock"
         test.ok encrypted.senderID is Alice.miniLockID
-        test.done()
+        test.end()
         # a = document.getElementById("link_to_download")
         # a.setAttribute("href", window.URL.createObjectURL(encrypted.data))
         # a.setAttribute("download", encrypted.name)
         # a.innerHTML = "Download: "+encrypted.name
 
-T["Alice can decrypt file that was encrypted for her"] = (test) ->
+tape "Alice can decrypt file that was encrypted for her", (test) ->
   read "alice.txt.minilock", (blob) ->
     miniLockLib.decrypt
       data: blob
       keys: Alice.keys
       callback: (error, decrypted) ->
-        if error then return test.done(error)
+        if error then return test.end(error)
         test.ok decrypted.data.size is 20
         test.ok decrypted.name is "alice.txt"
         test.ok decrypted.senderID is Alice.miniLockID
         test.ok decrypted.recipientID is Alice.miniLockID
-        test.done()
+        test.end()
 
-T["Bobby can’t decrypt file that was only encrypted for Alice"] = (test) ->
+tape "Bobby can’t decrypt file that was only encrypted for Alice", (test) ->
   read "alice.txt.minilock", (blob) ->
     miniLockLib.decrypt
       data: blob
       keys: Bobby.keys
       callback: (error, decrypted) ->
-        test.ok error is "File is not encrypted for this recipient"
-        test.ok decrypted is undefined
-        test.done()
+        test.equal "File is not encrypted for this recipient", error
+        test.equal undefined, decrypted
+        test.end()
 
-T["Encrypt a file for Alice & Bobby"] = (test) ->
+tape "Encrypt a file for Alice & Bobby", (test) ->
   read "basic.txt", (blob) ->
     miniLockLib.encrypt
       data: blob
@@ -52,39 +52,39 @@ T["Encrypt a file for Alice & Bobby"] = (test) ->
       keys: Alice.keys
       miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
       callback: (error, encrypted) ->
-        if error? then return test.done(error)
-        test.ok encrypted.name is "alice_and_bobby.txt.minilock"
-        test.ok encrypted.data.size is 1508
-        test.ok encrypted.data.type is "application/minilock"
-        test.ok encrypted.senderID is Alice.miniLockID
-        test.done()
+        if error then return test.end(error)
+        test.equal encrypted.name, "alice_and_bobby.txt.minilock"
+        test.equal encrypted.data.size, 1508
+        test.equal encrypted.data.type, "application/minilock"
+        test.equal encrypted.senderID, Alice.miniLockID
+        test.end()
         # a = document.getElementById("link_to_download")
         # a.setAttribute("href", window.URL.createObjectURL(encrypted.data))
         # a.setAttribute("download", encrypted.name)
         # a.innerHTML = "Download: "+encrypted.name
 
-T["Alice can decrypt file that was encrypted for Alice & Bobby"] = (test) ->
+tape "Alice can decrypt file that was encrypted for Alice & Bobby", (test) ->
   read "alice_and_bobby.txt.minilock", (blob) ->
     miniLockLib.decrypt
       data: blob
       keys: Alice.keys
       callback: (error, decrypted) ->
-        if error then return test.done(error)
+        if error then return test.end(error)
         test.ok decrypted.data.size is 20
         test.ok decrypted.name is "alice_and_bobby.txt"
         test.ok decrypted.senderID is Alice.miniLockID
         test.ok decrypted.recipientID is Alice.miniLockID
-        test.done()
+        test.end()
 
-T["Bobby can decrypt file that was encrypted for Alice & Bobby"] = (test) ->
+tape "Bobby can decrypt file that was encrypted for Alice & Bobby", (test) ->
   read "alice_and_bobby.txt.minilock", (blob) ->
     miniLockLib.decrypt
       data: blob
       keys: Bobby.keys
       callback: (error, decrypted) ->
-        if error then return test.done(error)
+        if error then return test.end(error)
         test.ok decrypted.data.size is 20
         test.ok decrypted.name is "alice_and_bobby.txt"
         test.ok decrypted.senderID is Alice.miniLockID
         test.ok decrypted.recipientID is Bobby.miniLockID
-        test.done()
+        test.end()

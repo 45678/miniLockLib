@@ -1,66 +1,69 @@
-window.testCases.push(T={})
 
-{Alice, Bobby} = window.testFixtures
 
-T["Alice’s ID is acceptable"] = (test) ->
+
+{Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
+
+tape "Identification Tests", (test) -> test.end()
+
+tape "Alice’s ID is acceptable", (test) ->
   test.same miniLockLib.ID.isAcceptable(Alice.miniLockID), true
-  test.done()
+  test.end()
 
-T["Bobby’s ID is acceptable"] = (test) ->
+tape "Bobby’s ID is acceptable", (test) ->
   test.same miniLockLib.ID.isAcceptable(Alice.miniLockID), true
-  test.done()
+  test.end()
 
-T["Undefined ID is unacceptable"] = (test) ->
+tape "Undefined ID is unacceptable", (test) ->
   test.same miniLockLib.ID.isAcceptable(`undefined`), false
-  test.done()
+  test.end()
 
-T["Blank ID is unacceptable"] = (test) ->
+tape "Blank ID is unacceptable", (test) ->
   test.same miniLockLib.ID.isAcceptable(""), false
   test.same miniLockLib.ID.isAcceptable(" "), false
   test.same miniLockLib.ID.isAcceptable("  "), false
-  test.done()
+  test.end()
 
-T["Truncated ID is unacceptable"] = (test) ->
+tape "Truncated ID is unacceptable", (test) ->
   test.same miniLockLib.ID.isAcceptable(Alice.miniLockID.slice(0, -1)), false
   test.same miniLockLib.ID.isAcceptable(Alice.miniLockID.slice(1)), false
-  test.done()
+  test.end()
 
-T["ID with extra characters is unacceptable"] = (test) ->
+tape "ID with extra characters is unacceptable", (test) ->
   test.same miniLockLib.ID.isAcceptable(Alice.miniLockID + "A"), false
   test.same miniLockLib.ID.isAcceptable("A" + Alice.miniLockID), false
-  test.done()
+  test.end()
 
-T["Decode public key from Alice’s ID"] = (test) ->
+tape "Decode public key from Alice’s ID", (test) ->
   publicKey = miniLockLib.ID.decode(Alice.miniLockID)
   test.same publicKey, Alice.publicKey
-  test.done()
+  test.end()
 
-T["Decode public key from Bobby’s ID"] = (test) ->
+tape "Decode public key from Bobby’s ID", (test) ->
   publicKey = miniLockLib.ID.decode(Bobby.miniLockID)
   test.same publicKey, Bobby.publicKey
-  test.done()
+  test.end()
 
-T["Make ID for Alice’s public key"] = (test) ->
+tape "Make ID for Alice’s public key", (test) ->
   miniLockID = miniLockLib.ID.encode(Alice.publicKey)
   test.same miniLockID, Alice.miniLockID
-  test.done()
+  test.end()
 
-T["Make ID for Bobby’s public key"] = (test) ->
+tape "Make ID for Bobby’s public key", (test) ->
   miniLockID = miniLockLib.ID.encode(Alice.publicKey)
   test.same miniLockID, Alice.miniLockID
-  test.done()
+  test.end()
 
-T["Can’t make ID for undefined key"] = (test) ->
+tape "Can’t make ID for undefined key", (test) ->
   miniLockID = miniLockLib.ID.encode(`undefined`)
   test.same miniLockID, `undefined`
-  test.done()
+  test.end()
 
-T["Can’t make ID for key that is too short"] = (test) ->
+tape "Can’t make ID for key that is too short", (test) ->
   miniLockID = miniLockLib.ID.encode(new Uint8Array(16))
   test.same miniLockID, `undefined`
-  test.done()
+  test.end()
 
-T["Can’t make ID for key that is too long"] = (test) ->
+tape "Can’t make ID for key that is too long", (test) ->
   miniLockID = miniLockLib.ID.encode(new Uint8Array(64))
   test.same miniLockID, `undefined`
-  test.done()
+  test.end()

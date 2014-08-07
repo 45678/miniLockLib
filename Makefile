@@ -1,4 +1,4 @@
-default: scripts/miniLockLib.js tests
+default: scripts/miniLockLib.js scripts/miniLockLib_tests.js
 
 scripts/miniLockLib.js: index.coffee BasicOperation.coffee DecryptOperation.coffee EncryptOperation.coffee lib/Base58.js lib/BLAKE2s.js lib/nacl.js lib/nacl-stream.js lib/scrypt-async.js lib/zxcvbn.js
 	# Compile source to Javascript in `lib`.
@@ -16,6 +16,16 @@ scripts/miniLockLib.js: index.coffee BasicOperation.coffee DecryptOperation.coff
 	  lib/EncryptOperation.js \
 	  --beautify --screw-ie8 \
 	  > scripts/miniLockLib.js
+
+scripts/miniLockLib_tests.js: tests/%.coffee 
+	# Compile CoffeeScript tests to Javascript in `tests/_compiled`.
+	coffee --output tests/_compiled --compile tests/*.coffee
+	# Combine all the compiled Javascript tests to create miniLockLib_tests.js in `scripts`.
+	# browserify tests/_compiled/*.js --require miniLockLib/tests --outFile scripts/miniLockLib_tests.js
+	browserify tests/_compiled/*.js > scripts/miniLockLib_tests.js
+
+tests/%.coffee:
+	# This is the wildcard yo.
 
 lib/Base58.js:
 	# Download bs58.js. Modify it to work in a window or a worker. And then rename
@@ -59,10 +69,6 @@ lib/zxcvbn.js:
 	# Make a copy of zxcvbn.js in `lib`.
 	cat node_modules/zxcvbn/zxcvbn.js \
 	  > lib/zxcvbn.js
-
-tests: tests/*.coffee
-	# Compile all tests to Javascript in `tests/_compiled`
-	coffee --compile --output tests/_compiled tests/*.coffee
 
 clean:
 	rm -f lib/*.js

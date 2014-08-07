@@ -1,47 +1,48 @@
-window.testCases.push(T={})
+{Alice, Bobby, tape} = require "./_fixtures"
 
-{Alice, Bobby} = window.testFixtures
+tape "Acceptability Tests", (test) -> test.end()
 
-T["Alice’s secret phrase is acceptable"] = (test) ->
+tape "Alice’s secret phrase is acceptable", (test) ->
   test.ok miniLockLib.secretPhraseIsAcceptable(Alice.secretPhrase)
-  test.done()
+  test.end()
 
-T["Bobby’s secret phrase is acceptable"] = (test) ->
+tape "Bobby’s secret phrase is acceptable", (test) ->
   test.ok miniLockLib.secretPhraseIsAcceptable(Bobby.secretPhrase)
-  test.done()
+  test.end()
 
-T["Undefined secret phrase is unacceptable"] = (test) ->
-  test.same miniLockLib.secretPhraseIsAcceptable(`undefined`), false
-  test.done()
+tape "Undefined secret phrase is unacceptable", (test) ->
+  test.same miniLockLib.secretPhraseIsAcceptable(undefined), false
+  test.end()
 
-T["Empty secret phrase is unacceptable"] = (test) ->
+tape "Empty secret phrase is unacceptable", (test) ->
   test.same miniLockLib.secretPhraseIsAcceptable(""), false
-  test.done()
+  test.end()
 
-T["Blank secret phrase is unacceptable"] = (test) ->
+tape "Blank secret phrase is unacceptable", (test) ->
   test.same miniLockLib.secretPhraseIsAcceptable("  "), false
-  test.done()
+  test.end()
 
-T["Short secret phrase is unacceptable"] = (test) ->
+tape "Short secret phrase is unacceptable", (test) ->
   test.same miniLockLib.secretPhraseIsAcceptable("My password is password"), false
-  test.done()
+  test.end()
 
-T["Alice’s email address is acceptable"] = (test) ->
+tape "Alice’s email address is acceptable", (test) ->
   test.ok miniLockLib.emailAddressIsAcceptable(Alice.emailAddress)
-  test.done()
+  test.end()
 
-T["Bobby’s email address is acceptable"] = (test) ->
+tape "Bobby’s email address is acceptable", (test) ->
   test.ok miniLockLib.emailAddressIsAcceptable(Bobby.emailAddress)
-  test.done()
+  test.end()
 
-T["Empty email address is unacceptable"] = (test) ->
+tape "Empty email address is unacceptable", (test) ->
   test.same miniLockLib.emailAddressIsAcceptable(""), false
-  test.done()
+  test.end()
 
-T["Blank email address is unacceptable"] = (test) ->
+tape "Blank email address is unacceptable", (test) ->
   test.same miniLockLib.emailAddressIsAcceptable("  "), false
-  test.done()
+  test.end()
 
-T["Undefined email address is unacceptable"] = (test) ->
-  test.same miniLockLib.emailAddressIsAcceptable(`undefined`), false
-  test.done()
+tape "Undefined email address is unacceptable", (test) ->
+  test.same miniLockLib.emailAddressIsAcceptable(undefined), false
+  test.end()
+

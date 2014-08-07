@@ -17,7 +17,6 @@
     "browserify": "^5.9.1",
     "coffee-script": "^1.7.1",
     "nacl-stream": "git+ssh://git@github.com:dchest/nacl-stream-js.git",
-    "nodeunit": "^0.9.0",
     "scrypt": "^3.0.1",
     "tape": "^2.14.0",
     "tweetnacl": "^0.11.0",

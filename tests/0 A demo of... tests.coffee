@@ -1,6 +1,6 @@
-{Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
+{Alice, Bobby, read, tape} = require "./_fixtures"
 
-tape "Operations", (test) -> test.end()
+tape "A demo of miniLockLib.encrypt & miniLockLib.decrypt", (test) -> test.end()
 
 tape "Encrypt a file for Alice", (test) ->
   read "basic.txt", (blob) ->

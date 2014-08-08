@@ -30,14 +30,14 @@ read.files =
       name: "alice.txt"
       keys: Alice.keys
       miniLockIDs: [Alice.miniLockID]
-      callback: callback
+      'callback': callback
   "alice_and_bobby.txt.minilock": (callback) ->
     miniLockLib.encrypt
       data: new Blob ["This is only a test!"], type: "text/plain"
       name: "alice_and_bobby.txt"
       keys: Alice.keys
       miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
-      callback: callback
+      'callback': callback
 
 readFromNetwork = exports.readFromNetwork = (name, callback) ->
   request = new XMLHttpRequest
@@ -48,7 +48,7 @@ readFromNetwork = exports.readFromNetwork = (name, callback) ->
       callback request.response
   request.send()
 
-exports.tape = require("tape").createHarness()
+exports.tape = window.tape.createHarness()
 testTemplate = document.getElementById("test_template")
 failureTemplate = document.getElementById("failure_template")
 assertionTemplate = document.getElementById("assertion_template")

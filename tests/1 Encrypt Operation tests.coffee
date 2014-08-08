@@ -150,33 +150,3 @@ tape "header for two recipients has two permits", (test) ->
   test.ok Object.keys(operation.header.decryptInfo).length is 2
   test.end()
 
-tape "encrypt 1MB file for Alice", (test) ->
-  readFromNetwork "1MB.tiff", (blob) ->
-    operation = new miniLockLib.EncryptOperation
-      data: blob
-      name: "alice.1MB.tiff"
-      keys: Alice.keys
-      miniLockIDs: [Alice.miniLockID]
-    operation.start (error, encrypted) ->
-      if error? then return test.end(error)
-      test.ok encrypted.data.size is 1049788
-      test.ok encrypted.name is "alice.1MB.tiff.minilock"
-      test.ok encrypted.senderID is Alice.miniLockID
-      test.end()
-      console.info("encrypted", encrypted.name, encrypted)
-
-tape "encrypt 4MB file for Alice", (test) ->
-  readFromNetwork "4MB.tiff", (blob) ->
-    operation = new miniLockLib.EncryptOperation
-      data: blob
-      name: "alice.4MB.tiff"
-      keys: Alice.keys
-      miniLockIDs: [Alice.miniLockID]
-    operation.start (error, encrypted) ->
-      if error? then return test.end(error)
-      test.ok encrypted.data.size is 4195768
-      test.ok encrypted.name is "alice.4MB.tiff.minilock"
-      test.ok encrypted.senderID is Alice.miniLockID
-      test.end()
-      console.info("encrypted", encrypted.name, encrypted)
-

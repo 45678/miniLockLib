@@ -1,5 +1,3 @@
-
-
 {Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
 
 tape "DecryptOperation", (test) -> test.end()
@@ -120,30 +118,3 @@ tape "decrypt file name", (test) ->
       test.ok positionOfLastNameByte is 922
       test.end(error)
 
-tape "decrypt 1MB file for Alice", (test) ->
-  readFromNetwork "1MB.tiff.for.Alice.minilock", (blob) ->
-    operation = new miniLockLib.DecryptOperation
-      data: blob
-      keys: Alice.keys
-    operation.start (error, decrypted) ->
-      if error? then return test.end(error)
-      test.ok decrypted.data.size is 1048826
-      test.ok decrypted.name is "1MB.tiff"
-      test.ok decrypted.senderID is Alice.miniLockID
-      test.ok decrypted.recipientID is Alice.miniLockID
-      test.end()
-      console.info("decrypted", decrypted.name, decrypted)
-
-tape "decrypt 4MB file for Alice", (test) ->
-  readFromNetwork "4MB.tiff.for.Alice.minilock", (blob) ->
-    operation = new miniLockLib.DecryptOperation
-      data: blob
-      keys: Alice.keys
-    operation.start (error, decrypted) ->
-      if error? then return test.end(error)
-      test.ok decrypted.data.size is 4194746
-      test.ok decrypted.name is "4MB.tiff"
-      test.ok decrypted.senderID is Alice.miniLockID
-      test.ok decrypted.recipientID is Alice.miniLockID
-      test.end()
-      console.info("decrypted", decrypted.name, decrypted)

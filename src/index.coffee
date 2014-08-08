@@ -1,10 +1,15 @@
-Base58  = this.Base58
-BLAKE2s = this.BLAKE2s
-nacl    = this.nacl
-scrypt  = this.scrypt
-zxcvbn  = this.zxcvbn
+miniLockLib = module.exports = {}
 
-miniLockLib = this.miniLockLib = {}
+miniLockLib.Base58 = Base58  = require("./Base58")
+miniLockLib.BLAKE2s          = require("./BLAKE2s")
+miniLockLib.NACL = NACL      = require("./NACL")
+miniLockLib.scrypt = scrypt  = require("./scrypt-async")
+miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")
+
+miniLockLib.EncryptOperation = require("./EncryptOperation")
+miniLockLib.DecryptOperation = require("./DecryptOperation")
+
+
 
 
 # --------------
@@ -55,8 +60,8 @@ EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i
 #
 miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
   # Decode each input into a Uint8Array of bytes.
-  decodedSecretPhrase = nacl.util.decodeUTF8(secretPhrase)
-  decodedEmailAddress = nacl.util.decodeUTF8(emailAddress)
+  decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
+  decodedEmailAddress = NACL.util.decodeUTF8(emailAddress)
   
   # Create a hash digest of the decoded secret phrase.
   # (Why? Because the miniLock specification says so.)
@@ -70,8 +75,8 @@ miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
 calculateCurve25519Keys = (secret, salt, callback) ->
   # Decode and unpack the keys when the task is complete.
   whenKeysAreReady = (encodedBytes) ->
-    decodedBytes = nacl.util.decodeBase64(encodedBytes)
-    keys = nacl.box.keyPair.fromSecretKey(decodedBytes)
+    decodedBytes = NACL.util.decodeBase64(encodedBytes)
+    keys = NACL.box.keyPair.fromSecretKey(decodedBytes)
     callback(keys)
   
   # Define miniLock `scrypt` parameters for the calculation task:
@@ -206,7 +211,7 @@ miniLockLib.byteArrayToNumber = (byteArray) ->
 
 # Construct a BLAKE2 hash digest of `input`. Specify digest `length` as a `Number`.
 BLAKE2HashDigest = (input, options={}) ->
-  hash = new BLAKE2s(options.length)
+  hash = new miniLockLib.BLAKE2s(options.length)
   hash.update(input)
   hash.digest()
 

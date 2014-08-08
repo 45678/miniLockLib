@@ -1,4 +1,6 @@
-class miniLockLib.BasicOperation
+class BasicOperation
+  module.exports = this
+  
   chunkSize: 1024 * 1024
 
   end: (error, blob) ->

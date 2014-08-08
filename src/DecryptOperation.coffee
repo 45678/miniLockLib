@@ -1,4 +1,11 @@
-class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
+BasicOperation = require("./BasicOperation")
+NACL = require("./NACL")
+
+{encodeUTF8, decodeBase64} = NACL.util
+
+class DecryptOperation extends BasicOperation
+  module.exports = this
+  
   constructor: (params={}) ->
     {@data, @keys, @callback} = params
     @decryptedBytes = []
@@ -25,7 +32,7 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
 
   end: (error, blob) ->
     @streamDecryptor.clean() if @streamDecryptor?
-    miniLockLib.BasicOperation::end.call(this, error, blob)
+    BasicOperation::end.call(this, error, blob)
   
   oncomplete: (blob) ->
     @callback(undefined, {
@@ -51,7 +58,7 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
         fixedLengthNameAsBytes = @streamDecryptor.decryptChunk(sliceOfBytes, no)
         if fixedLengthNameAsBytes
           nameAsBytes = (byte for byte in fixedLengthNameAsBytes when byte isnt 0)
-          @name = nacl.util.encodeUTF8(nameAsBytes)
+          @name = encodeUTF8(nameAsBytes)
           callback(undefined, @name?, endPosition)
         else
           callback("DecryptOperation failed to decrypt file name.")
@@ -80,7 +87,7 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
         @permit = permit
         @fileKey = permit.fileInfo.fileKey
         @fileNonce = permit.fileInfo.fileNonce
-        @streamDecryptor = nacl.stream.createDecryptor(@fileKey, @fileNonce, @chunkSize)
+        @streamDecryptor = NACL.stream.createDecryptor(@fileKey, @fileNonce, @chunkSize)
         @constructStreamDecryptor = (callback) -> callback(undefined, lengthOfHeader)
         @constructStreamDecryptor(callback)
       else
@@ -99,20 +106,20 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
           callback("File is not encrypted for this recipient")
 
   findUniqueNonceAndPermit: (header) ->
-    ephemeral = nacl.util.decodeBase64(header.ephemeral)
+    ephemeral = decodeBase64(header.ephemeral)
     for encodedUniqueNonce, encodedEncryptedPermit of header.decryptInfo
-      uniqueNonce = nacl.util.decodeBase64(encodedUniqueNonce)
-      decodedEncryptedPermit = nacl.util.decodeBase64(encodedEncryptedPermit)
+      uniqueNonce = decodeBase64(encodedUniqueNonce)
+      decodedEncryptedPermit = decodeBase64(encodedEncryptedPermit)
       permit = @decryptPermit(decodedEncryptedPermit, uniqueNonce, ephemeral)
       if permit then return [uniqueNonce, permit]
     return undefined
   
   decryptPermit: (decodedEncryptedPermit, uniqueNonce, ephemeral) ->
-    decryptedPermitAsBytes = nacl.box.open(decodedEncryptedPermit, uniqueNonce, ephemeral, @keys.secretKey)
+    decryptedPermitAsBytes = NACL.box.open(decodedEncryptedPermit, uniqueNonce, ephemeral, @keys.secretKey)
     if decryptedPermitAsBytes
-      decryptedPermitAsString = nacl.util.encodeUTF8(decryptedPermitAsBytes)
+      decryptedPermitAsString = encodeUTF8(decryptedPermitAsBytes)
       decryptedPermit = JSON.parse(decryptedPermitAsString)
-      decodedEncryptedFileInfo = nacl.util.decodeBase64(decryptedPermit.fileInfo)
+      decodedEncryptedFileInfo = decodeBase64(decryptedPermit.fileInfo)
       senderPublicKey = miniLockLib.ID.decode(decryptedPermit.senderID)
       decryptedPermit.fileInfo = @decryptFileInfo(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey)
       return decryptedPermit
@@ -120,14 +127,14 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
       return undefined
   
   decryptFileInfo: (decodedEncryptedFileInfo, uniqueNonce, senderPublicKey) ->
-    decryptedFileInfoAsBytes = nacl.box.open(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey, @keys.secretKey)
+    decryptedFileInfoAsBytes = NACL.box.open(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey, @keys.secretKey)
     if (decryptedFileInfoAsBytes)
-      decryptedFileInfoAsString = nacl.util.encodeUTF8(decryptedFileInfoAsBytes)
+      decryptedFileInfoAsString = encodeUTF8(decryptedFileInfoAsBytes)
       decryptedFileInfo = JSON.parse(decryptedFileInfoAsString)
       return {
         fileHash:  decryptedFileInfo.fileHash
-        fileKey:   nacl.util.decodeBase64(decryptedFileInfo.fileKey)
-        fileNonce: nacl.util.decodeBase64(decryptedFileInfo.fileNonce)
+        fileKey:   decodeBase64(decryptedFileInfo.fileKey)
+        fileNonce: decodeBase64(decryptedFileInfo.fileNonce)
       }
       return decryptedFileInfo
     else
@@ -138,7 +145,7 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
       if error then return callback(error)
       @readSliceOfData 12, lengthOfHeader+12, (error, sliceOfBytes) =>
         if error then return callback(error)
-        headerAsString = nacl.util.encodeUTF8(sliceOfBytes)
+        headerAsString = encodeUTF8(sliceOfBytes)
         header = JSON.parse(headerAsString)
         callback(undefined, header, lengthOfHeader)
 

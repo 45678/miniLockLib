@@ -4,7 +4,7 @@
   "description": "Do miniLock file encryption operations on a web page of your own.",
   "main": "scripts/miniLockLib.js",
   "scripts": {
-    "start": "make && wr make *.coffee tests/*.coffee",
+    "start": "make && wr make src/*.coffee tests/*.coffee",
     "test": "make && open -a 'Google Chrome' http://minilocklib.dev/tests.html"
   },
   "repository": {
@@ -16,12 +16,12 @@
   "devDependencies": {
     "browserify": "^5.9.1",
     "coffee-script": "^1.7.1",
-    "nacl-stream": "git+ssh://git@github.com:dchest/nacl-stream-js.git",
-    "scrypt": "^3.0.1",
     "tape": "^2.14.0",
-    "tweetnacl": "^0.11.0",
-    "uglify-js": "^2.4.15",
-    "wr": "^1.3.1",
-    "zxcvbn": "git+ssh://git@github.com:dropbox/zxcvbn.git"
+    "wr": "^1.3.1"
+  },
+  "dependencies": {
+    "nacl-stream": "^0.3.2",
+    "tweetnacl": "^0.11.1",
+    "zxcvbn": "^1.0.0"
   }
 }

@@ -1,32 +1,20 @@
 class miniLockLib.BasicOperation
   chunkSize: 1024 * 1024
-  
-  start: (callback) ->
-    @callback = callback if callback?
-    if @data is undefined
-      throw "Can’t start miniLockLib.#{@constructor.name} without data."
-    if typeof @callback isnt "function"
-      throw "Can’t start miniLockLib.#{@constructor.name} without a callback."
-    @startedAt = Date.now()
-    @run()
-  
-  run: ->
-    @end()
-    
-  end: (error, blob) =>
+
+  end: (error, blob) ->
     @endedAt = Date.now()
     @duration = @endedAt - @startedAt
     if error
       @onerror(error)
     else
       @oncomplete(blob)
-  
+
   onerror: (error) ->
     console.info("onerror", error)
-    
+
   oncomplete: (blob) ->
     console.info("oncomplete", blob)
-  
+
   readSliceOfData: (start, end, callback) ->
     @fileReader ?= new FileReader
     @fileReader.readAsArrayBuffer(@data.slice(start, end))

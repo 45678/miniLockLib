@@ -3863,32 +3863,9 @@ if (typeof module !== "undefined") module.exports = scrypt;
 }).call(this);
 
 (function() {
-    var __bind = function(fn, me) {
-        return function() {
-            return fn.apply(me, arguments);
-        };
-    };
     miniLockLib.BasicOperation = function() {
-        function BasicOperation() {
-            this.end = __bind(this.end, this);
-        }
+        function BasicOperation() {}
         BasicOperation.prototype.chunkSize = 1024 * 1024;
-        BasicOperation.prototype.start = function(callback) {
-            if (callback != null) {
-                this.callback = callback;
-            }
-            if (this.data === void 0) {
-                throw "Can’t start miniLockLib." + this.constructor.name + " without data.";
-            }
-            if (typeof this.callback !== "function") {
-                throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
-            }
-            this.startedAt = Date.now();
-            return this.run();
-        };
-        BasicOperation.prototype.run = function() {
-            return this.end();
-        };
         BasicOperation.prototype.end = function(error, blob) {
             this.endedAt = Date.now();
             this.duration = this.endedAt - this.startedAt;
@@ -3950,7 +3927,6 @@ if (typeof module !== "undefined") module.exports = scrypt;
             if (params == null) {
                 params = {};
             }
-            this.end = __bind(this.end, this);
             this.start = __bind(this.start, this);
             this.data = params.data, this.keys = params.keys, this.callback = params.callback;
             this.decryptedBytes = [];
@@ -3960,16 +3936,28 @@ if (typeof module !== "undefined") module.exports = scrypt;
         }
         DecryptOperation.prototype.start = function(callback) {
             var _ref;
+            if (callback != null) {
+                this.callback = callback;
+            }
+            if (this.data === void 0) {
+                throw "Can’t start miniLockLib." + this.constructor.name + " without data.";
+            }
             if (((_ref = this.keys) != null ? _ref.secretKey : void 0) === void 0) {
                 throw "Can’t start miniLockLib." + this.constructor.name + " without keys.";
             }
-            return miniLockLib.BasicOperation.prototype.start.call(this, callback);
+            if (typeof this.callback !== "function") {
+                throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
+            }
+            this.startedAt = Date.now();
+            return this.run();
         };
         DecryptOperation.prototype.run = function() {
             return this.decryptName(function(_this) {
                 return function(error, nameWasDecrypted, startPositionOfDataBytes) {
                     if (nameWasDecrypted != null) {
-                        return _this.decryptData(startPositionOfDataBytes, _this.end);
+                        return _this.decryptData(startPositionOfDataBytes, function(error, blob) {
+                            return _this.end(error, blob);
+                        });
                     } else {
                         return _this.end(error);
                     }
@@ -3980,7 +3968,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             if (this.streamDecryptor != null) {
                 this.streamDecryptor.clean();
             }
-            return DecryptOperation.__super__.end.call(this, error, blob);
+            return miniLockLib.BasicOperation.prototype.end.call(this, error, blob);
         };
         DecryptOperation.prototype.oncomplete = function(blob) {
             return this.callback(void 0, {
@@ -4160,14 +4148,16 @@ if (typeof module !== "undefined") module.exports = scrypt;
             }(this));
         };
         DecryptOperation.prototype.readLengthOfHeader = function(callback) {
-            return this.readSliceOfData(8, 12, function(error, sliceOfBytes) {
-                var lengthOfHeader;
-                if (error) {
-                    return callback(error);
-                }
-                lengthOfHeader = miniLockLib.byteArrayToNumber(sliceOfBytes);
-                return callback(void 0, lengthOfHeader);
-            });
+            return this.readSliceOfData(8, 12, function(_this) {
+                return function(error, sliceOfBytes) {
+                    var lengthOfHeader;
+                    if (error) {
+                        return callback(error);
+                    }
+                    lengthOfHeader = miniLockLib.byteArrayToNumber(sliceOfBytes);
+                    return callback(void 0, lengthOfHeader);
+                };
+            }(this));
         };
         return DecryptOperation;
     }(miniLockLib.BasicOperation);
@@ -4196,6 +4186,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             if (params == null) {
                 params = {};
             }
+            this.end = __bind(this.end, this);
             this.start = __bind(this.start, this);
             this.data = params.data, this.keys = params.keys, this.name = params.name, this.miniLockIDs = params.miniLockIDs, 
             this.callback = params.callback;
@@ -4209,14 +4200,24 @@ if (typeof module !== "undefined") module.exports = scrypt;
             }
         }
         EncryptOperation.prototype.start = function(callback) {
-            var _ref, _ref1;
+            var _ref, _ref1, _ref2;
+            if (callback != null) {
+                this.callback = callback;
+            }
             if (((_ref = this.keys) != null ? _ref.publicKey : void 0) === void 0 || ((_ref1 = this.keys) != null ? _ref1.secretKey : void 0) === void 0) {
                 throw "Can’t start miniLockLib." + this.constructor.name + " without keys.";
             }
             if (this.miniLockIDs === void 0) {
                 throw "Can’t start miniLockLib." + this.constructor.name + " without miniLockIDs.";
             }
-            return miniLockLib.BasicOperation.prototype.start.call(this, callback);
+            if (((_ref2 = this.data) != null ? _ref2.constructor : void 0) !== Blob) {
+                throw "Can’t start miniLockLib." + this.constructor.name + " without data.";
+            }
+            if (typeof this.callback !== "function") {
+                throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
+            }
+            this.startedAt = Date.now();
+            return this.run();
         };
         EncryptOperation.prototype.run = function() {
             this.encryptName();
@@ -4239,7 +4240,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             if (this.streamEncryptor != null) {
                 this.streamEncryptor.clean();
             }
-            return EncryptOperation.__super__.end.call(this, error, blob);
+            return miniLockLib.BasicOperation.prototype.end.call(this, error, blob);
         };
         EncryptOperation.prototype.oncomplete = function(blob) {
             return this.callback(void 0, {

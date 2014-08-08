@@ -5,20 +5,27 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
     @start() if params.start?
 
   start: (callback) =>
+    @callback = callback if callback?
+    if @data is undefined
+      throw "Can’t start miniLockLib.#{@constructor.name} without data."
     if @keys?.secretKey is undefined
       throw "Can’t start miniLockLib.#{@constructor.name} without keys."
-    miniLockLib.BasicOperation::start.call(this, callback)
+    if typeof @callback isnt "function"
+      throw "Can’t start miniLockLib.#{@constructor.name} without a callback."
+    @startedAt = Date.now()
+    @run()
 
   run: ->
     @decryptName (error, nameWasDecrypted, startPositionOfDataBytes) =>
       if nameWasDecrypted?
-        @decryptData(startPositionOfDataBytes, @end)
+        @decryptData startPositionOfDataBytes, (error, blob) => 
+          @end(error, blob)
       else
         @end(error)
 
-  end: (error, blob) =>
+  end: (error, blob) ->
     @streamDecryptor.clean() if @streamDecryptor?
-    miniLockLib.BasicOperation::end.call(error, blob)
+    miniLockLib.BasicOperation::end.call(this, error, blob)
   
   oncomplete: (blob) ->
     @callback(undefined, {
@@ -134,9 +141,9 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
         headerAsString = nacl.util.encodeUTF8(sliceOfBytes)
         header = JSON.parse(headerAsString)
         callback(undefined, header, lengthOfHeader)
-  
+
   readLengthOfHeader: (callback) ->
-    @readSliceOfData 8, 12, (error, sliceOfBytes) ->
+    @readSliceOfData 8, 12, (error, sliceOfBytes) =>
       if error then return callback(error)
       lengthOfHeader = miniLockLib.byteArrayToNumber(sliceOfBytes)
       callback(undefined, lengthOfHeader)

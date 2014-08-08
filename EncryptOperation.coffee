@@ -9,11 +9,17 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
     @start() if params.start?
 
   start: (callback) =>
+    @callback = callback if callback?
     if (@keys?.publicKey is undefined) or (@keys?.secretKey is undefined)
       throw "Can’t start miniLockLib.#{@constructor.name} without keys."
     if @miniLockIDs is undefined
       throw "Can’t start miniLockLib.#{@constructor.name} without miniLockIDs."
-    miniLockLib.BasicOperation::start.call(this, callback)
+    if @data?.constructor isnt Blob
+      throw "Can’t start miniLockLib.#{@constructor.name} without data."
+    if typeof @callback isnt "function"
+      throw "Can’t start miniLockLib.#{@constructor.name} without a callback."
+    @startedAt = Date.now()
+    @run()
 
   run: ->
     @encryptName()
@@ -30,9 +36,9 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
       else
         @end(error)
 
-  end: (error, blob) ->
+  end: (error, blob) =>
     @streamEncryptor.clean() if @streamEncryptor?
-    miniLockLib.BasicOperation::end.call(error, blob)
+    miniLockLib.BasicOperation::end.call(this, error, blob)
 
   oncomplete: (blob) ->
     @callback(undefined, {

@@ -2,7 +2,12 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
   constructor: (params={}) ->
     {@data, @keys, @callback} = params
     @decryptedBytes = []
-    super(params)
+    @start() if params.start?
+
+  start: (callback) =>
+    if @keys?.secretKey is undefined
+      throw "Can’t start miniLockLib.#{@constructor.name} without keys."
+    miniLockLib.BasicOperation::start.call(this, callback)
 
   run: ->
     @decryptName (error, nameWasDecrypted, startPositionOfDataBytes) =>
@@ -13,7 +18,7 @@ class miniLockLib.DecryptOperation extends miniLockLib.BasicOperation
 
   end: (error, blob) =>
     @streamDecryptor.clean() if @streamDecryptor?
-    super(error, blob)
+    miniLockLib.BasicOperation::end.call(error, blob)
   
   oncomplete: (blob) ->
     @callback(undefined, {

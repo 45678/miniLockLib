@@ -1,13 +1,12 @@
 class miniLockLib.BasicOperation
   chunkSize: 1024 * 1024
   
-  constructor: (params) ->
-    @start() if params.start?
-  
-  start: (callback) =>
+  start: (callback) ->
     @callback = callback if callback?
-    if @callback is undefined
-      throw "Can’t start operation without a callback."
+    if @data is undefined
+      throw "Can’t start miniLockLib.#{@constructor.name} without data."
+    if typeof @callback isnt "function"
+      throw "Can’t start miniLockLib.#{@constructor.name} without a callback."
     @startedAt = Date.now()
     @run()
   

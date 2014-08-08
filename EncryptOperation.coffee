@@ -1,13 +1,19 @@
 class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
   constructor: (params={})->
-    {@data, @name, @miniLockIDs, @callback} = params
-    @author = {keys: params.keys}
+    {@data, @keys, @name, @miniLockIDs, @callback} = params
     @ephemeral = nacl.box.keyPair()
     @fileKey = nacl.randomBytes(32)
     @fileNonce = nacl.randomBytes(24).subarray(0, 16)
     @hash = new BLAKE2s(32)
     @ciphertextBytes = []
-    super(params)
+    @start() if params.start?
+
+  start: (callback) =>
+    if (@keys?.publicKey is undefined) or (@keys?.secretKey is undefined)
+      throw "Can’t start miniLockLib.#{@constructor.name} without keys."
+    if @miniLockIDs is undefined
+      throw "Can’t start miniLockLib.#{@constructor.name} without miniLockIDs."
+    miniLockLib.BasicOperation::start.call(this, callback)
 
   run: ->
     @encryptName()
@@ -26,13 +32,13 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
 
   end: (error, blob) ->
     @streamEncryptor.clean() if @streamEncryptor?
-    super(error, blob)
+    miniLockLib.BasicOperation::end.call(error, blob)
 
   oncomplete: (blob) ->
     @callback(undefined, {
       data: blob
       name: @name + ".minilock"
-      senderID: miniLockLib.ID.encode(@author.keys.publicKey)
+      senderID: miniLockLib.ID.encode(@keys.publicKey)
       duration: @duration
       startedAt: @startedAt
       endedAt: @endedAt
@@ -105,7 +111,7 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
   permit: (miniLockID) ->
     uniqueNonce = nacl.randomBytes(24)
     [uniqueNonce, {
-      senderID: miniLockLib.ID.encode(@author.keys.publicKey)
+      senderID: miniLockLib.ID.encode(@keys.publicKey)
       recipientID: miniLockID
       fileInfo: nacl.util.encodeBase64(@encryptedFileInfo(miniLockID, uniqueNonce))
     }]
@@ -113,7 +119,7 @@ class miniLockLib.EncryptOperation extends miniLockLib.BasicOperation
   encryptedFileInfo: (miniLockID, uniqueNonce) ->
     decodedFileInfoJSON = nacl.util.decodeUTF8(JSON.stringify(@permitFileInfo()))
     recipientPublicKey = Base58.decode(miniLockID).subarray(0, 32)
-    nacl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, @author.keys.secretKey)
+    nacl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, @keys.secretKey)
 
   permitFileInfo: ->
     fileKey:   nacl.util.encodeBase64(@fileKey)

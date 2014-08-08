@@ -49,10 +49,12 @@ readFromNetwork = exports.readFromNetwork = (name, callback) ->
   request.send()
 
 exports.tape = require("tape").createHarness()
-testKit = 
 testTemplate = document.getElementById("test_template")
 failureTemplate = document.getElementById("failure_template")
 assertionTemplate = document.getElementById("assertion_template")
+numberOfTests = document.getElementById("number_of_tests")
+numberOfFailedTests = document.getElementById("number_of_failed_tests")
+body = document.body
 idOfCurrentlyRunningTest = undefined
 untouched = true
 failedTests = []
@@ -61,42 +63,97 @@ window.onmousewheel = ->
   window.onmousewheel = undefined
   untouched = false
 
+delay = (amount, callback) -> setTimeout(callback, amount)
+
 exports.tape.createStream(objectMode:yes).on "data", (data) ->
-  switch 
+  switch
     when data.type is "test"
       idOfCurrentlyRunningTest = data.id
-      element = testTemplate.cloneNode(true)
-      element.id = "test_#{data.id}"
-      element.querySelector(".name").innerText = data.name
-      element.className += " started"
-      document.body.appendChild(element)
-      element.scrollIntoView() if untouched
-      element.startedAt = Date.now()
-      element.querySelector("div.id").innerText = (data.id / 1000).toFixed(3).replace("0.", "#")
-      document.body.className = "running"
-    when data.id?
-      element = document.getElementById("test_#{idOfCurrentlyRunningTest}")
-      className = if data.ok then "ok" else "failed"
-      element.className = element.className.replace(className,"").trim() + " " + className
-      assertionEl = assertionTemplate.cloneNode(true)
-      assertionEl.id = "test_#{idOfCurrentlyRunningTest}_assertion_#{data.id}"
-      element.querySelector('.assertions').appendChild(assertionEl)
-      if data.ok isnt true
-        failedTests.push(data.id) unless data.id in failedTests
-        document.getElementById("number_of_failed_tests").innerText = failedTests.length
-        failureEl = failureTemplate.cloneNode("true")
-        failureEl.id = ""
-        failureEl.querySelector("pre.expected").innerText += data.expected
-        failureEl.querySelector("pre.received").innerText += data.actual
-        failureEl.querySelector("pre.at").innerText = data.at
-        failureEl.querySelector("pre.error_stack").innerText = data.error.stack
-        element.appendChild(failureEl)
+      insertTestElement(data)
+      renderBodyElement(data)
+    when data.operator?
+      fixBrokenThrowsOperatorData(data)
+      if data.ok is false
+        failedTests.push(idOfCurrentlyRunningTest) unless idOfCurrentlyRunningTest in failedTests
+      element = findElementForTest(idOfCurrentlyRunningTest)
+      renderTestElementUpdate(element, data)
+      insertTestAssertion(element, data)
+      insertFailure(element, data) unless data.ok
     when data.type is "end"
       idOfCurrentlyRunningTest = undefined
-      element = document.getElementById("test_#{data.test}")
-      element.className = element.className.replace("started", "ended")
-      element.querySelector("div.duration").innerText = "#{((Date.now() - element.startedAt) / 1000).toFixed(2)}s"
-      document.getElementById("number_of_tests").innerText = data.test
-  if idOfCurrentlyRunningTest is undefined
-    document.body.className = "stopped"
+      renderTestElementEnded(findElementForTest(data.test), data)
+      numberOfFailedTests.innerText = failedTests.length if failedTests.length isnt 0
+      numberOfTests.innerText = data.test
+      renderBodyElement(data)
+    else
+      console.info("Unhandled", data)
+
+renderBodyElement = (data) ->
+  body.className = body.className.replace("undefined", "")
+  body.className = switch
+    when data.type is "test"
+      body.className.replace("stopped", "running")
+    when data.type is "end"
+      body.className.replace("running", "stopped")
+    else
+      body.className
+  if failedTests.length is 1 and body.className.indexOf("fail") is -1
+    body.className += " failures"
+
+insertTestElement = (data) ->
+  element = testTemplate.cloneNode(true)
+  element.id = "test_#{data.id}"
+  element.querySelector(".name").innerText = data.name
+  element.className += " started"
+  document.body.appendChild(element)
+  element.scrollIntoView() if untouched
+  element.startedAt = Date.now()
+  element.querySelector("div.id").innerText = (data.id / 1000).toFixed(3).replace("0.", "#")
+
+renderTestElementUpdate = (element, data) ->
+  className = if data.ok then "ok" else "failed"
+  element.className = element.className.replace(className,"").trim() + " " + className
+
+renderTestElementEnded = (element, data) ->
+  element.className = element.className.replace("started", "ended")
+  element.querySelector("div.duration").innerText = "#{((Date.now() - element.startedAt) / 1000).toFixed(2)}s"
+
+insertTestAssertion = (element, data) ->
+  assertionEl = assertionTemplate.cloneNode(true)
+  assertionEl.id = "test_#{idOfCurrentlyRunningTest}_assertion_#{data.id}"
+  element.className = element.className.replace('empty', '').trim()
+  element.querySelector('.assertions').appendChild(assertionEl)
+
+insertFailure = (element, data) ->
+  failureEl = failureTemplate.cloneNode("true")
+  failureEl.id = ""
+  if typeof data.expected is "function"
+    failureEl.querySelector("pre.expected").innerHTML += data.expected
+  else
+    failureEl.querySelector("pre.expected").innerHTML += JSON.stringify(data.expected, undefined, "  ")
+  if typeof data.actual is "function"
+    failureEl.querySelector("pre.received").innerHTML += data.actual
+  else
+    failureEl.querySelector("pre.received").innerHTML += JSON.stringify(data.actual, undefined, "  ")
+  if data.error?
+    failureEl.querySelector("pre.error_stack").innerText = data.error.stack
+  element.appendChild(failureEl)
+  if failedTests.length is 1
+    if untouched is true
+      delay 1, -> 
+        untouched = false
+        element.scrollIntoView(true)
+
+fixBrokenThrowsOperatorData = (data) ->
+  if (data.operator is "throws") and (data.name isnt data.actual)
+    data.ok = no
+    data.expected = data.name
+    data.name = undefined
+    data.fixedForThrowsOperator = yes
+
+findElementForTest = (id) ->
+  document.getElementById("test_#{id}")
+
+
+
 

@@ -16,6 +16,7 @@
       background: black;
       color: white;
       height: 20px;
+      background-color:hsl(0, 0%, 33%)
     }
     
     #summary {
@@ -26,12 +27,14 @@
     body #running,
     body #done {
       position: absolute;
-      left: 10px;
+      padding: 0px 5px;
+      left: 5px;
       bottom: 10px;
     }
-    
+
     body.running #running {
       visibility: visible;
+      color:hsl(180, 66%, 66%);
       transition: visibility 0s linear 0s;
     }
 
@@ -40,7 +43,10 @@
       transition: visibility 0s linear 100ms;
     }
     
-    body #done {
+    body.undefined #done {
+      display: none;
+    }
+    body.running #done {
       visibility: hidden;
       transition: visibility 0s linear 0s;
     }
@@ -55,11 +61,29 @@
       padding: 5px;
       margin: 1px;
     }
-    div.test          { background-color:hsl(000, 00%, 55%); }
-    div.test.started  { background-color:hsl(055, 66%, 66%); }
-    div.test.ok       { background-color:hsl(135, 45%, 60%); }
-    div.test.failed   { background-color:hsl(350, 66%, 66%); }
+    div.test          { background-color: hsl(000, 00%, 55%); }
+    div.test.started  { background-color: hsl(180, 66%, 66%); }
+    div.test.ok       { background-color: hsl(340, 33%, 66%); }
+    div.test.failed   { background-color: hsl(070, 66%, 66%); }
+
+    body .failed_phrase {
+      color:inherit;
+      padding: 0px 2px 0px 5px;
+    }
+    body.failures .failed_phrase {
+      color: black;
+      background-color: hsl(070, 66%, 66%);
+    }
     
+    body.stopped #done {
+      color: black;
+      background-color: hsl(340, 33%, 66%);
+    }
+    body.stopped.failures #done {
+      color: white;
+      background: transparent;
+    }
+
     div.failure pre {
       margin-top: 20px;
     }
@@ -70,12 +94,18 @@
       top: 5px;
       opacity: 0.5;
     }
+    div.empty.test.ended div.id {
+      display: none;
+    }
 
     div.duration {
       position: absolute;
       left: 50px;
       top: 5px;
       opacity: 0.5;
+    }
+    div.empty.test div.duration {
+      display: none;
     }
 
     div.name_and_assertions {
@@ -91,6 +121,10 @@
       opacity: 1;
     }
     
+    pre.at {
+      clear: both;
+    }
+    
     span.assertions {
       margin-left: 5px;
     }
@@ -98,29 +132,63 @@
     b.assertion {
       margin: 0px 2px;
     }
+    
+    div.failure {
+      margin: 15px 0;
+    }
+    
+    div.output {
+      float: left;
+      width: 50%;
+    }
+    
+    div.output label {
+      position: absolute;
+      opacity: 0.5;
+    }
+
+    pre.expected, pre.received {
+      width: 100%;
+      margin: 0;
+      white-space: pre-wrap;
+      /*      word-wrap: break-word;*/
+    }
+    
+    
   </style>
-  <body>
-    <footer>
-      <em id="running">Running...</em>
-      <em id="done">Done.</em>
-      <div id="summary"><b id="number_of_tests">No</b> tests completed. <b id="number_of_failed_tests">No</b> tests failed.</div>
-      <a id="link_to_download"></a>
-    </footer>
+  <body class="undefined stopped">
     <div id="templates" hidden>
-      <div id="test_template" class="test">
-        <div class="name_and_assertions"><span class="name"></span><span class="assertions"></span></div>
+      <div id="test_template" class="empty test">
         <div class="id"></div>
         <div class="duration"></div>
+        <div class="name_and_assertions">
+          <span class="name"></span>
+          <span class="assertions"></span>
+        </div>
       </div>
       <b id="assertion_template" class="assertion">•</b>
       <div id="failure_template" class="failure">
-        <pre class="received">Received: </pre>
-        <pre class="expected">Expected: </pre>
+        <div class="output">
+          <label>Received:</label>
+          <pre class="received"></pre>
+        </div>
+        <div class="output">
+          <label>Expected:</label>
+          <pre class="expected"></pre>
+        </div>
         <pre class="at"></pre>
         <pre class="error_stack"></pre>
       </div>
     </div>
-    
+    <footer>
+      <div id="summary">
+        <span class="completed_phrase"><b id="number_of_tests">None</b> completed.</span>
+        <span class="failed_phrase"><b id="number_of_failed_tests">None</b> failed.</span>
+      </div>
+      <em id="running">Running...</em>
+      <em id="done">Done</em>
+      <a id="link_to_download"></a>
+    </footer>
   </body>
   <script src="scripts/miniLockLib.js"></script>
   <script src="scripts/miniLockLib_tests.js"></script>

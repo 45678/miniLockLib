@@ -3,7 +3,7 @@
 
 {Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
 
-tape "Identification Tests", (test) -> test.end()
+tape "Identification", (test) -> test.end()
 
 tape "Alice’s ID is acceptable", (test) ->
   test.same miniLockLib.ID.isAcceptable(Alice.miniLockID), true

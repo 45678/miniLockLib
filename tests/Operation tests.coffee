@@ -1,6 +1,6 @@
 {Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
 
-tape "Operation Tests", (test) -> test.end()
+tape "Operations", (test) -> test.end()
 
 tape "Encrypt a file for Alice", (test) ->
   read "basic.txt", (blob) ->

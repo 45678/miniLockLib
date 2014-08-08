@@ -1,6 +1,6 @@
 {Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
 
-tape "Key Pair Tests", (test) -> test.end()
+tape "Key Pair", (test) -> test.end()
 
 tape "Compute Alice’s keys from her secret phrase and email address", (test) ->
   miniLockLib.getKeyPair Alice.secretPhrase, Alice.emailAddress, (keys) ->

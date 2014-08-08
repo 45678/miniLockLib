@@ -1,6 +1,6 @@
 {Alice, Bobby, tape} = require "./_fixtures"
 
-tape "Acceptability Tests", (test) -> test.end()
+tape "Acceptability", (test) -> test.end()
 
 tape "Alice’s secret phrase is acceptable", (test) ->
   test.ok miniLockLib.secretPhraseIsAcceptable(Alice.secretPhrase)

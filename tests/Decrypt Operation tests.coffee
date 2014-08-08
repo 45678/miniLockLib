@@ -2,12 +2,53 @@
 
 {Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
 
-tape "DecryptOperation Tests", (test) -> test.end()
+tape "DecryptOperation", (test) -> test.end()
 
 tape "construct a blank miniLockLib.DecryptOperation", (test) ->
+  test.ok new miniLockLib.DecryptOperation
+  test.end()
+
+tape "define data, keys and callback when decrypt operation is constructed", (test) ->
+  callback = (error, decrypted) ->
   operation = new miniLockLib.DecryptOperation
-  test.ok operation
-  test.equal operation.constructor, miniLockLib.DecryptOperation
+    data: (blob = new Blob)
+    keys: Alice.keys
+    callback: callback
+  test.same operation.data, blob
+  test.same operation.keys, Alice.keys
+  test.same operation.callback, callback
+  test.end()
+
+tape "or define the callback when start is called if you prefer", (test) ->
+  callbackSpecifiedOnStart = ->
+  operation = new miniLockLib.DecryptOperation
+    data: new Blob
+    keys: Alice.keys
+  # Intercept run to verify the expected callback and end the test.
+  operation.run = ->
+    test.same operation.callback, callbackSpecifiedOnStart
+    test.end()
+  operation.start(callbackSpecifiedOnStart)
+
+tape "can’t start a decrypt operation without data", (test) ->
+  operation = new miniLockLib.DecryptOperation
+    keys: Alice.keys
+    callback: yes
+  test.throws operation.start, 'Can’t start miniLockLib.DecryptOperation without data.'
+  test.end()
+
+tape "can’t start a decrypt operation without keys", (test) ->
+  operation = new miniLockLib.DecryptOperation
+    data: yes
+    callback: yes
+  test.throws operation.start, 'Can’t start miniLockLib.DecryptOperation without keys.'
+  test.end()
+
+tape "can’t start a decrypt operation without a callback", (test) ->
+  operation = new miniLockLib.DecryptOperation
+    data: yes
+    keys: Alice.keys
+  test.throws operation.start, 'Can’t start miniLockLib.DecryptOperation without a callback.'
   test.end()
 
 tape "read length of header from a file", (test) ->
@@ -18,10 +59,11 @@ tape "read length of header from a file", (test) ->
       test.equal lengthOfHeader, 634
       test.end()
 
-tape "read header of file with one permits", (test) ->
+tape "read header of a file with one permit", (test) ->
   read "alice.txt.minilock", (blob) ->
     operation = new miniLockLib.DecryptOperation
       data: blob
+      keys: Alice.keys
     operation.readHeader (error, header) ->
       if error then return test.end(error)
       test.ok header.version is 1
@@ -32,7 +74,7 @@ tape "read header of file with one permits", (test) ->
       test.ok header.decryptInfo[uniqueNonces[0]].length is 508
       test.end()
 
-tape "read header of file with two permits", (test) ->
+tape "read header of a file with two permits", (test) ->
   read "alice_and_bobby.txt.minilock", (blob) ->
     operation = new miniLockLib.DecryptOperation
       data: blob

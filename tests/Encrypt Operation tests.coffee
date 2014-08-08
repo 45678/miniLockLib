@@ -2,18 +2,49 @@
 
 {Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
 
-tape "EncryptOperation Tests", (test) -> test.end()
+tape "EncryptOperation", (test) -> test.end()
 
 tape "construct a blank encrypt operation", (test) ->
   operation = new miniLockLib.EncryptOperation
   test.ok operation
   test.end()
-
-tape "author is available after operation is constructed", (test) ->
+  
+tape "define data, keys, miniLockIDs and callback when you construct an ecrypt operation", (test) ->
   operation = new miniLockLib.EncryptOperation
-  test.ok operation.author?
+    data: new Blob
+    keys: Alice.keys
+    miniLockIDs: []
+    callback: ->
+  test.ok operation.data
+  test.ok operation.keys
+  test.ok operation.miniLockIDs
+  test.ok operation.callback
   test.end()
 
+tape "can’t start an encrypt operation without data", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    keys: Alice.keys
+    miniLockIDs: []
+    callback: ->
+  test.throws operation.start, 'Can’t start miniLockLib.EncryptOperation without data.'
+  test.end()
+
+tape "can’t start an encrypt operation without keys", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    data: new Blob
+    miniLockIDs: []
+    callback: ->
+  test.throws operation.start, 'Can’t start miniLockLib.EncryptOperation without keys.'
+  test.end()
+
+tape "can’t start an encrypt operation without miniLockIDs", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    data: new Blob
+    keys: Alice.keys
+    callback: ->
+  test.throws operation.start, 'Can’t start miniLockLib.EncryptOperation without miniLockIDs.'
+  test.end()
+  
 tape "empty array of ciphertext bytes is ready after operation is constructed", (test) ->
   operation = new miniLockLib.EncryptOperation
   test.ok operation.ciphertextBytes.length is 0

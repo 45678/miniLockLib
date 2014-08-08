@@ -3869,20 +3869,19 @@ if (typeof module !== "undefined") module.exports = scrypt;
         };
     };
     miniLockLib.BasicOperation = function() {
-        BasicOperation.prototype.chunkSize = 1024 * 1024;
-        function BasicOperation(params) {
+        function BasicOperation() {
             this.end = __bind(this.end, this);
-            this.start = __bind(this.start, this);
-            if (params.start != null) {
-                this.start();
-            }
         }
+        BasicOperation.prototype.chunkSize = 1024 * 1024;
         BasicOperation.prototype.start = function(callback) {
             if (callback != null) {
                 this.callback = callback;
             }
-            if (this.callback === void 0) {
-                throw "Can’t start operation without a callback.";
+            if (this.data === void 0) {
+                throw "Can’t start miniLockLib." + this.constructor.name + " without data.";
+            }
+            if (typeof this.callback !== "function") {
+                throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
             }
             this.startedAt = Date.now();
             return this.run();
@@ -3952,10 +3951,20 @@ if (typeof module !== "undefined") module.exports = scrypt;
                 params = {};
             }
             this.end = __bind(this.end, this);
+            this.start = __bind(this.start, this);
             this.data = params.data, this.keys = params.keys, this.callback = params.callback;
             this.decryptedBytes = [];
-            DecryptOperation.__super__.constructor.call(this, params);
+            if (params.start != null) {
+                this.start();
+            }
         }
+        DecryptOperation.prototype.start = function(callback) {
+            var _ref;
+            if (((_ref = this.keys) != null ? _ref.secretKey : void 0) === void 0) {
+                throw "Can’t start miniLockLib." + this.constructor.name + " without keys.";
+            }
+            return miniLockLib.BasicOperation.prototype.start.call(this, callback);
+        };
         DecryptOperation.prototype.run = function() {
             return this.decryptName(function(_this) {
                 return function(error, nameWasDecrypted, startPositionOfDataBytes) {
@@ -4165,7 +4174,11 @@ if (typeof module !== "undefined") module.exports = scrypt;
 }).call(this);
 
 (function() {
-    var __hasProp = {}.hasOwnProperty, __extends = function(child, parent) {
+    var __bind = function(fn, me) {
+        return function() {
+            return fn.apply(me, arguments);
+        };
+    }, __hasProp = {}.hasOwnProperty, __extends = function(child, parent) {
         for (var key in parent) {
             if (__hasProp.call(parent, key)) child[key] = parent[key];
         }
@@ -4183,18 +4196,28 @@ if (typeof module !== "undefined") module.exports = scrypt;
             if (params == null) {
                 params = {};
             }
-            this.data = params.data, this.name = params.name, this.miniLockIDs = params.miniLockIDs, 
+            this.start = __bind(this.start, this);
+            this.data = params.data, this.keys = params.keys, this.name = params.name, this.miniLockIDs = params.miniLockIDs, 
             this.callback = params.callback;
-            this.author = {
-                keys: params.keys
-            };
             this.ephemeral = nacl.box.keyPair();
             this.fileKey = nacl.randomBytes(32);
             this.fileNonce = nacl.randomBytes(24).subarray(0, 16);
             this.hash = new BLAKE2s(32);
             this.ciphertextBytes = [];
-            EncryptOperation.__super__.constructor.call(this, params);
+            if (params.start != null) {
+                this.start();
+            }
         }
+        EncryptOperation.prototype.start = function(callback) {
+            var _ref, _ref1;
+            if (((_ref = this.keys) != null ? _ref.publicKey : void 0) === void 0 || ((_ref1 = this.keys) != null ? _ref1.secretKey : void 0) === void 0) {
+                throw "Can’t start miniLockLib." + this.constructor.name + " without keys.";
+            }
+            if (this.miniLockIDs === void 0) {
+                throw "Can’t start miniLockLib." + this.constructor.name + " without miniLockIDs.";
+            }
+            return miniLockLib.BasicOperation.prototype.start.call(this, callback);
+        };
         EncryptOperation.prototype.run = function() {
             this.encryptName();
             return this.encryptData(0, function(_this) {
@@ -4222,7 +4245,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             return this.callback(void 0, {
                 data: blob,
                 name: this.name + ".minilock",
-                senderID: miniLockLib.ID.encode(this.author.keys.publicKey),
+                senderID: miniLockLib.ID.encode(this.keys.publicKey),
                 duration: this.duration,
                 startedAt: this.startedAt,
                 endedAt: this.endedAt
@@ -4315,7 +4338,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             var uniqueNonce;
             uniqueNonce = nacl.randomBytes(24);
             return [ uniqueNonce, {
-                senderID: miniLockLib.ID.encode(this.author.keys.publicKey),
+                senderID: miniLockLib.ID.encode(this.keys.publicKey),
                 recipientID: miniLockID,
                 fileInfo: nacl.util.encodeBase64(this.encryptedFileInfo(miniLockID, uniqueNonce))
             } ];
@@ -4324,7 +4347,7 @@ if (typeof module !== "undefined") module.exports = scrypt;
             var decodedFileInfoJSON, recipientPublicKey;
             decodedFileInfoJSON = nacl.util.decodeUTF8(JSON.stringify(this.permitFileInfo()));
             recipientPublicKey = Base58.decode(miniLockID).subarray(0, 32);
-            return nacl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, this.author.keys.secretKey);
+            return nacl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, this.keys.secretKey);
         };
         EncryptOperation.prototype.permitFileInfo = function() {
             return {

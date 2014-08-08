@@ -33,16 +33,16 @@ Pass `data`, `name`, `keys` and `miniLockIDs` when you `encrypt` a file:
 
 Pass `data` and `keys` when you `decrypt` a file:
 
-  miniLockLib.decrypt({
-    data: blob,
-    keys: {publicKey: Uint8Array, secretKey: Uint8Array},
-    callback: function(error, decrypted) {
-      decrypted.data is a Blob of the decrypted data
-      decrypted.data.size is the Number of bytes in the decrypted file 
-      decrypted.name is the decrypted name of file as a String
-      decrypted.senderID is the miniLock ID of the person who encrypted the file
-    }
-  })
+    miniLockLib.decrypt({
+      data: blob,
+      keys: {publicKey: Uint8Array, secretKey: Uint8Array},
+      callback: function(error, decrypted) {
+        decrypted.data is a Blob of the decrypted data
+        decrypted.data.size is the Number of bytes in the decrypted file 
+        decrypted.name is the decrypted name of file as a String
+        decrypted.senderID is the miniLock ID of the person who encrypted the file
+      }
+    })
 
 [Find more examples in the tests](https://github.com/45678/miniLockLib/blob/master/tests/0%20A%20demo%20of...%20tests.coffee) and [read the source code](https://github.com/45678/miniLockLib/blob/master/index.coffee) for the terrible details.
 

@@ -52,7 +52,7 @@ miniLockLib.decrypt({
 })
 ```
 
-[Find more examples, and all the documentation, in the source code](https://github.com/45678/miniLockLib/blob/master/index.coffee).
+[Find more examples in the tests](https://github.com/45678/miniLockLib/blob/master/tests/0%20A%20demo%20of...%20tests.coffee) and [read the source code](https://github.com/45678/miniLockLib/blob/master/index.coffee) for the terrible details.
 
 __Sources__
 
@@ -62,9 +62,9 @@ __Sources__
 
 `BLAKE2s.js` is an unmodified copy of Dmitry Chestnykh’s [blake2s-js project](https://github.com/dchest/blake2s-js). The filename of the script was renamed to match the global `BLAKE2s` address that it defines.
 
-`nacl.js` is a copy of the [tweetnacl-js crypto library](https://github.com/dchest/tweetnacl-js) written by Dmitry Chestnykh. It has been modified to assign itself to `this` instead of `window` so that it can be imported seamlessly into the crypto worker. `nacl` is used throughout `miniLockLib` for a variety of cryptographic functions.
+`nacl.js` is a copy of the [tweetnacl-js crypto library](https://github.com/dchest/tweetnacl-js) written by Dmitry Chestnykh. It has been modified to assign itself to `this` instead of `window` so that it can be imported seamlessly into a crypto worker. `nacl` is used throughout `miniLockLib` for a variety of cryptographic functions.
 
-`nacl-stream.js` is an unmodified copy of the [tweetnacl-js streaming encryption library](https://github.com/dchest/nacl-stream-js) written by Dmitry Chestnykh. Streaming encryption is employed in the crypto worker.
+`nacl-stream.js` is an unmodified copy of the [tweetnacl-js streaming encryption library](https://github.com/dchest/nacl-stream-js) written by Dmitry Chestnykh. Streaming encryption is employed in a crypto worker.
 
 `scrypt-async.js` is an unmodified script from Dmitry Chestnykh’s [scrypt-async-js](https://github.com/dchest/scrypt-async-js) project. It is used to derive a key pair from a secret phrase and email address. 
 

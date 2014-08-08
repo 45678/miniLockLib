@@ -2,3 +2,5 @@
 node_modules
 lib
 tests/_compiled/*.js
+scripts/tape.js
+scripts/miniLockLib_tests.js

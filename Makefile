@@ -8,7 +8,6 @@ library/%.coffee: library.compiled
 	# Compile CoffeeScript source code to Javascript and save it in `lib`.
 	coffee --compile --output library.compiled library/*.coffee
 
-
 library.compiled:
 	# Folder for compiled library code.
 	mkdir -p library.compiled

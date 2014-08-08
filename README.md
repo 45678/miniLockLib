@@ -6,9 +6,11 @@ Download [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/
 <script src="miniLockLib.js" charset="utf-8"></script>
 ```
 
+
 Now you are ready to call methods on `miniLockLib` from your Javascript program...
 
 __Examples__
+
 
 Call `getKeyPair` with `secretPhrase` and `emailAddress` to get a pair of `keys`:
 
@@ -18,6 +20,7 @@ miniLockLib.getKeyPair(secretPhrase, emailAddress, function(keys){
    keys.secretKey is a Uint8Array
 })
 ```
+
 
 Pass `data`, `name`, `keys` and `miniLockIDs` when you `encrypt` a file:
 
@@ -36,6 +39,7 @@ miniLockLib.encrypt({
   }
 })
 ```
+
 
 Pass `data` and `keys` when you `decrypt` a file:
 

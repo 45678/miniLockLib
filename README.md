@@ -66,8 +66,8 @@ __Digging In__
 
 `npm install git+https://git@github.com/45678/miniLockLib.git` to get the source code.
 
-`make` to build the `scripts`. All the source files for `miniLockLib.js` are saved in `lib`.
+`npm test` launch the test kit in Google Chrome.
 
 `npm start` to begin watching CoffeeScript files. Your saved changes will trigger automatic re-compilation.
 
-`npm test` launch the test kit in Google Chrome.
+`make` to re-compile the `scripts`. Source files are compiled to `library.compiled` and saved as `scripts/miniLockLib.js`. Tests are compiled to `tests.compiled` and saved as `scripts/tests.js`.

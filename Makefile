@@ -1,15 +1,15 @@
 default: scripts/miniLockLib.js scripts/miniLockLib_tests.js scripts/tape.js
 
 scripts/miniLockLib.js: src/%.coffee lib/BLAKE2s.js lib/scrypt-async.js lib/zxcvbn.js
-	# Combine Javascript files in `lib` to create miniLockLib.js in `scripts`.
-	  browserify lib/index.js --standalone miniLockLib > scripts/miniLockLib.js
+	# Create a standalone copy of miniLockLib.js in the `scripts` folder.
+	browserify lib/index.js --standalone miniLockLib > scripts/miniLockLib.js
 
 src/%.coffee:
-	# Compile source to Javascript in `lib`.
+	# Compile CoffeeScript source code to Javascript and save it in `lib`.
 	coffee --compile --output lib src/*.coffee
 
 lib/BLAKE2s.js:
-	# Download BLAKE2s.js and save it in `lib`.
+	# Download BLAKE2s.js and modify it to export itself as a module. Saved in `lib`.
 	curl -s https://raw.githubusercontent.com/dchest/blake2s-js/master/blake2s.js \
 	  | sed "s/var BLAKE2s = /module.exports = /" \
 	  > lib/BLAKE2s.js
@@ -20,13 +20,13 @@ lib/scrypt-async.js:
 	  > lib/scrypt-async.js
 
 lib/zxcvbn.js:
-	# Make a copy of zxcvbn.js in `lib`.
+	# Make a copy of zxcvbn.js in `lib` that exports itself as a module.
 	cat node_modules/zxcvbn/zxcvbn.js \
 	  | sed "s/window.zxcvbn=o/module.exports=o/" \
 	  > lib/zxcvbn.js
 
 scripts/miniLockLib_tests.js: tests/%.coffee
-	# Combine all the compiled Javascript tests to create miniLockLib_tests.js in `scripts`.
+	# Create miniLockLib_tests.js in the `scripts` folder.
 	browserify tests/_compiled/*.js --exclude tape > scripts/miniLockLib_tests.js
 
 tests/%.coffee:

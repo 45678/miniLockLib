@@ -25,21 +25,21 @@ lib/zxcvbn.js:
 	  | sed "s/window.zxcvbn=o/module.exports=o/" \
 	  > lib/zxcvbn.js
 
-scripts/miniLockLib_tests.js: tests/%.coffee
+scripts/tests.js: tests/%.coffee
 	# Create miniLockLib_tests.js in the `scripts` folder.
-	browserify tests/_compiled/*.js --exclude tape > scripts/miniLockLib_tests.js
+	browserify tests.compiled/*.js > scripts/miniLockLib_tests.js
 
-tests/%.coffee:
+tests/%.coffee: tests.compiled
 	# Compile CoffeeScript tests to Javascript in `tests/_compiled`.
-	coffee --output tests/_compiled --compile tests/*.coffee
+	coffee --output tests.compiled --compile tests/*.coffee
 
-scripts/tape.js:
-	browserify --require tape --standalone tape > scripts/tape.js
+tests.compiled:
+	mkdir -p tests.compiled
 	
 clean:
 	rm -f lib/*.js
 	rm -f scripts/*.js
-	rm -f tests/_compiled/*.js
+	rm -f tests.compiled/*.js
 	
 install:
 	# Setup POW to serve http://minilocklib.dev/tests.html

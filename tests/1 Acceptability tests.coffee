@@ -1,4 +1,5 @@
-{Alice, Bobby, tape} = require "./_fixtures"
+tape = require "./tape_test_harness"
+{Alice, Bobby} = require "./fixtures"
 
 tape "Acceptability", (test) -> test.end()
 

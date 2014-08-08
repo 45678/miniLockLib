@@ -1,4 +1,5 @@
-{Alice, Bobby, read, tape} = require "./_fixtures"
+tape = require "./tape_test_harness"
+{Alice, Bobby, read} = require "./fixtures"
 
 tape "A demo of miniLockLib.encrypt & miniLockLib.decrypt", (test) -> test.end()
 

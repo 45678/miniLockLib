@@ -1,6 +1,5 @@
-
-
-{Alice, Bobby, read, readFromNetwork, tape} = require "./_fixtures"
+tape = require "./tape_test_harness"
+{Alice, Bobby, read, readFromNetwork} = require "./fixtures"
 
 tape "Slow Operations", (test) -> test.end()
 

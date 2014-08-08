@@ -31,7 +31,7 @@ library.compiled/zxcvbn.js:
 
 scripts/tests.js: tests/%.coffee
 	# Create miniLockLib_tests.js in the `scripts` folder.
-	browserify tests.compiled/*.js > scripts/tests.js
+	browserify --debug tests.compiled/*.js > scripts/tests.js
 
 tests/%.coffee: tests.compiled
 	# Compile CoffeeScript tests to Javascript in `tests/_compiled`.

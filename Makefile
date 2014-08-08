@@ -1,29 +1,34 @@
 default: scripts/miniLockLib.js scripts/tests.js
 
-scripts/miniLockLib.js: src/%.coffee lib/BLAKE2s.js lib/scrypt-async.js lib/zxcvbn.js
+scripts/miniLockLib.js: library/%.coffee library.compiled/BLAKE2s.js library.compiled/scrypt-async.js library.compiled/zxcvbn.js
 	# Create a standalone copy of miniLockLib.js in the `scripts` folder.
-	browserify lib/index.js --standalone miniLockLib > scripts/miniLockLib.js
+	browserify library.compiled/index.js --standalone miniLockLib > scripts/miniLockLib.js
 
-src/%.coffee:
+library/%.coffee: library.compiled
 	# Compile CoffeeScript source code to Javascript and save it in `lib`.
-	coffee --compile --output lib src/*.coffee
+	coffee --compile --output library.compiled library/*.coffee
 
-lib/BLAKE2s.js:
-	# Download BLAKE2s.js and modify it to export itself as a module. Saved in `lib`.
+
+library.compiled:
+	# Folder for compiled library code.
+	mkdir -p library.compiled
+
+library.compiled/BLAKE2s.js:
+	# Download BLAKE2s.js and modify it to export itself as a module.
 	curl -s https://raw.githubusercontent.com/dchest/blake2s-js/master/blake2s.js \
 	  | sed "s/var BLAKE2s = /module.exports = /" \
-	  > lib/BLAKE2s.js
+	  > library.compiled/BLAKE2s.js
 
-lib/scrypt-async.js:
-	# Download scrypt-async.js and save it in `lib`.
+library.compiled/scrypt-async.js:
+	# Download scrypt-async.js
 	curl -s https://raw.githubusercontent.com/dchest/scrypt-async-js/master/scrypt-async.js \
-	  > lib/scrypt-async.js
+	  > library.compiled/scrypt-async.js
 
-lib/zxcvbn.js:
-	# Make a copy of zxcvbn.js in `lib` that exports itself as a module.
+library.compiled/zxcvbn.js:
+	# Make a copy of zxcvbn.js that exports itself as a module.
 	cat node_modules/zxcvbn/zxcvbn.js \
 	  | sed "s/window.zxcvbn=o/module.exports=o/" \
-	  > lib/zxcvbn.js
+	  > library.compiled/zxcvbn.js
 
 scripts/tests.js: tests/%.coffee
 	# Create miniLockLib_tests.js in the `scripts` folder.
@@ -34,11 +39,12 @@ tests/%.coffee: tests.compiled
 	coffee --output tests.compiled --compile tests/*.coffee
 
 tests.compiled:
+	# Folder for compiled tests.
 	mkdir -p tests.compiled
 	
 clean:
-	rm -f lib/*.js
 	rm -f scripts/*.js
+	rm -f library.compiled/*.js
 	rm -f tests.compiled/*.js
 	
 install:

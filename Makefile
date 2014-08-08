@@ -1,4 +1,4 @@
-default: scripts/miniLockLib.js scripts/miniLockLib_tests.js scripts/tape.js
+default: scripts/miniLockLib.js scripts/tests.js
 
 scripts/miniLockLib.js: src/%.coffee lib/BLAKE2s.js lib/scrypt-async.js lib/zxcvbn.js
 	# Create a standalone copy of miniLockLib.js in the `scripts` folder.
@@ -27,7 +27,7 @@ lib/zxcvbn.js:
 
 scripts/tests.js: tests/%.coffee
 	# Create miniLockLib_tests.js in the `scripts` folder.
-	browserify tests.compiled/*.js > scripts/miniLockLib_tests.js
+	browserify tests.compiled/*.js > scripts/tests.js
 
 tests/%.coffee: tests.compiled
 	# Compile CoffeeScript tests to Javascript in `tests/_compiled`.

@@ -20,7 +20,7 @@ class EncryptOperation extends BasicOperation
       throw "Can’t start miniLockLib.#{@constructor.name} without keys."
     if @miniLockIDs is undefined
       throw "Can’t start miniLockLib.#{@constructor.name} without miniLockIDs."
-    if @data?.constructor isnt Blob
+    if (@data instanceof Blob) is false
       throw "Can’t start miniLockLib.#{@constructor.name} without data."
     if typeof @callback isnt "function"
       throw "Can’t start miniLockLib.#{@constructor.name} without a callback."

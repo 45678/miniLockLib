@@ -35,7 +35,7 @@
     }
 
     EncryptOperation.prototype.start = function(callback) {
-      var _ref, _ref1, _ref2;
+      var _ref, _ref1;
       if (callback != null) {
         this.callback = callback;
       }
@@ -45,7 +45,7 @@
       if (this.miniLockIDs === void 0) {
         throw "Can’t start miniLockLib." + this.constructor.name + " without miniLockIDs.";
       }
-      if (((_ref2 = this.data) != null ? _ref2.constructor : void 0) !== Blob) {
+      if ((this.data instanceof Blob) === false) {
         throw "Can’t start miniLockLib." + this.constructor.name + " without data.";
       }
       if (typeof this.callback !== "function") {

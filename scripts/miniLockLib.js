@@ -2079,7 +2079,7 @@ module.exports = (function () {
     var encodedChecksum, publicKey, slots, trueChecksum;
     slots = Base58.decode(id);
     if (slots.length === 33) {
-      publicKey = slots.subarray(0, 32);
+      publicKey = new Uint8Array(slots.subarray(0, 32));
       encodedChecksum = slots[32];
       trueChecksum = BLAKE2HashDigest(publicKey, {
         length: 1

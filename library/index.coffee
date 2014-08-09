@@ -116,7 +116,7 @@ miniLockLib.ID.encode = (publicKey) ->
 miniLockLib.ID.decode = (id) ->
   slots = Base58.decode(id)
   if slots.length is 33
-    publicKey = slots.subarray(0, 32)
+    publicKey = new Uint8Array(slots.subarray(0, 32))
     encodedChecksum = slots[32]
     trueChecksum = BLAKE2HashDigest(publicKey, length: 1)[0]
     return publicKey if encodedChecksum is trueChecksum

@@ -4,7 +4,7 @@
   "description": "Do miniLock file encryption operations on a web page of your own.",
   "main": "scripts/miniLockLib.js",
   "scripts": {
-    "start": "make && wr make src/*.coffee tests/*.coffee",
+    "start": "make && wr make library/*.coffee tests/*.coffee",
     "test": "make && open -a 'Google Chrome' http://minilocklib.dev/tests.html"
   },
   "repository": {

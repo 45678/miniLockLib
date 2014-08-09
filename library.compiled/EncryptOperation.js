@@ -177,7 +177,7 @@
       var decodedPermitJSON, encryptedPermit, permit, recipientPublicKey, uniqueNonce, _ref;
       _ref = this.permit(miniLockID), uniqueNonce = _ref[0], permit = _ref[1];
       decodedPermitJSON = NACL.util.decodeUTF8(JSON.stringify(permit));
-      recipientPublicKey = miniLockLib.Base58.decode(miniLockID).subarray(0, 32);
+      recipientPublicKey = miniLockLib.ID.decode(miniLockID);
       encryptedPermit = NACL.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, this.ephemeral.secretKey);
       return [uniqueNonce, encryptedPermit];
     };
@@ -197,7 +197,7 @@
     EncryptOperation.prototype.encryptedFileInfo = function(miniLockID, uniqueNonce) {
       var decodedFileInfoJSON, recipientPublicKey;
       decodedFileInfoJSON = NACL.util.decodeUTF8(JSON.stringify(this.permitFileInfo()));
-      recipientPublicKey = miniLockLib.Base58.decode(miniLockID).subarray(0, 32);
+      recipientPublicKey = miniLockLib.ID.decode(miniLockID);
       return NACL.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, this.keys.secretKey);
     };
 

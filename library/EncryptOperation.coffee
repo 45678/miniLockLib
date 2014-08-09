@@ -116,7 +116,7 @@ class EncryptOperation extends BasicOperation
   encryptedPermit: (miniLockID) ->
     [uniqueNonce, permit] = @permit(miniLockID)
     decodedPermitJSON = NACL.util.decodeUTF8(JSON.stringify(permit))
-    recipientPublicKey = miniLockLib.Base58.decode(miniLockID).subarray(0, 32)
+    recipientPublicKey = miniLockLib.ID.decode(miniLockID)
     encryptedPermit = NACL.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, @ephemeral.secretKey)
     [uniqueNonce, encryptedPermit]
 
@@ -130,7 +130,7 @@ class EncryptOperation extends BasicOperation
   
   encryptedFileInfo: (miniLockID, uniqueNonce) ->
     decodedFileInfoJSON = NACL.util.decodeUTF8(JSON.stringify(@permitFileInfo()))
-    recipientPublicKey = miniLockLib.Base58.decode(miniLockID).subarray(0, 32)
+    recipientPublicKey = miniLockLib.ID.decode(miniLockID)
     NACL.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, @keys.secretKey)
 
   permitFileInfo: ->

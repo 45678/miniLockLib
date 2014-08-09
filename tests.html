@@ -6,7 +6,11 @@
     body, body * { font: 15px/20px Consolas, monospace; }
     body {
       background-color:hsl(0, 0%, 33%);
-      margin: 5px 5px 40px;
+      margin: 10px 10px 40px;
+    }
+    #tests {
+      position: absolute;
+      left: 0; right: 0; bottom:0;
     }
     
     footer {
@@ -21,20 +25,20 @@
     
     #summary {
       position: absolute;
-      left: 110px;
+      left: 115px;
     }
     
     body #running,
     body #done {
       position: absolute;
       padding: 0px 5px;
-      left: 5px;
+      left: 10px;
       bottom: 10px;
     }
 
     body.running #running {
       visibility: visible;
-      color:hsl(180, 66%, 66%);
+      color:hsl(195, 55%, 66%);
       transition: visibility 0s linear 0s;
     }
 
@@ -61,10 +65,15 @@
       padding: 5px;
       margin: 1px;
     }
-    div.test          { background-color: hsl(000, 00%, 55%); }
-    div.test.started  { background-color: hsl(180, 66%, 66%); }
-    div.test.ok       { background-color: hsl(340, 33%, 66%); }
-    div.test.failed   { background-color: hsl(070, 66%, 66%); }
+    div.test          { background-color: hsl(270, 25%, 55%); }
+    div.test.started  { background-color: hsl(195, 55%, 66%); }
+    div.test.ok       { background-color: hsl(275, 55%, 66%); }
+    div.test.failed   { background-color: hsl(030, 80%, 55%); }
+
+    div.test          { background-color: hsl(270, 00%, 50%); }
+    div.test.started  { background-color: hsl(195, 55%, 66%); }
+    div.test.ok       { background-color: hsl(275, 00%, 66%); }
+    div.test.failed   { background-color: hsl(030, 80%, 55%); }
 
     body .failed_phrase {
       color:inherit;
@@ -72,12 +81,12 @@
     }
     body.failures .failed_phrase {
       color: black;
-      background-color: hsl(070, 66%, 66%);
+      background-color: hsl(030, 90%, 55%);
     }
     
     body.stopped #done {
       color: black;
-      background-color: hsl(340, 33%, 66%);
+      background-color: hsl(275, 66%, 66%);
     }
     body.stopped.failures #done {
       color: white;
@@ -154,8 +163,11 @@
       /* word-wrap: break-word; */
     }
     
+    
   </style>
   <body class="undefined stopped">
+    <div id="tests">
+    </div>
     <div id="templates" hidden>
       <div id="test_template" class="empty test">
         <div class="id"></div>

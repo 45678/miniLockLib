@@ -57,10 +57,15 @@ insertTestElement = (data) ->
   element.id = "test_#{data.id}"
   element.querySelector(".name").innerText = data.name
   element.className += " started"
-  document.body.appendChild(element)
-  element.scrollIntoView() if untouched
   element.startedAt = Date.now()
   element.querySelector("div.id").innerText = (data.id / 1000).toFixed(3).replace("0.", "#")
+  container = document.getElementById('tests')
+  container.appendChild(element)
+  containerHeight = parseInt getComputedStyle(container)['height']
+  bodyHeight = parseInt getComputedStyle(document.body)['height']
+  if (containerHeight > bodyHeight)
+    document.body.style.height = "#{containerHeight}px"
+  element.scrollIntoView() if untouched
 
 renderTestElementUpdate = (element, data) ->
   className = if data.ok then "ok" else "failed"

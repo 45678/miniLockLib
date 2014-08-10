@@ -53,8 +53,8 @@ miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair
 #           error is a String explaing the failure
 #           encrypted is undefined
 #
-# A `miniLockLib.EncryptOperation` is constructed when you call `encrypt`. Refer
-# to EncryptOperation.coffee to see how it works.
+# A `miniLockLib.EncryptOperation` is constructed when you call `encrypt`.
+# Refer to EncryptOperation.coffee to see how it works.
 
 miniLockLib.encrypt = (params) ->
   {data, name, miniLockIDs, keys, callback} = params
@@ -88,8 +88,8 @@ miniLockLib.encrypt = (params) ->
 #           error is a String explaing the failure
 #           encrypted is undefined
 #
-# A `miniLockLib.DecryptOperation` is constructed when you call `encrypt`. Refer
-# to DecryptOperation.coffee to see how it works.
+# A `miniLockLib.DecryptOperation` is constructed when you call `decrypt`.
+# Refer to DecryptOperation.coffee to see how it works.
 
 miniLockLib.decrypt = (params) ->
   {data, keys, callback} = params

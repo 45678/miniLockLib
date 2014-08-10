@@ -118,4 +118,3 @@ tape "decrypt file name", (test) ->
       test.ok operation.name is "alice.txt"
       test.ok positionOfLastNameByte is 922
       test.end(error)
-

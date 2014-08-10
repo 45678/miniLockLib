@@ -97,7 +97,7 @@ insertFailure = (element, data) ->
   element.appendChild(failureEl)
   if failedTests.length is 1
     if untouched is true
-      delay 1, -> 
+      delay 1, ->
         untouched = false
         element.scrollIntoView(true)
 
@@ -110,7 +110,3 @@ fixBrokenThrowsOperatorData = (data) ->
 
 findElementForTest = (id) ->
   document.getElementById("test_#{id}")
-
-
-
-

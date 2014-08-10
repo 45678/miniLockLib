@@ -5,7 +5,7 @@ NACL = require("./NACL")
 
 class DecryptOperation extends BasicOperation
   module.exports = this
-  
+
   constructor: (params={}) ->
     {@data, @keys, @callback} = params
     @decryptedBytes = []
@@ -25,7 +25,7 @@ class DecryptOperation extends BasicOperation
   run: ->
     @decryptName (error, nameWasDecrypted, startPositionOfDataBytes) =>
       if nameWasDecrypted?
-        @decryptData startPositionOfDataBytes, (error, blob) => 
+        @decryptData startPositionOfDataBytes, (error, blob) =>
           @end(error, blob)
       else
         @end(error)
@@ -33,7 +33,7 @@ class DecryptOperation extends BasicOperation
   end: (error, blob) ->
     @streamDecryptor.clean() if @streamDecryptor?
     BasicOperation::end.call(this, error, blob)
-  
+
   oncomplete: (blob) ->
     @callback(undefined, {
       data: blob
@@ -47,7 +47,7 @@ class DecryptOperation extends BasicOperation
 
   onerror: (error) ->
     @callback(error)
-  
+
   decryptName: (callback) ->
     @constructStreamDecryptor (error, lengthOfHeader) =>
       if error then return callback(error)
@@ -92,7 +92,7 @@ class DecryptOperation extends BasicOperation
         @constructStreamDecryptor(callback)
       else
         callback(error)
-      
+
   decryptUniqueNonceAndPermit: (callback) ->
     @readHeader (error, header, lengthOfHeader) =>
       if error
@@ -113,7 +113,7 @@ class DecryptOperation extends BasicOperation
       permit = @decryptPermit(decodedEncryptedPermit, uniqueNonce, ephemeral)
       if permit then return [uniqueNonce, permit]
     return undefined
-  
+
   decryptPermit: (decodedEncryptedPermit, uniqueNonce, ephemeral) ->
     decryptedPermitAsBytes = NACL.box.open(decodedEncryptedPermit, uniqueNonce, ephemeral, @keys.secretKey)
     if decryptedPermitAsBytes
@@ -125,7 +125,7 @@ class DecryptOperation extends BasicOperation
       return decryptedPermit
     else
       return undefined
-  
+
   decryptFileInfo: (decodedEncryptedFileInfo, uniqueNonce, senderPublicKey) ->
     decryptedFileInfoAsBytes = NACL.box.open(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey, @keys.secretKey)
     if (decryptedFileInfoAsBytes)
@@ -139,7 +139,7 @@ class DecryptOperation extends BasicOperation
       return decryptedFileInfo
     else
       return undefined
-  
+
   readHeader: (callback) ->
     @readLengthOfHeader (error, lengthOfHeader) =>
       if error then return callback(error)
@@ -154,4 +154,3 @@ class DecryptOperation extends BasicOperation
       if error then return callback(error)
       lengthOfHeader = miniLockLib.byteArrayToNumber(sliceOfBytes)
       callback(undefined, lengthOfHeader)
-

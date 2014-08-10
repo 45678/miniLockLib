@@ -4,7 +4,7 @@ BLAKE2s = require("./BLAKE2s")
 
 class EncryptOperation extends BasicOperation
   module.exports = this
-  
+
   constructor: (params={})->
     {@data, @keys, @name, @miniLockIDs, @callback} = params
     @ephemeral = NACL.box.keyPair()
@@ -92,10 +92,10 @@ class EncryptOperation extends BasicOperation
     @lengthOfHeaderIn4Bytes = miniLockLib.numberToByteArray(headerJSON.length)
     @headerJSONBytes = NACL.util.decodeUTF8(headerJSON)
     return @header
-    
+
   constructStreamEncryptor: ->
     @streamEncryptor ?= NACL.stream.createEncryptor(@fileKey, @fileNonce, @chunkSize)
-  
+
   fixedLengthDecodedName: ->
     fixedLength = new Uint8Array(256)
     decodedName = NACL.util.decodeUTF8(@name)
@@ -127,7 +127,7 @@ class EncryptOperation extends BasicOperation
       recipientID: miniLockID
       fileInfo: NACL.util.encodeBase64(@encryptedFileInfo(miniLockID, uniqueNonce))
     }]
-  
+
   encryptedFileInfo: (miniLockID, uniqueNonce) ->
     decodedFileInfoJSON = NACL.util.decodeUTF8(JSON.stringify(@permitFileInfo()))
     recipientPublicKey = miniLockLib.ID.decode(miniLockID)
@@ -137,4 +137,3 @@ class EncryptOperation extends BasicOperation
     fileKey:   NACL.util.encodeBase64(@fileKey)
     fileNonce: NACL.util.encodeBase64(@fileNonce)
     fileHash:  NACL.util.encodeBase64(@hash.digest())
-

@@ -1,6 +1,6 @@
 class BasicOperation
   module.exports = this
-  
+
   chunkSize: 1024 * 1024
 
   end: (error, blob) ->
@@ -23,7 +23,7 @@ class BasicOperation
     @fileReader.onabort = (event) ->
       console.error("@fileReader.onabort", event)
       callback "File read abort."
-    @fileReader.onerror = (event) -> 
+    @fileReader.onerror = (event) ->
       console.error("@fileReader.onerror", event)
       callback "File read error."
     @fileReader.onload = (event) ->

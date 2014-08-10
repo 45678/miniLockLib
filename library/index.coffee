@@ -13,8 +13,6 @@ miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")
 
 
 
-
-
 # -------------
 # miniLock Keys
 # -------------
@@ -31,8 +29,7 @@ miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")
 #          error is a String explaining the failure
 #          keys in undefined
 #
-miniLockLib.makeKeyPair = (secretPhrase, emailAddress, callback) ->
-  miniLockLib.Keys.makeKeyPair(secretPhrase, emailAddress, callback)
+miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair
 
 
 

@@ -2156,9 +2156,7 @@ module.exports = (function () {
 
   miniLockLib.zxcvbn = zxcvbn = require("./zxcvbn");
 
-  miniLockLib.makeKeyPair = function(secretPhrase, emailAddress, callback) {
-    return miniLockLib.Keys.makeKeyPair(secretPhrase, emailAddress, callback);
-  };
+  miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair;
 
   miniLockLib.encrypt = function(params) {
     var callback, data, keys, miniLockIDs, name;

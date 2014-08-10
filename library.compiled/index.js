@@ -91,34 +91,12 @@
     7: "Could not validate ciphertext hash"
   };
 
-  miniLockLib.numberToByteArray = function(n) {
-    var byteArray, index, _i;
-    byteArray = new Uint8Array(4);
-    for (index = _i = 0; _i <= 4; index = ++_i) {
-      byteArray[index] = n & 255;
-      n = n >> 8;
-    }
-    return byteArray;
-  };
-
-  miniLockLib.byteArrayToNumber = function(byteArray) {
-    var index, n, _i;
-    n = 0;
-    for (index = _i = 3; _i >= 0; index = --_i) {
-      n += byteArray[index];
-      if (index !== 0) {
-        n = n << 8;
-      }
-    }
-    return n;
-  };
-
   BLAKE2HashDigest = function(input, options) {
     var hash;
     if (options == null) {
       options = {};
     }
-    hash = new miniLockLib.BLAKE2(options.length);
+    hash = new BLAKE2(options.length);
     hash.update(input);
     return hash.digest();
   };

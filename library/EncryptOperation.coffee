@@ -1,6 +1,7 @@
 BasicOperation = require("./BasicOperation")
 NACL = require("./NACL")
 BLAKE2s = require("./BLAKE2s")
+{numberToByteArray} = require("./util")
 
 class EncryptOperation extends BasicOperation
   module.exports = this
@@ -89,7 +90,7 @@ class EncryptOperation extends BasicOperation
       ephemeral: NACL.util.encodeBase64(@ephemeral.publicKey)
       decryptInfo: @encodedEncryptedPermits()
     headerJSON = JSON.stringify(@header)
-    @lengthOfHeaderIn4Bytes = miniLockLib.numberToByteArray(headerJSON.length)
+    @lengthOfHeaderIn4Bytes = numberToByteArray(headerJSON.length)
     @headerJSONBytes = NACL.util.decodeUTF8(headerJSON)
     return @header
 

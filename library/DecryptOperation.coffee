@@ -1,7 +1,7 @@
 BasicOperation = require("./BasicOperation")
 NACL = require("./NACL")
-
 {encodeUTF8, decodeBase64} = NACL.util
+{byteArrayToNumber} = require("./util")
 
 class DecryptOperation extends BasicOperation
   module.exports = this
@@ -152,5 +152,5 @@ class DecryptOperation extends BasicOperation
   readLengthOfHeader: (callback) ->
     @readSliceOfData 8, 12, (error, sliceOfBytes) =>
       if error then return callback(error)
-      lengthOfHeader = miniLockLib.byteArrayToNumber(sliceOfBytes)
+      lengthOfHeader = byteArrayToNumber(sliceOfBytes)
       callback(undefined, lengthOfHeader)

@@ -160,23 +160,6 @@ miniLockLib.ErrorMessages =
   6: "File is not encrypted for this recipient"
   7: "Could not validate ciphertext hash"
 
-# Convert a Number to a 4-byte little-endian Uint8Array
-miniLockLib.numberToByteArray = (n) ->
-  byteArray = new Uint8Array(4)
-  for index in [0..4]
-    byteArray[index] = n & 255
-    n = n >> 8
-  byteArray
-
-# Convert a 4-byte little-endian Uint8Array to a Number
-miniLockLib.byteArrayToNumber = (byteArray) ->
-  n = 0
-  for index in [3..0]
-    n += byteArray[index]
-    if (index isnt 0)
-      n = n << 8
-  return n
-
 # Construct a BLAKE2 hash digest of `input`. Specify digest `length` as a `Number`.
 BLAKE2HashDigest = (input, options={}) ->
   hash = new BLAKE2(options.length)

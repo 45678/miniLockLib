@@ -16,10 +16,12 @@ zxcvbn  = require("./zxcvbn")
 #          keys in undefined
 #
 # The secret phrase and email address are both tested to make sure they meet
-# miniLock’s standards. The secret phrase must be at least 32 characters long
-# and it must contain at least 100 bits of entropy. The email address musn’t
-# be invalid. If either input is unacceptable your `callback` will receive an
-# explanation as an error message.
+# miniLock’s standards. The phrase must be at least 32 characters long and it
+# must contain at least 100 bits of entropy. The address musn’t be invalid. If
+# either input is unacceptable your `callback` will receive an explanation of
+# the failure as its `error` argument.
+#
+# Making a pair of keys will take a few seconds — please be patient.
 
 exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
   switch

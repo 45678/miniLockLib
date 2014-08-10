@@ -103,7 +103,7 @@ miniLockLib.decrypt = (params) ->
 
 
 miniLockLib.Base58 = Base58  = require("./Base58")
-miniLockLib.BLAKE2 = BLAKE2  = require("./BLAKE2s")
+miniLockLib.BLAKE2 = BLAKE2  = require("./BLAKE2")
 miniLockLib.NACL   = NACL    = require("./NACL")
 miniLockLib.scrypt = scrypt  = require("./scrypt-async")
 miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")

@@ -1,4 +1,4 @@
-BLAKE2  = require("./BLAKE2s")
+BLAKE2  = require("./BLAKE2")
 NACL    = require("./NACL")
 scrypt  = require("./scrypt-async")
 zxcvbn  = require("./zxcvbn")
@@ -40,9 +40,9 @@ exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
       decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
       decodedEmailAddress = NACL.util.decodeUTF8(emailAddress)
       # Create a hash digest of the decoded secret phrase to increase its complexity.
-      hashOfDecodedSecretPhrase = BLAKE2HashDigestOf(decodedSecretPhrase, length: 32)
+      hashDigestOfDecodedSecretPhrase = (new BLAKE2 length: 32).update(decodedSecretPhrase).digest()
       # Calculate keys for the hash of the secret phrase with email address as salt.
-      calculateCurve25519KeyPair hashOfDecodedSecretPhrase, decodedEmailAddress, (keys) ->
+      calculateCurve25519KeyPair hashDigestOfDecodedSecretPhrase, decodedEmailAddress, (keys) ->
         callback(undefined, keys)
 
 
@@ -63,13 +63,6 @@ calculateCurve25519KeyPair = (secret, salt, callback) ->
 
   # Send the task to `scrypt` for processing...
   scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding)
-
-
-# Construct a BLAKE2 hash digest of `input`. Specify digest `length` as a `Number`.
-BLAKE2HashDigestOf = (input, options={}) ->
-  hash = new BLAKE2(options.length)
-  hash.update(input)
-  hash.digest()
 
 
 # miniLock only accepts secret phrases that are at least 32 characters long and

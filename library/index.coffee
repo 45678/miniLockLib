@@ -1,14 +1,13 @@
 miniLockLib = module.exports = {}
 
-miniLockLib.NACL = NACL      = require("./NACL")
-miniLockLib.scrypt = scrypt  = require("./scrypt-async")
-miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")
-
+miniLockLib.Keys             = require "./Keys"
 miniLockLib.ID               = require "./ID"
 miniLockLib.EncryptOperation = require("./EncryptOperation")
 miniLockLib.DecryptOperation = require("./DecryptOperation")
 
-
+miniLockLib.NACL   = NACL    = require("./NACL")
+miniLockLib.scrypt = scrypt  = require("./scrypt-async")
+miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")
 miniLockLib.Base58 = Base58  = require("./Base58")
 miniLockLib.BLAKE2 = BLAKE2  = require("./BLAKE2s")
 
@@ -44,51 +43,15 @@ EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i
 # miniLock Keys
 # -------------
 #
-# miniLock key pairs consist of two cryptographic keys (two lists of numbers
-# between 0..255, each list has 32 numbers in it). Your public key lets you
-# encrypt your own files and it lets other people encrypt files for you. Your
-# secret key unlocks files that were encrypted for you. Both keys are derived
-# from the combination your secret phrase and email address. Your email address
-# acts as the key derivation salt to ensure your key pair is unique just in
-# case someone else uses the same secret phrase as you do.
-#
-# Call `miniLockLib.getKeyPair` to generate a set of keys from a secret phrase
+# Call `miniLockLib.makeKeyPair` to generate a set of keys from a secret phrase
 # and email address. Your `callback` receives a pair of `keys` like this:
 #
-#     miniLockLib.getKeyPair secretPhrase, emailAddress, (keys) ->
+#     miniLockLib.makeKeyPair secretPhrase, emailAddress, (keys) ->
 #        keys.publicKey is a Uint8Array
 #        keys.secretKey is a Uint8Array
 #
 miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
-  # Decode each input into a Uint8Array of bytes.
-  decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
-  decodedEmailAddress = NACL.util.decodeUTF8(emailAddress)
-
-  # Create a hash digest of the decoded secret phrase.
-  # (Why? Because the miniLock specification says so.)
-  hashOfDecodedSecretPhrase = BLAKE2HashDigest(decodedSecretPhrase, length: 32)
-
-  # Calculate keys for the hash of the secret phrase and email address salt.
-  calculateCurve25519Keys hashOfDecodedSecretPhrase, decodedEmailAddress, callback
-
-
-# Calculate a curve25519 key pair for the given `secret` and `salt`.
-calculateCurve25519Keys = (secret, salt, callback) ->
-  # Decode and unpack the keys when the task is complete.
-  whenKeysAreReady = (encodedBytes) ->
-    decodedBytes = NACL.util.decodeBase64(encodedBytes)
-    keys = NACL.box.keyPair.fromSecretKey(decodedBytes)
-    callback(keys)
-
-  # Define miniLock `scrypt` parameters for the calculation task:
-  logN          = 17       # CPU/memory cost parameter (1 to 31).
-  r             = 8        # Block size parameter. (I don’t know about this).
-  dkLen         = 32       # Length of derived keys. (A miniLock key is 32 numbers).
-  interruptStep = 1000     # Steps to split calculation with timeouts (default 1000).
-  encoding      = "base64" # Output encoding ("base64", "hex", or null).
-
-  # Send the task to `scrypt` for processing...
-  scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding)
+  miniLockLib.Keys.makeKeyPair(secretPhrase, emailAddress, callback)
 
 
 
@@ -159,9 +122,3 @@ miniLockLib.ErrorMessages =
   5: "Could not validate sender ID"
   6: "File is not encrypted for this recipient"
   7: "Could not validate ciphertext hash"
-
-# Construct a BLAKE2 hash digest of `input`. Specify digest `length` as a `Number`.
-BLAKE2HashDigest = (input, options={}) ->
-  hash = new BLAKE2(options.length)
-  hash.update(input)
-  hash.digest()

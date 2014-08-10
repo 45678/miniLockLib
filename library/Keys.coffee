@@ -1,6 +1,7 @@
 BLAKE2  = require("./BLAKE2s")
 NACL    = require("./NACL")
 scrypt  = require("./scrypt-async")
+zxcvbn  = require("./zxcvbn")
 
 # -------------
 # miniLock Keys
@@ -56,3 +57,16 @@ BLAKE2HashDigestOf = (input, options={}) ->
   hash = new BLAKE2(options.length)
   hash.update(input)
   hash.digest()
+
+
+# miniLock only accepts secret phrases that are at least 32 characters long and
+# have at least 100 bits of entropy.
+module.exports.secretPhraseIsAcceptable = (secretPhrase) ->
+  secretPhrase?.length >= 32 and zxcvbn(secretPhrase).entropy >= 100
+
+
+# miniLock only accepts relatively standards compliant email addresses.
+module.exports.emailAddressIsAcceptable = (emailAddress) ->
+  EmailAddressPattern.test(emailAddress)
+
+EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i

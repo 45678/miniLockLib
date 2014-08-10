@@ -5,36 +5,12 @@ miniLockLib.ID               = require "./ID"
 miniLockLib.EncryptOperation = require("./EncryptOperation")
 miniLockLib.DecryptOperation = require("./DecryptOperation")
 
+miniLockLib.Base58 = Base58  = require("./Base58")
+miniLockLib.BLAKE2 = BLAKE2  = require("./BLAKE2s")
 miniLockLib.NACL   = NACL    = require("./NACL")
 miniLockLib.scrypt = scrypt  = require("./scrypt-async")
 miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")
-miniLockLib.Base58 = Base58  = require("./Base58")
-miniLockLib.BLAKE2 = BLAKE2  = require("./BLAKE2s")
 
-
-# --------------
-# Secret Phrases
-# --------------
-#
-# miniLock only accepts secret phrases that are at least 32 characters long
-# and have at least 100 bits of entropy.
-#
-miniLockLib.secretPhraseIsAcceptable = (secretPhrase) ->
-  secretPhrase?.length >= 32 and zxcvbn(secretPhrase).entropy >= 100
-
-
-
-
-# ---------------
-# Email Addresses
-# ---------------
-#
-# miniLock only accepts relatively standards compliant email addresses.
-#
-miniLockLib.emailAddressIsAcceptable = (emailAddress) ->
-  EmailAddressPattern.test(emailAddress)
-
-EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i
 
 
 

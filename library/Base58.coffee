@@ -36,7 +36,7 @@ Base58.encode = (buffer) ->
       digits.push carry % Base58.BASE
       carry = (carry / Base58.BASE) | 0
     i++
-  
+
   # deal with leading zeros
   i = 0
   while i < buffer.length - 1 and buffer[i] is 0
@@ -73,7 +73,7 @@ Base58.decode = (string) ->
       bytes.push carry & 0xff
       carry >>= 8
     i++
-  
+
   # deal with leading zeros
   i = 0
   while i < input.length - 1 and input[i] is 0

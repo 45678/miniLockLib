@@ -7,7 +7,7 @@ tape "construct a blank encrypt operation", (test) ->
   operation = new miniLockLib.EncryptOperation
   test.ok operation
   test.end()
-  
+
 tape "define data, keys, miniLockIDs and callback when you construct an ecrypt operation", (test) ->
   operation = new miniLockLib.EncryptOperation
     data: new Blob
@@ -43,7 +43,7 @@ tape "can’t start an encrypt operation without miniLockIDs", (test) ->
     callback: ->
   test.throws operation.start, 'Can’t start miniLockLib.EncryptOperation without miniLockIDs.'
   test.end()
-  
+
 tape "empty array of ciphertext bytes is ready after operation is constructed", (test) ->
   operation = new miniLockLib.EncryptOperation
   test.ok operation.ciphertextBytes.length is 0
@@ -66,7 +66,7 @@ tape "file nonce is ready after operation is constructed", (test) ->
   test.ok operation.fileNonce.constructor is Uint8Array
   test.ok operation.fileNonce.length is 16
   test.end()
-  
+
 tape "hash for ciphertext bytes is ready after operation is constructed", (test) ->
   operation = new miniLockLib.EncryptOperation
   test.ok operation.hash.digestLength is 32 # bytes
@@ -103,7 +103,7 @@ tape "construct a permit to decrypt for a recipient", (test) ->
   test.ok permit.fileInfo.constructor is String
   test.ok permit.fileInfo isnt ""
   test.end()
-  
+
 tape "recipient can decrypt the key, nonce and hash of the file encoded in their permit", (test) ->
   operation = new miniLockLib.EncryptOperation keys: Alice.keys
   [uniqueNonce, permit] = operation.permit(Bobby.miniLockID)
@@ -147,4 +147,3 @@ tape "header for two recipients has two permits", (test) ->
   operation.constructHeader()
   test.ok Object.keys(operation.header.decryptInfo).length is 2
   test.end()
-

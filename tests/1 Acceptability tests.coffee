@@ -46,4 +46,3 @@ tape "Blank email address is unacceptable", (test) ->
 tape "Undefined email address is unacceptable", (test) ->
   test.same miniLockLib.emailAddressIsAcceptable(undefined), false
   test.end()
-

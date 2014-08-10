@@ -16,7 +16,7 @@ miniLockLib.DecryptOperation = require("./DecryptOperation")
 # Secret Phrases
 # --------------
 #
-# miniLock only accepts secret phrases that are at least 32 characters long 
+# miniLock only accepts secret phrases that are at least 32 characters long
 # and have at least 100 bits of entropy.
 #
 miniLockLib.secretPhraseIsAcceptable = (secretPhrase) ->
@@ -43,15 +43,15 @@ EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i
 # miniLock Keys
 # -------------
 #
-# miniLock key pairs consist of two cryptographic keys (two lists of numbers 
-# between 0..255, each list has 32 numbers in it). Your public key lets you 
-# encrypt your own files and it lets other people encrypt files for you. Your 
-# secret key unlocks files that were encrypted for you. Both keys are derived 
+# miniLock key pairs consist of two cryptographic keys (two lists of numbers
+# between 0..255, each list has 32 numbers in it). Your public key lets you
+# encrypt your own files and it lets other people encrypt files for you. Your
+# secret key unlocks files that were encrypted for you. Both keys are derived
 # from the combination your secret phrase and email address. Your email address
-# acts as the key derivation salt to ensure your key pair is unique just in 
+# acts as the key derivation salt to ensure your key pair is unique just in
 # case someone else uses the same secret phrase as you do.
 #
-# Call `miniLockLib.getKeyPair` to generate a set of keys from a secret phrase 
+# Call `miniLockLib.getKeyPair` to generate a set of keys from a secret phrase
 # and email address. Your `callback` receives a pair of `keys` like this:
 #
 #     miniLockLib.getKeyPair secretPhrase, emailAddress, (keys) ->
@@ -62,11 +62,11 @@ miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
   # Decode each input into a Uint8Array of bytes.
   decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
   decodedEmailAddress = NACL.util.decodeUTF8(emailAddress)
-  
+
   # Create a hash digest of the decoded secret phrase.
   # (Why? Because the miniLock specification says so.)
   hashOfDecodedSecretPhrase = BLAKE2HashDigest(decodedSecretPhrase, length: 32)
-  
+
   # Calculate keys for the hash of the secret phrase and email address salt.
   calculateCurve25519Keys hashOfDecodedSecretPhrase, decodedEmailAddress, callback
 
@@ -78,14 +78,14 @@ calculateCurve25519Keys = (secret, salt, callback) ->
     decodedBytes = NACL.util.decodeBase64(encodedBytes)
     keys = NACL.box.keyPair.fromSecretKey(decodedBytes)
     callback(keys)
-  
+
   # Define miniLock `scrypt` parameters for the calculation task:
   logN          = 17       # CPU/memory cost parameter (1 to 31).
   r             = 8        # Block size parameter. (I don’t know about this).
   dkLen         = 32       # Length of derived keys. (A miniLock key is 32 numbers).
   interruptStep = 1000     # Steps to split calculation with timeouts (default 1000).
   encoding      = "base64" # Output encoding ("base64", "hex", or null).
-  
+
   # Send the task to `scrypt` for processing...
   scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding)
 
@@ -131,7 +131,7 @@ miniLockLib.ID.decode = (id) ->
 #
 #     miniLockLib.encrypt
 #       data: blob,
-#       name: "alice_and_bobby.txt" 
+#       name: "alice_and_bobby.txt"
 #       keys: {publicKey: Uint8Array, secretKey: Uint8Array}
 #       miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
 #       callback: (error, encrypted) ->
@@ -214,4 +214,3 @@ BLAKE2HashDigest = (input, options={}) ->
   hash = new miniLockLib.BLAKE2s(options.length)
   hash.update(input)
   hash.digest()
-

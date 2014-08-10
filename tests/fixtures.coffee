@@ -15,11 +15,11 @@ Bobby.secretKey    = miniLockLib.Base58.decode("A699ac6jesP643rkM71jAxs33wY9mk6V
 Bobby.keys         = {publicKey: Bobby.publicKey, secretKey: Bobby.secretKey}
 
 read = exports.read = (name, callback) ->
-  read.files[name] (error, processed) -> 
+  read.files[name] (error, processed) ->
     if error then throw error
     callback(processed.data)
 
-read.files = 
+read.files =
   "basic.txt": (callback) ->
     callback undefined,
       data: new Blob ["This is only a test!"], type: "text/plain"
@@ -47,4 +47,3 @@ readFromNetwork = exports.readFromNetwork = (name, callback) ->
     if request.readyState is 4
       callback request.response
   request.send()
-

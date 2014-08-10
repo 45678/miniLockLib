@@ -1,9 +1,9 @@
-BasicOperation = require("./BasicOperation")
+AbstractOperation = require("./AbstractOperation")
 NACL = require("./NACL")
 {encodeUTF8, decodeBase64} = NACL.util
 {byteArrayToNumber} = require("./util")
 
-class DecryptOperation extends BasicOperation
+class DecryptOperation extends AbstractOperation
   module.exports = this
 
   constructor: (params={}) ->
@@ -32,7 +32,7 @@ class DecryptOperation extends BasicOperation
 
   end: (error, blob) ->
     @streamDecryptor.clean() if @streamDecryptor?
-    BasicOperation::end.call(this, error, blob)
+    AbstractOperation::end.call(this, error, blob)
 
   oncomplete: (blob) ->
     @callback(undefined, {

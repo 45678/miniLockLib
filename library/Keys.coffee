@@ -1,4 +1,4 @@
-BLAKE2  = require("./BLAKE2s")
+BLAKE2  = require("./BLAKE2")
 NACL    = require("./NACL")
 scrypt  = require("./scrypt-async")
 zxcvbn  = require("./zxcvbn")
@@ -16,31 +16,33 @@ zxcvbn  = require("./zxcvbn")
 #          keys in undefined
 #
 # The secret phrase and email address are both tested to make sure they meet
-# miniLock’s standards. The secret phrase must be at least 32 characters long
-# and it must contain at least 100 bits of entropy. The email address musn’t
-# be invalid. If either input is unacceptable your `callback` will receive an
-# explanation as an error message.
+# miniLock’s standards. The phrase must be at least 32 characters long and it
+# must contain at least 100 bits of entropy. The address musn’t be invalid. If
+# either input is unacceptable your `callback` will receive an explanation of
+# the failure as its `error` argument.
+#
+# Making a pair of keys will take a few seconds — please be patient.
 
 exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
   switch
     when callback?.constructor isnt Function
       return "Can’t make a pair of keys without a callback function."
     when secretPhrase is undefined
-      callback("Can’t make a pair of keys without a secret phrase.")
+      callback "Can’t make a pair of keys without a secret phrase."
     when exports.secretPhraseIsAcceptable(secretPhrase) is no
-      callback("Can’t make a pair of keys because the secret phrase is unacceptable.")
+      callback "Can’t make a pair of keys because the secret phrase is unacceptable."
     when emailAddress is undefined
-      callback("Can’t make a pair of keys without an email address.")
+      callback "Can’t make a pair of keys without an email address."
     when exports.emailAddressIsAcceptable(emailAddress) is no
-      callback("Can’t make a pair of keys because the email address is unacceptable.")
+      callback "Can’t make a pair of keys because the email address is unacceptable."
     when secretPhrase and emailAddress and callback
       # Decode each input into a Uint8Array of bytes.
       decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
       decodedEmailAddress = NACL.util.decodeUTF8(emailAddress)
       # Create a hash digest of the decoded secret phrase to increase its complexity.
-      hashOfDecodedSecretPhrase = BLAKE2HashDigestOf(decodedSecretPhrase, length: 32)
+      hashDigestOfDecodedSecretPhrase = (new BLAKE2 length: 32).update(decodedSecretPhrase).digest()
       # Calculate keys for the hash of the secret phrase with email address as salt.
-      calculateCurve25519KeyPair hashOfDecodedSecretPhrase, decodedEmailAddress, (keys) ->
+      calculateCurve25519KeyPair hashDigestOfDecodedSecretPhrase, decodedEmailAddress, (keys) ->
         callback(undefined, keys)
 
 
@@ -61,13 +63,6 @@ calculateCurve25519KeyPair = (secret, salt, callback) ->
 
   # Send the task to `scrypt` for processing...
   scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding)
-
-
-# Construct a BLAKE2 hash digest of `input`. Specify digest `length` as a `Number`.
-BLAKE2HashDigestOf = (input, options={}) ->
-  hash = new BLAKE2(options.length)
-  hash.update(input)
-  hash.digest()
 
 
 # miniLock only accepts secret phrases that are at least 32 characters long and

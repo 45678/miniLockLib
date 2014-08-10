@@ -5,50 +5,54 @@ miniLockLib.ID               = require "./ID"
 miniLockLib.EncryptOperation = require("./EncryptOperation")
 miniLockLib.DecryptOperation = require("./DecryptOperation")
 
-miniLockLib.Base58 = Base58  = require("./Base58")
-miniLockLib.BLAKE2 = BLAKE2  = require("./BLAKE2s")
-miniLockLib.NACL   = NACL    = require("./NACL")
-miniLockLib.scrypt = scrypt  = require("./scrypt-async")
-miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")
-
-
-
-# -------------
-# miniLock Keys
-# -------------
+# ------------------
+# Make a set of Keys
+# ------------------
 #
 # Call `miniLockLib.makeKeyPair` to generate a set of keys from a secret phrase
 # and email address. Your `callback` receives a pair of `keys` like this:
 #
-#     miniLockLib.makeKeyPair secretPhrase, emailAddress, (error, keys) ->
-#        if keys?
-#          keys.publicKey is a Uint8Array
-#          keys.secretKey is a Uint8Array
-#          error is undefined
-#        else
-#          error is a String explaining the failure
-#          keys in undefined
+#   miniLockLib.makeKeyPair secretPhrase, emailAddress, (error, keys) ->
+#    if keys
+#      keys.publicKey is a Uint8Array
+#      keys.secretKey is a Uint8Array
+#      error is undefined
+#    else
+#      error is a String explaining the failure
+#      keys is undefined
 #
+# `miniLockLib.makeKeyPair` tests the secret phrase and email address to make
+# sure they meet miniLock’s standards. The secret phrase must be at least 32
+# characters long and it must contain at least 100 bits of entropy. The email
+# address must be valid. If either input is unacceptable your callback will
+# receive an error.
+#
+# `miniLockLib.makeKeyPair` is defined in Keys.coffee. Refer to that file for
+# more details and references to all its error messages.
 miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair
 
 
 
-
-# -------
-# Encrypt
-# -------
+# --------------
+# Encrypt a File
+# --------------
 #
 #     miniLockLib.encrypt
-#       data: blob,
+#       data: File or Blob,
 #       name: "alice_and_bobby.txt"
 #       keys: {publicKey: Uint8Array, secretKey: Uint8Array}
 #       miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
 #       callback: (error, encrypted) ->
-#         error is undefined or it is a message String
-#         encrypted.name is "alice_and_bobby.txt.minilock"
-#         encrypted.data.constructor is Blob
-#         encrypted.data.size.constructor is Number
-#         encrypted.senderID is Alice.miniLockID
+#         if encrypted
+#           encrypted.name is "alice_and_bobby.txt.minilock"
+#           encrypted.data is a Blob
+#           encrypted.data.size is Number
+#           encrypted.senderID is Alice.miniLockID
+#           encrypted.duration is in Milliseconds
+#           error is undefined
+#         else
+#           error is a String explaing the failure
+#           encrypted is undefined
 #
 miniLockLib.encrypt = (params) ->
   {data, name, miniLockIDs, keys, callback} = params
@@ -64,12 +68,12 @@ miniLockLib.encrypt = (params) ->
 
 
 
-# -------
-# Decrypt
-# -------
+# --------------
+# Decrypt a File
+# --------------
 #
 #     miniLockLib.decrypt
-#       data: blob,
+#       data: File or Blob,
 #       keys: {publicKey: Uint8Array, secretKey: Uint8Array}
 #       callback: (error, decrypted) ->
 #         error is undefined or it is a message String
@@ -88,6 +92,12 @@ miniLockLib.decrypt = (params) ->
 
 
 
+
+miniLockLib.Base58 = Base58  = require("./Base58")
+miniLockLib.BLAKE2 = BLAKE2  = require("./BLAKE2s")
+miniLockLib.NACL   = NACL    = require("./NACL")
+miniLockLib.scrypt = scrypt  = require("./scrypt-async")
+miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")
 
 # Explanations of miniLock’s numeric error codes.
 miniLockLib.ErrorMessages =

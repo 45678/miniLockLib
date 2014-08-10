@@ -3,25 +3,36 @@ NACL    = require("./NACL")
 scrypt  = require("./scrypt-async")
 zxcvbn  = require("./zxcvbn")
 
-# -------------
-# miniLock Keys
-# -------------
+# Make a set of keys for a secret phrase and email address. Your `callback`
+# receives a pair of `keys`, or an `error`, like this:
+#
+#     miniLockLib.makeKeyPair secretPhrase, emailAddress, (error, keys) ->
+#        if keys?
+#          keys.publicKey is a Uint8Array
+#          keys.secretKey is a Uint8Array
+#          error is undefined
+#        else
+#          error is a String explaining the failure
+#          keys in undefined
+#
+# The secret phrase and email address are both tested to make sure they meet
+# miniLock’s standards. The secret phrase must be at least 32 characters long
+# and it must contain at least 100 bits of entropy. The email address musn’t
+# be invalid. If either input is unacceptable your `callback` will receive an
+# explanation as an error message.
 
-# Make a set of keys for the given `secretPhrase` and `emailAddress`.
-# Your `callback` receives a pair keys like this:
-#
-#     miniLockLib.Keys.makeKeyPair secretPhrase, emailAddress, (keys) ->
-#        keys.publicKey is a Uint8Array
-#        keys.secretKey is a Uint8Array
-#
-module.exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
+exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
   switch
     when callback?.constructor isnt Function
       return "Can’t make a pair of keys without a callback function."
     when secretPhrase is undefined
       callback("Can’t make a pair of keys without a secret phrase.")
+    when exports.secretPhraseIsAcceptable(secretPhrase) is no
+      callback("Can’t make a pair of keys because the secret phrase is unacceptable.")
     when emailAddress is undefined
       callback("Can’t make a pair of keys without an email address.")
+    when exports.emailAddressIsAcceptable(emailAddress) is no
+      callback("Can’t make a pair of keys because the email address is unacceptable.")
     when secretPhrase and emailAddress and callback
       # Decode each input into a Uint8Array of bytes.
       decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
@@ -61,12 +72,12 @@ BLAKE2HashDigestOf = (input, options={}) ->
 
 # miniLock only accepts secret phrases that are at least 32 characters long and
 # have at least 100 bits of entropy.
-module.exports.secretPhraseIsAcceptable = (secretPhrase) ->
+exports.secretPhraseIsAcceptable = (secretPhrase) ->
   secretPhrase?.length >= 32 and zxcvbn(secretPhrase).entropy >= 100
 
 
 # miniLock only accepts relatively standards compliant email addresses.
-module.exports.emailAddressIsAcceptable = (emailAddress) ->
+exports.emailAddressIsAcceptable = (emailAddress) ->
   EmailAddressPattern.test(emailAddress)
 
 EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i

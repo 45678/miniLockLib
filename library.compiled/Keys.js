@@ -10,15 +10,19 @@
 
   zxcvbn = require("./zxcvbn");
 
-  module.exports.makeKeyPair = function(secretPhrase, emailAddress, callback) {
+  exports.makeKeyPair = function(secretPhrase, emailAddress, callback) {
     var decodedEmailAddress, decodedSecretPhrase, hashOfDecodedSecretPhrase;
     switch (false) {
       case (callback != null ? callback.constructor : void 0) === Function:
         return "Can’t make a pair of keys without a callback function.";
       case secretPhrase !== void 0:
         return callback("Can’t make a pair of keys without a secret phrase.");
+      case exports.secretPhraseIsAcceptable(secretPhrase) !== false:
+        return callback("Can’t make a pair of keys because the secret phrase is unacceptable.");
       case emailAddress !== void 0:
         return callback("Can’t make a pair of keys without an email address.");
+      case exports.emailAddressIsAcceptable(emailAddress) !== false:
+        return callback("Can’t make a pair of keys because the email address is unacceptable.");
       case !(secretPhrase && emailAddress && callback):
         decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase);
         decodedEmailAddress = NACL.util.decodeUTF8(emailAddress);
@@ -57,11 +61,11 @@
     return hash.digest();
   };
 
-  module.exports.secretPhraseIsAcceptable = function(secretPhrase) {
+  exports.secretPhraseIsAcceptable = function(secretPhrase) {
     return (secretPhrase != null ? secretPhrase.length : void 0) >= 32 && zxcvbn(secretPhrase).entropy >= 100;
   };
 
-  module.exports.emailAddressIsAcceptable = function(emailAddress) {
+  exports.emailAddressIsAcceptable = function(emailAddress) {
     return EmailAddressPattern.test(emailAddress);
   };
 

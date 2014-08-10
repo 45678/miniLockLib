@@ -29,7 +29,17 @@ tape "can’t make keys without a secret phrase", (test) ->
     test.same error, "Can’t make a pair of keys without a secret phrase."
     test.end()
 
+tape "can’t make keys with unacceptable secret phrase", (test) ->
+  miniLockLib.makeKeyPair "My password is password.", Bobby.emailAddress, (error) ->
+    test.same error, "Can’t make a pair of keys because the secret phrase is unacceptable."
+    test.end()
+
 tape "can’t make keys without an email address", (test) ->
   miniLockLib.makeKeyPair Bobby.secretPhrase, undefined, (error) ->
     test.same error, "Can’t make a pair of keys without an email address."
+    test.end()
+
+tape "can’t make keys with unacceptable email address", (test) ->
+  miniLockLib.makeKeyPair Bobby.secretPhrase, "undefined@undefined", (error) ->
+    test.same error, "Can’t make a pair of keys because the email address is unacceptable."
     test.end()

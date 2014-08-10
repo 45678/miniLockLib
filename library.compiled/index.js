@@ -12,16 +12,6 @@
 
   miniLockLib.DecryptOperation = require("./DecryptOperation");
 
-  miniLockLib.Base58 = Base58 = require("./Base58");
-
-  miniLockLib.BLAKE2 = BLAKE2 = require("./BLAKE2s");
-
-  miniLockLib.NACL = NACL = require("./NACL");
-
-  miniLockLib.scrypt = scrypt = require("./scrypt-async");
-
-  miniLockLib.zxcvbn = zxcvbn = require("./zxcvbn");
-
   miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair;
 
   miniLockLib.encrypt = function(params) {
@@ -48,6 +38,16 @@
       start: true
     });
   };
+
+  miniLockLib.Base58 = Base58 = require("./Base58");
+
+  miniLockLib.BLAKE2 = BLAKE2 = require("./BLAKE2s");
+
+  miniLockLib.NACL = NACL = require("./NACL");
+
+  miniLockLib.scrypt = scrypt = require("./scrypt-async");
+
+  miniLockLib.zxcvbn = zxcvbn = require("./zxcvbn");
 
   miniLockLib.ErrorMessages = {
     1: "General encryption error",

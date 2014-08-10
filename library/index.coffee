@@ -46,9 +46,14 @@ EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i
 # Call `miniLockLib.makeKeyPair` to generate a set of keys from a secret phrase
 # and email address. Your `callback` receives a pair of `keys` like this:
 #
-#     miniLockLib.makeKeyPair secretPhrase, emailAddress, (keys) ->
-#        keys.publicKey is a Uint8Array
-#        keys.secretKey is a Uint8Array
+#     miniLockLib.makeKeyPair secretPhrase, emailAddress, (error, keys) ->
+#        if keys?
+#          keys.publicKey is a Uint8Array
+#          keys.secretKey is a Uint8Array
+#          error is undefined
+#        else
+#          error is a String explaining the failure
+#          keys in undefined
 #
 miniLockLib.makeKeyPair = (secretPhrase, emailAddress, callback) ->
   miniLockLib.Keys.makeKeyPair(secretPhrase, emailAddress, callback)

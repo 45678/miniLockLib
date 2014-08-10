@@ -14,15 +14,22 @@ scrypt  = require("./scrypt-async")
 #        keys.secretKey is a Uint8Array
 #
 module.exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
-  # Decode each input into a Uint8Array of bytes.
-  decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
-  decodedEmailAddress = NACL.util.decodeUTF8(emailAddress)
-
-  # Create a hash digest of the decoded secret phrase.
-  hashOfDecodedSecretPhrase = BLAKE2HashDigestOf(decodedSecretPhrase, length: 32)
-
-  # Calculate keys for the hash of the secret phrase and email address salt.
-  calculateCurve25519KeyPair hashOfDecodedSecretPhrase, decodedEmailAddress, callback
+  switch
+    when callback?.constructor isnt Function
+      return "Can’t make a pair of keys without a callback function."
+    when secretPhrase is undefined
+      callback("Can’t make a pair of keys without a secret phrase.")
+    when emailAddress is undefined
+      callback("Can’t make a pair of keys without an email address.")
+    when secretPhrase and emailAddress and callback
+      # Decode each input into a Uint8Array of bytes.
+      decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
+      decodedEmailAddress = NACL.util.decodeUTF8(emailAddress)
+      # Create a hash digest of the decoded secret phrase to increase its complexity.
+      hashOfDecodedSecretPhrase = BLAKE2HashDigestOf(decodedSecretPhrase, length: 32)
+      # Calculate keys for the hash of the secret phrase with email address as salt.
+      calculateCurve25519KeyPair hashOfDecodedSecretPhrase, decodedEmailAddress, (keys) ->
+        callback(undefined, keys)
 
 
 # Calculate a curve25519 key pair for the given `secret` and `salt`.

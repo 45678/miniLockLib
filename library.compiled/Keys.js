@@ -10,12 +10,23 @@
 
   module.exports.makeKeyPair = function(secretPhrase, emailAddress, callback) {
     var decodedEmailAddress, decodedSecretPhrase, hashOfDecodedSecretPhrase;
-    decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase);
-    decodedEmailAddress = NACL.util.decodeUTF8(emailAddress);
-    hashOfDecodedSecretPhrase = BLAKE2HashDigestOf(decodedSecretPhrase, {
-      length: 32
-    });
-    return calculateCurve25519KeyPair(hashOfDecodedSecretPhrase, decodedEmailAddress, callback);
+    switch (false) {
+      case (callback != null ? callback.constructor : void 0) === Function:
+        return "Can’t make a pair of keys without a callback function.";
+      case secretPhrase !== void 0:
+        return callback("Can’t make a pair of keys without a secret phrase.");
+      case emailAddress !== void 0:
+        return callback("Can’t make a pair of keys without an email address.");
+      case !(secretPhrase && emailAddress && callback):
+        decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase);
+        decodedEmailAddress = NACL.util.decodeUTF8(emailAddress);
+        hashOfDecodedSecretPhrase = BLAKE2HashDigestOf(decodedSecretPhrase, {
+          length: 32
+        });
+        return calculateCurve25519KeyPair(hashOfDecodedSecretPhrase, decodedEmailAddress, function(keys) {
+          return callback(void 0, keys);
+        });
+    }
   };
 
   calculateCurve25519KeyPair = function(secret, salt, callback) {

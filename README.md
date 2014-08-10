@@ -4,15 +4,21 @@ Download [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/
 
     <script src="miniLockLib.js" charset="utf-8"></script>
 
-Now you are ready to call methods on `miniLockLib` from your Javascript program...
+Now you are ready to call `miniLockLib` methods from your Javascript program...
 
 __Examples__
 
-Call `makeKeyPair` with `secretPhrase` and `emailAddress` to get a pair of `keys`:
+Call `miniLockLib.makeKeyPair` with a `secretPhrase` and `emailAddress` to get a pair of `keys`:
 
-    miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(keys){
-       keys.publicKey is a Uint8Array
-       keys.secretKey is a Uint8Array
+    miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
+      if (keys) {
+        keys.publicKey is a Uint8Array
+        keys.secretKey is a Uint8Array
+        error is undefined
+      } else {
+        error is a String explaining the failure
+        keys is undefined
+       }
     })
 
 Pass `data`, `name`, `keys` and `miniLockIDs` when you `encrypt` a file:

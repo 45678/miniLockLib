@@ -32,7 +32,7 @@
 
   EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i;
 
-  miniLockLib.getKeyPair = function(secretPhrase, emailAddress, callback) {
+  miniLockLib.makeKeyPair = function(secretPhrase, emailAddress, callback) {
     return miniLockLib.Keys.makeKeyPair(secretPhrase, emailAddress, callback);
   };
 

@@ -8,9 +8,9 @@ Now you are ready to call methods on `miniLockLib` from your Javascript program.
 
 __Examples__
 
-Call `getKeyPair` with `secretPhrase` and `emailAddress` to get a pair of `keys`:
+Call `makeKeyPair` with `secretPhrase` and `emailAddress` to get a pair of `keys`:
 
-    miniLockLib.getKeyPair(secretPhrase, emailAddress, function(keys){
+    miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(keys){
        keys.publicKey is a Uint8Array
        keys.secretKey is a Uint8Array
     })
@@ -38,7 +38,7 @@ Pass `data` and `keys` when you `decrypt` a file:
       keys: {publicKey: Uint8Array, secretKey: Uint8Array},
       callback: function(error, decrypted) {
         decrypted.data is a Blob of the decrypted data
-        decrypted.data.size is the Number of bytes in the decrypted file 
+        decrypted.data.size is the Number of bytes in the decrypted file
         decrypted.name is the decrypted name of file as a String
         decrypted.senderID is the miniLock ID of the person who encrypted the file
       }
@@ -58,9 +58,9 @@ __Sources__
 
 `nacl-stream.js` is an unmodified copy of the [tweetnacl-js streaming encryption library](https://github.com/dchest/nacl-stream-js) written by Dmitry Chestnykh. Streaming encryption is employed in a crypto worker.
 
-`scrypt-async.js` is an unmodified script from Dmitry Chestnykh’s [scrypt-async-js](https://github.com/dchest/scrypt-async-js) project. It is used to derive a key pair from a secret phrase and email address. 
+`scrypt-async.js` is an unmodified script from Dmitry Chestnykh’s [scrypt-async-js](https://github.com/dchest/scrypt-async-js) project. It is used to derive a key pair from a secret phrase and email address.
 
-`zxcvbn.js` is an unmodified copy of Dropbox’s [zxcvbn password strength estimator](https://github.com/dropbox/zxcvbn). `miniLockLib` uses this library to calculate the entropy present in secret phrases. 
+`zxcvbn.js` is an unmodified copy of Dropbox’s [zxcvbn password strength estimator](https://github.com/dropbox/zxcvbn). `miniLockLib` uses this library to calculate the entropy present in secret phrases.
 
 __Digging In__
 

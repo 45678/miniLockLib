@@ -50,7 +50,7 @@ EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i
 #        keys.publicKey is a Uint8Array
 #        keys.secretKey is a Uint8Array
 #
-miniLockLib.getKeyPair = (secretPhrase, emailAddress, callback) ->
+miniLockLib.makeKeyPair = (secretPhrase, emailAddress, callback) ->
   miniLockLib.Keys.makeKeyPair(secretPhrase, emailAddress, callback)
 
 

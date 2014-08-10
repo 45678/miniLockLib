@@ -26,13 +26,13 @@ exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
     when callback?.constructor isnt Function
       return "Can’t make a pair of keys without a callback function."
     when secretPhrase is undefined
-      callback("Can’t make a pair of keys without a secret phrase.")
+      callback "Can’t make a pair of keys without a secret phrase."
     when exports.secretPhraseIsAcceptable(secretPhrase) is no
-      callback("Can’t make a pair of keys because the secret phrase is unacceptable.")
+      callback "Can’t make a pair of keys because the secret phrase is unacceptable."
     when emailAddress is undefined
-      callback("Can’t make a pair of keys without an email address.")
+      callback "Can’t make a pair of keys without an email address."
     when exports.emailAddressIsAcceptable(emailAddress) is no
-      callback("Can’t make a pair of keys because the email address is unacceptable.")
+      callback "Can’t make a pair of keys because the email address is unacceptable."
     when secretPhrase and emailAddress and callback
       # Decode each input into a Uint8Array of bytes.
       decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)

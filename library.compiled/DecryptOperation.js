@@ -85,38 +85,84 @@
       return this.callback(error);
     };
 
+    DecryptOperation.prototype.constructMap = function(callback) {
+      return this.readSliceOfData(8, 12, (function(_this) {
+        return function(error, sliceOfBytes) {
+          var sizeOfHeader;
+          if (sliceOfBytes) {
+            sizeOfHeader = byteArrayToNumber(sliceOfBytes);
+            return callback(error, {
+              magicBytes: {
+                start: 0,
+                end: 8
+              },
+              sizeOfHeaderBytes: {
+                start: 8,
+                end: 12
+              },
+              headerBytes: {
+                start: 12,
+                end: 12 + sizeOfHeader
+              },
+              ciphertextBytes: {
+                start: 12 + sizeOfHeader,
+                end: _this.data.size
+              },
+              encryptedNameBytes: {
+                start: 12 + sizeOfHeader,
+                end: 12 + sizeOfHeader + 256 + 4 + 16
+              },
+              encryptedDataBytes: {
+                start: 12 + sizeOfHeader + 256 + 4 + 16,
+                end: _this.data.size
+              }
+            });
+          } else {
+            return callback(error);
+          }
+        };
+      })(this));
+    };
+
     DecryptOperation.prototype.decryptName = function(callback) {
-      return this.constructStreamDecryptor((function(_this) {
-        return function(error, lengthOfHeader) {
-          var endPosition, startPosition;
+      return this.constructMap((function(_this) {
+        return function(error, map) {
+          var ciphertextBytes;
           if (error) {
             return callback(error);
           }
-          startPosition = 12 + lengthOfHeader;
-          endPosition = 12 + lengthOfHeader + 256 + 4 + 16;
-          return _this.readSliceOfData(startPosition, endPosition, function(error, sliceOfBytes) {
-            var byte, fixedLengthNameAsBytes, nameAsBytes;
+          ciphertextBytes = map.ciphertextBytes;
+          return _this.constructStreamDecryptor(function(error) {
+            var endPosition, startPosition;
             if (error) {
               return callback(error);
             }
-            fixedLengthNameAsBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false);
-            if (fixedLengthNameAsBytes) {
-              nameAsBytes = (function() {
-                var _i, _len, _results;
-                _results = [];
-                for (_i = 0, _len = fixedLengthNameAsBytes.length; _i < _len; _i++) {
-                  byte = fixedLengthNameAsBytes[_i];
-                  if (byte !== 0) {
-                    _results.push(byte);
+            startPosition = ciphertextBytes.start;
+            endPosition = ciphertextBytes.start + 256 + 4 + 16;
+            return _this.readSliceOfData(startPosition, endPosition, function(error, sliceOfBytes) {
+              var byte, fixedLengthNameAsBytes, nameAsBytes;
+              if (error) {
+                return callback(error);
+              }
+              fixedLengthNameAsBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false);
+              if (fixedLengthNameAsBytes) {
+                nameAsBytes = (function() {
+                  var _i, _len, _results;
+                  _results = [];
+                  for (_i = 0, _len = fixedLengthNameAsBytes.length; _i < _len; _i++) {
+                    byte = fixedLengthNameAsBytes[_i];
+                    if (byte !== 0) {
+                      _results.push(byte);
+                    }
                   }
-                }
-                return _results;
-              })();
-              _this.name = encodeUTF8(nameAsBytes);
-              return callback(void 0, _this.name != null, endPosition);
-            } else {
-              return callback("DecryptOperation failed to decrypt file name.");
-            }
+                  return _results;
+                })();
+                _this.name = encodeUTF8(nameAsBytes);
+                return callback(void 0, _this.name != null, endPosition);
+              } else {
+                return callback("DecryptOperation failed to decrypt file name.");
+              }
+            });
           });
         };
       })(this));
@@ -124,7 +170,7 @@
 
     DecryptOperation.prototype.decryptData = function(position, callback) {
       return this.constructStreamDecryptor((function(_this) {
-        return function(error, lengthOfHeader) {
+        return function(error) {
           var endPosition, startPosition;
           if (error) {
             return callback(error);
@@ -152,15 +198,15 @@
 
     DecryptOperation.prototype.constructStreamDecryptor = function(callback) {
       return this.decryptUniqueNonceAndPermit((function(_this) {
-        return function(error, uniqueNonce, permit, lengthOfHeader) {
-          if (uniqueNonce && permit && lengthOfHeader) {
+        return function(error, uniqueNonce, permit) {
+          if (uniqueNonce && permit) {
             _this.uniqueNonce = uniqueNonce;
             _this.permit = permit;
             _this.fileKey = permit.fileInfo.fileKey;
             _this.fileNonce = permit.fileInfo.fileNonce;
             _this.streamDecryptor = NACL.stream.createDecryptor(_this.fileKey, _this.fileNonce, _this.chunkSize);
             _this.constructStreamDecryptor = function(callback) {
-              return callback(void 0, lengthOfHeader);
+              return callback(void 0);
             };
             return _this.constructStreamDecryptor(callback);
           } else {
@@ -172,7 +218,7 @@
 
     DecryptOperation.prototype.decryptUniqueNonceAndPermit = function(callback) {
       return this.readHeader((function(_this) {
-        return function(error, header, lengthOfHeader) {
+        return function(error, header) {
           var permit, returned, uniqueNonce;
           if (error) {
             return callback(error);
@@ -180,7 +226,7 @@
             returned = _this.findUniqueNonceAndPermit(header);
             if (returned) {
               uniqueNonce = returned[0], permit = returned[1];
-              return callback(void 0, uniqueNonce, permit, lengthOfHeader);
+              return callback(void 0, uniqueNonce, permit);
             } else {
               return callback("File is not encrypted for this recipient");
             }
@@ -238,33 +284,37 @@
     };
 
     DecryptOperation.prototype.readHeader = function(callback) {
-      return this.readLengthOfHeader((function(_this) {
-        return function(error, lengthOfHeader) {
+      return this.constructMap((function(_this) {
+        return function(error, map) {
+          var headerBytes;
           if (error) {
             return callback(error);
           }
-          return _this.readSliceOfData(12, lengthOfHeader + 12, function(error, sliceOfBytes) {
+          headerBytes = map.headerBytes;
+          return _this.readSliceOfData(headerBytes.start, headerBytes.end, function(error, sliceOfBytes) {
             var header, headerAsString;
             if (error) {
               return callback(error);
             }
             headerAsString = encodeUTF8(sliceOfBytes);
             header = JSON.parse(headerAsString);
-            return callback(void 0, header, lengthOfHeader);
+            return callback(void 0, header);
           });
         };
       })(this));
     };
 
-    DecryptOperation.prototype.readLengthOfHeader = function(callback) {
-      return this.readSliceOfData(8, 12, (function(_this) {
-        return function(error, sliceOfBytes) {
-          var lengthOfHeader;
-          if (error) {
+    DecryptOperation.prototype.readSizeOfHeader = function(callback) {
+      return this.constructMap((function(_this) {
+        return function(error, map) {
+          var headerBytes, sizeOfHeader;
+          if (map) {
+            headerBytes = map.headerBytes;
+            sizeOfHeader = headerBytes.end - headerBytes.start;
+            return callback(error, sizeOfHeader);
+          } else {
             return callback(error);
           }
-          lengthOfHeader = byteArrayToNumber(sliceOfBytes);
-          return callback(void 0, lengthOfHeader);
         };
       })(this));
     };

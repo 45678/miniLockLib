@@ -50,12 +50,27 @@ tape "can’t start a decrypt operation without a callback", (test) ->
   test.throws operation.start, 'Can’t start miniLockLib.DecryptOperation without a callback.'
   test.end()
 
-tape "read length of header from a file", (test) ->
+tape "construct map of byte addresses in a file", (test) ->
   read "alice.txt.minilock", (blob) ->
     operation = new miniLockLib.DecryptOperation
       data: blob
-    operation.readLengthOfHeader (error, lengthOfHeader) ->
-      test.equal lengthOfHeader, 634
+    operation.constructMap (error, map) ->
+      test.same map, {
+        magicBytes:         {start: 0,   end: 8  }
+        sizeOfHeaderBytes:  {start: 8,   end: 12 }
+        headerBytes:        {start: 12,  end: 646}
+        ciphertextBytes:    {start: 646, end: 962}
+        encryptedNameBytes: {start: 646, end: 646+256+4+16}
+        encryptedDataBytes: {start: 646+256+4+16, end: 962}
+      }
+      test.end(error)
+
+tape "read size of header", (test) ->
+  read "alice.txt.minilock", (blob) ->
+    operation = new miniLockLib.DecryptOperation
+      data: blob
+    operation.readSizeOfHeader (error, sizeOfHeader) ->
+      test.equal sizeOfHeader, 634
       test.end()
 
 tape "read header of a file with one permit", (test) ->
@@ -93,7 +108,7 @@ tape "decrypt uniqueNonce and permit from a file encrypted with miniLockLib", (t
     operation = new miniLockLib.DecryptOperation
       data: blob
       keys: Alice.keys
-    operation.decryptUniqueNonceAndPermit (error, uniqueNonce, permit, lengthOfHeader) ->
+    operation.decryptUniqueNonceAndPermit (error, uniqueNonce, permit) ->
       if error? then return test.end(error)
       test.ok uniqueNonce
       test.ok uniqueNonce.constructor is Uint8Array
@@ -105,7 +120,6 @@ tape "decrypt uniqueNonce and permit from a file encrypted with miniLockLib", (t
       test.ok permit.fileInfo.fileKey.length is 32
       test.ok permit.fileInfo.fileNonce.constructor is Uint8Array
       test.ok permit.fileInfo.fileNonce.length is 16
-      test.ok lengthOfHeader is 634
       test.end()
 
 tape "decrypt file name", (test) ->

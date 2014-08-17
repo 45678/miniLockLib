@@ -56,18 +56,10 @@ miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair
 # A `miniLockLib.EncryptOperation` is constructed when you call `encrypt`.
 # Refer to EncryptOperation.coffee to see how it works.
 
-miniLockLib.encrypt = (params) ->
-  {data, name, type, time, miniLockIDs, keys, version, callback} = params
-  new miniLockLib.EncryptOperation
-    data: data
-    name: name
-    type: type
-    time: time
-    keys: keys
-    version: version
-    miniLockIDs: miniLockIDs
-    callback: callback
-    start: yes
+miniLockLib.encrypt = (params, callback) ->
+  params.callback = callback if callback
+  params.start = yes
+  new miniLockLib.EncryptOperation params
 
 
 
@@ -93,14 +85,10 @@ miniLockLib.encrypt = (params) ->
 # A `miniLockLib.DecryptOperation` is constructed when you call `decrypt`.
 # Refer to DecryptOperation.coffee to see how it works.
 
-miniLockLib.decrypt = (params) ->
-  {data, keys, callback} = params
-  new miniLockLib.DecryptOperation
-    data: data
-    keys: keys
-    callback: callback
-    start: yes
-
+miniLockLib.decrypt = (params, callback) ->
+  params.callback = callback if callback
+  params.start = yes
+  new miniLockLib.DecryptOperation params
 
 
 

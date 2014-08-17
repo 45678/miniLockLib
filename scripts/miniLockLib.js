@@ -2340,7 +2340,6 @@ module.exports = (function () {
       keys: keys,
       version: version,
       miniLockIDs: miniLockIDs,
-      saveName: name + ".minilock",
       callback: callback,
       start: true
     });

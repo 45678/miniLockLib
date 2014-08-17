@@ -49,15 +49,22 @@
     };
 
     DecryptOperation.prototype.run = function() {
-      return this.decryptName((function(_this) {
-        return function(error, nameWasDecrypted, startPositionOfDataBytes) {
-          if (nameWasDecrypted != null) {
-            return _this.decryptData(startPositionOfDataBytes, function(error, blob) {
-              return _this.end(error, blob);
-            });
-          } else {
+      return this.constructMap((function(_this) {
+        return function(error, map) {
+          if (error != null) {
             return _this.end(error);
           }
+          return _this.decryptName(function(error) {
+            var encryptedDataBytes;
+            if (error === void 0) {
+              encryptedDataBytes = map.encryptedDataBytes;
+              return _this.decryptData(encryptedDataBytes.start, function(error, blob) {
+                return _this.end(error, blob);
+              });
+            } else {
+              return _this.end(error);
+            }
+          });
         };
       })(this));
     };
@@ -140,17 +147,16 @@
             startPosition = ciphertextBytes.start;
             endPosition = ciphertextBytes.start + 256 + 4 + 16;
             return _this.readSliceOfData(startPosition, endPosition, function(error, sliceOfBytes) {
-              var byte, fixedLengthNameAsBytes, nameAsBytes;
+              var byte, fixedSizeNameAsBytes, nameAsBytes;
               if (error) {
                 return callback(error);
               }
-              fixedLengthNameAsBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false);
-              if (fixedLengthNameAsBytes) {
+              if (fixedSizeNameAsBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false)) {
                 nameAsBytes = (function() {
                   var _i, _len, _results;
                   _results = [];
-                  for (_i = 0, _len = fixedLengthNameAsBytes.length; _i < _len; _i++) {
-                    byte = fixedLengthNameAsBytes[_i];
+                  for (_i = 0, _len = fixedSizeNameAsBytes.length; _i < _len; _i++) {
+                    byte = fixedSizeNameAsBytes[_i];
                     if (byte !== 0) {
                       _results.push(byte);
                     }
@@ -158,7 +164,7 @@
                   return _results;
                 })();
                 _this.name = encodeUTF8(nameAsBytes);
-                return callback(void 0, _this.name != null, endPosition);
+                return callback(void 0, _this.name);
               } else {
                 return callback("DecryptOperation failed to decrypt file name.");
               }

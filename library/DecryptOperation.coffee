@@ -23,12 +23,15 @@ class DecryptOperation extends AbstractOperation
     @run()
 
   run: ->
-    @decryptName (error, nameWasDecrypted, startPositionOfDataBytes) =>
-      if nameWasDecrypted?
-        @decryptData startPositionOfDataBytes, (error, blob) =>
-          @end(error, blob)
-      else
-        @end(error)
+    @constructMap (error, map) =>
+      return @end(error) if error?
+      @decryptName (error) =>
+        if error is undefined
+          {encryptedDataBytes} = map
+          @decryptData encryptedDataBytes.start, (error, blob) =>
+            @end(error, blob)
+        else
+          @end(error)
 
   end: (error, blob) ->
     @streamDecryptor.clean() if @streamDecryptor?
@@ -72,11 +75,10 @@ class DecryptOperation extends AbstractOperation
         endPosition   = ciphertextBytes.start+256+4+16
         @readSliceOfData startPosition, endPosition, (error, sliceOfBytes) =>
           if error then return callback(error)
-          fixedLengthNameAsBytes = @streamDecryptor.decryptChunk(sliceOfBytes, no)
-          if fixedLengthNameAsBytes
-            nameAsBytes = (byte for byte in fixedLengthNameAsBytes when byte isnt 0)
+          if fixedSizeNameAsBytes = @streamDecryptor.decryptChunk(sliceOfBytes, no)
+            nameAsBytes = (byte for byte in fixedSizeNameAsBytes when byte isnt 0)
             @name = encodeUTF8(nameAsBytes)
-            callback(undefined, @name?, endPosition)
+            callback(undefined, @name)
           else
             callback("DecryptOperation failed to decrypt file name.")
 

@@ -127,8 +127,6 @@ tape "decrypt file name", (test) ->
     operation = new miniLockLib.DecryptOperation
       data: blob
       keys: Alice.keys
-    operation.decryptName (error, nameWasDecrypted, positionOfLastNameByte) ->
-      test.ok nameWasDecrypted is true
-      test.ok operation.name is "alice.txt"
-      test.ok positionOfLastNameByte is 922
+    operation.decryptName (error, name) ->
+      test.same name, "alice.txt"
       test.end(error)

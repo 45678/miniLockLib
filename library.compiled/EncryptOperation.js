@@ -201,19 +201,23 @@
     EncryptOperation.prototype.fixedSizeDecodedType = function() {
       var decodedType, fixedSize;
       fixedSize = new Uint8Array(128);
-      decodedType = NACL.util.decodeUTF8(this.type);
-      if (decodedType.length > fixedSize.length) {
-        throw "EncryptOperation media type is too long. 128-characters max please.";
+      if (this.type) {
+        decodedType = NACL.util.decodeUTF8(this.type);
+        if (decodedType.length > fixedSize.length) {
+          throw "EncryptOperation media type is too long. 128-characters max please.";
+        }
+        fixedSize.set(decodedType);
       }
-      fixedSize.set(decodedType);
       return fixedSize;
     };
 
     EncryptOperation.prototype.fixedSizeDecodedTime = function() {
       var fixedSize, timestamp;
       fixedSize = new Uint8Array(24);
-      timestamp = (new Date(this.time)).toJSON();
-      fixedSize.set(NACL.util.decodeUTF8(timestamp));
+      if (this.time) {
+        timestamp = (new Date(this.time)).toJSON();
+        fixedSize.set(NACL.util.decodeUTF8(timestamp));
+      }
       return fixedSize;
     };
 

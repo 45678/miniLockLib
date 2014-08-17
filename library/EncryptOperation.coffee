@@ -124,16 +124,18 @@ class EncryptOperation extends AbstractOperation
 
   fixedSizeDecodedType: ->
     fixedSize = new Uint8Array(128)
-    decodedType = NACL.util.decodeUTF8(@type)
-    if decodedType.length > fixedSize.length
-      throw "EncryptOperation media type is too long. 128-characters max please."
-    fixedSize.set(decodedType)
+    if @type
+      decodedType = NACL.util.decodeUTF8(@type)
+      if decodedType.length > fixedSize.length
+        throw "EncryptOperation media type is too long. 128-characters max please."
+      fixedSize.set(decodedType)
     return fixedSize
 
   fixedSizeDecodedTime: ->
     fixedSize = new Uint8Array(24)
-    timestamp = (new Date(@time)).toJSON()
-    fixedSize.set(NACL.util.decodeUTF8(timestamp))
+    if @time
+      timestamp = (new Date(@time)).toJSON()
+      fixedSize.set(NACL.util.decodeUTF8(timestamp))
     return fixedSize
 
   encodedEncryptedPermits: ->

@@ -115,11 +115,12 @@ tape "decrypt uniqueNonce and permit", (test) ->
       test.ok uniqueNonce.length is 24
       test.ok permit.senderID is Alice.miniLockID
       test.ok permit.recipientID is Alice.miniLockID
-      test.ok permit.fileInfo.fileHash?
-      test.ok permit.fileInfo.fileKey.constructor is Uint8Array
-      test.ok permit.fileInfo.fileKey.length is 32
-      test.ok permit.fileInfo.fileNonce.constructor is Uint8Array
-      test.ok permit.fileInfo.fileNonce.length is 16
+      test.same permit.fileInfo.fileHash.constructor, Uint8Array
+      test.same permit.fileInfo.fileHash.length, 32
+      test.same permit.fileInfo.fileKey.constructor, Uint8Array
+      test.same permit.fileInfo.fileKey.length, 32
+      test.same permit.fileInfo.fileNonce.constructor, Uint8Array
+      test.same permit.fileInfo.fileNonce.length, 16
       test.end()
 
 tape "decrypt file name", (test) ->

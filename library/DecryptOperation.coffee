@@ -151,7 +151,7 @@ class DecryptOperation extends AbstractOperation
       decryptedFileInfoAsString = encodeUTF8(decryptedFileInfoAsBytes)
       decryptedFileInfo = JSON.parse(decryptedFileInfoAsString)
       return {
-        fileHash:  decryptedFileInfo.fileHash
+        fileHash:  decodeBase64(decryptedFileInfo.fileHash)
         fileKey:   decodeBase64(decryptedFileInfo.fileKey)
         fileNonce: decodeBase64(decryptedFileInfo.fileNonce)
       }

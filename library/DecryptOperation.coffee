@@ -23,24 +23,24 @@ class DecryptOperation extends AbstractOperation
     @run()
 
   run: ->
-    @constructMap (error, map) =>
-      return @end(error) if error?
-      @decryptName (error) =>
+    @readHeader (error, header) =>
+      @["decryptVersion#{header.version}Attributes"] (error, attributes, startOfEncryptedDataBytes) =>
         if error is undefined
-          {encryptedDataBytes} = map
-          @decryptData encryptedDataBytes.start, (error, blob) =>
-            @end(error, blob)
+          @decryptData startOfEncryptedDataBytes, (error, blob) =>
+            @end(error, blob, attributes)
         else
           @end(error)
 
-  end: (error, blob) ->
+  end: (error, blob, attributes) ->
     @streamDecryptor.clean() if @streamDecryptor?
-    AbstractOperation::end.call(this, error, blob)
+    AbstractOperation::end.call(this, error, blob, attributes)
 
-  oncomplete: (blob) ->
+  oncomplete: (blob, attributes) ->
     @callback(undefined, {
       data: blob
-      name: @name
+      name: attributes.name
+      type: attributes.type
+      time: attributes.time
       senderID: @permit.senderID
       recipientID: @permit.recipientID
       duration: @duration
@@ -51,36 +51,48 @@ class DecryptOperation extends AbstractOperation
   onerror: (error) ->
     @callback(error)
 
-  constructMap: (callback) ->
-    @readSliceOfData 8, 12, (error, sliceOfBytes) =>
-      if sliceOfBytes
-        sizeOfHeader = byteArrayToNumber(sliceOfBytes)
-        callback error,
-          magicBytes:         {start: 0, end: 8}
-          sizeOfHeaderBytes:  {start: 8, end: 12}
-          headerBytes:        {start: 12, end: 12+sizeOfHeader}
-          ciphertextBytes:    {start: 12+sizeOfHeader, end: @data.size}
-          encryptedNameBytes: {start: 12+sizeOfHeader, end: 12+sizeOfHeader+256+4+16}
-          encryptedDataBytes: {start: 12+sizeOfHeader+256+4+16, end: @data.size}
-      else
-        callback(error)
-
-  decryptName: (callback) ->
+  decryptVersion1Attributes: (callback) ->
     @constructMap (error, map) =>
       if error then return callback(error)
-      {ciphertextBytes} = map
       @constructStreamDecryptor (error) =>
         if error then return callback(error)
-        startPosition = ciphertextBytes.start
-        endPosition   = ciphertextBytes.start+256+4+16
-        @readSliceOfData startPosition, endPosition, (error, sliceOfBytes) =>
+        {ciphertextBytes} = map
+        start = ciphertextBytes.start
+        end   = ciphertextBytes.start+256+4+16
+        @readSliceOfData start, end, (error, sliceOfBytes) =>
           if error then return callback(error)
-          if fixedSizeNameAsBytes = @streamDecryptor.decryptChunk(sliceOfBytes, no)
-            nameAsBytes = (byte for byte in fixedSizeNameAsBytes when byte isnt 0)
-            @name = encodeUTF8(nameAsBytes)
-            callback(undefined, @name)
+          if decryptedBytes = @streamDecryptor.decryptChunk(sliceOfBytes, no)
+            nameAsBytes = (byte for byte in decryptedBytes when byte isnt 0)
+            attributes =
+              name: encodeUTF8(nameAsBytes)
+            callback(undefined, attributes, end)
           else
-            callback("DecryptOperation failed to decrypt file name.")
+            callback("DecryptOperation failed to decrypt version 1 attributes.")
+
+  decryptVersion2Attributes: (callback) ->
+    @constructMap (error, map) =>
+      if error then return callback(error)
+      @constructStreamDecryptor (error) =>
+        if error then return callback(error)
+        {ciphertextBytes} = map
+        start = ciphertextBytes.start
+        end   = ciphertextBytes.start+256+128+24+4+16
+        @readSliceOfData start, end, (error, sliceOfBytes) =>
+          if error then return callback(error)
+          if decryptedBytes = @streamDecryptor.decryptChunk(sliceOfBytes, no)
+            decryptedNameBytes = decryptedBytes.subarray(0, 256)
+            nameAsBytes = (byte for byte in decryptedNameBytes when byte isnt 0)
+            decryptedTypeBytes = decryptedBytes.subarray(256, 256+128)
+            typeAsBytes = (byte for byte in decryptedTypeBytes when byte isnt 0)
+            decryptedTimeBytes = decryptedBytes.subarray(256+128, 256+128+24)
+            timeAsBytes = (byte for byte in decryptedTimeBytes when byte isnt 0)
+            attributes =
+              name: encodeUTF8(nameAsBytes)
+              type: encodeUTF8(typeAsBytes)
+              time: encodeUTF8(timeAsBytes)
+            callback(undefined, attributes, end)
+          else
+            callback("DecryptOperation failed to decrypt version 2 attributes.")
 
   decryptData: (position, callback) ->
     @constructStreamDecryptor (error) =>
@@ -98,6 +110,15 @@ class DecryptOperation extends AbstractOperation
             @decryptData(endPosition, callback)
         else
           callback("DecryptOperation failed to decrypt file data.")
+
+  constructMap: (callback) ->
+    @readHeader (error, header, sizeOfHeader) =>
+      if (error is undefined) and sizeOfHeader?
+        magicBytes        = {start: 0, end: 8}
+        sizeOfHeaderBytes = {start: 8, end: 12}
+        headerBytes       = {start: 12, end: 12+sizeOfHeader}
+        ciphertextBytes   = {start: headerBytes.end, end: @data.size}
+      callback error, {magicBytes, sizeOfHeaderBytes, headerBytes, ciphertextBytes}
 
   constructStreamDecryptor: (callback) ->
     @decryptUniqueNonceAndPermit (error, uniqueNonce, permit) =>
@@ -160,20 +181,16 @@ class DecryptOperation extends AbstractOperation
       return undefined
 
   readHeader: (callback) ->
-    @constructMap (error, map) =>
+    @readSizeOfHeader (error, sizeOfHeader) =>
       if error then return callback(error)
-      {headerBytes} = map
-      @readSliceOfData headerBytes.start, headerBytes.end, (error, sliceOfBytes) =>
+      @readSliceOfData 12, 12+sizeOfHeader, (error, sliceOfBytes) =>
         if error then return callback(error)
         headerAsString = encodeUTF8(sliceOfBytes)
         header = JSON.parse(headerAsString)
-        callback(undefined, header)
+        callback(undefined, header, sizeOfHeader)
 
   readSizeOfHeader: (callback) ->
-    @constructMap (error, map) =>
-      if map
-        {headerBytes} = map
-        sizeOfHeader = headerBytes.end - headerBytes.start
-        callback(error, sizeOfHeader)
-      else
-        callback(error)
+    @readSliceOfData 8, 12, (error, sliceOfBytes) =>
+      if error then return callback(error)
+      sizeOfHeader = byteArrayToNumber(sliceOfBytes)
+      callback(error, sizeOfHeader)

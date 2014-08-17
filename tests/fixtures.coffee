@@ -28,8 +28,27 @@ read.files =
       name: "basic.txt"
   "alice.txt.minilock": (callback) ->
     miniLockLib.encrypt
+      version: 1
       data: new Blob ["This is only a test!"], type: "text/plain"
       name: "alice.txt"
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
+      'callback': callback
+  "alice.txt.v1.minilock": (callback) ->
+    miniLockLib.encrypt
+      version: 1
+      data: new Blob ["This is only a test!"], type: "text/plain"
+      name: "alice.txt.v1"
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
+      'callback': callback
+  "alice.txt.v2.minilock": (callback) ->
+    miniLockLib.encrypt
+      version: 2
+      data: new Blob ["This is only a test!"], type: "text/plain"
+      name: "alice.txt.v2"
+      type: "text/plain"
+      time: (new Date "2014-08-17T07:06:50.095Z").getTime()
       keys: Alice.keys
       miniLockIDs: [Alice.miniLockID]
       'callback': callback

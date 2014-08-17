@@ -8,16 +8,29 @@ tape "construct a blank encrypt operation", (test) ->
   test.ok operation
   test.end()
 
-tape "define data, keys, miniLockIDs and callback when you construct an ecrypt operation", (test) ->
+tape "make miniLock version 1 files by default", (test) ->
   operation = new miniLockLib.EncryptOperation
-    data: new Blob
+  test.same operation.version, 1
+  test.end()
+
+tape "define version, data, name, type, time, miniLockIDs, keys and callback when you construct an encrypt operation", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    version: 2
+    data: data = new Blob
+    name: "secret.minilock"
+    type: "text/plain"
+    time: time = Date.now()
+    miniLockIDs: miniLockIDs = []
     keys: Alice.keys
-    miniLockIDs: []
-    callback: ->
-  test.ok operation.data
-  test.ok operation.keys
-  test.ok operation.miniLockIDs
-  test.ok operation.callback
+    callback: callback = (error, encrypted) ->
+  test.same operation.version, 2
+  test.same operation.data, data
+  test.same operation.name, "secret.minilock"
+  test.same operation.type, "text/plain"
+  test.same operation.time, time
+  test.same operation.keys, Alice.keys
+  test.same operation.miniLockIDs, miniLockIDs
+  test.same operation.callback, callback
   test.end()
 
 tape "can’t start an encrypt operation without data", (test) ->
@@ -75,22 +88,72 @@ tape "hash for ciphertext bytes is ready after operation is constructed", (test)
   test.ok operation.hash.digest?
   test.end()
 
-tape "decoded name has a fixed length of 256 bytes", (test) ->
+tape "name has a fixed size of 256 bytes", (test) ->
   operation = new miniLockLib.EncryptOperation name: "untitled.txt"
-  decodedName = operation.fixedLengthDecodedName()
-  test.same decodedName.length, 256
+  decodedName = operation.fixedSizeDecodedName()
+  test.equal decodedName.length, 256
   test.end()
 
-tape "encrypt name of a file", (test) ->
-  operation = new miniLockLib.EncryptOperation name: "untitled.txt"
-  operation.encryptName()
-  test.ok operation.ciphertextBytes.length is 1
-  decryptor = miniLockLib.NACL.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize)
-  # decryptedChunk = decryptor.decryptChunk(operation.ciphertextBytes[0], no)
-  # test.ok decryptedChunk?
-  # decryptedName = miniLockLib.NACL.util.encodeUTF8(decryptedChunk)
-  # test.ok decryptedName.length is 256
-  # test.ok decryptedName.indexOf("untitled.txt") is 0
+tape "undefined name has a fixed size of 256 bytes", (test) ->
+  operation = new miniLockLib.EncryptOperation name: undefined
+  decodedName = operation.fixedSizeDecodedName()
+  test.equal decodedName.length, 256
+  filteredBytes = (byte for byte in decodedName when byte isnt 0)
+  test.same filteredBytes.length, 0
+  test.end()
+
+tape "decoded type has a fixed size of 128 bytes", (test) ->
+  operation = new miniLockLib.EncryptOperation type: "text/plain"
+  decodedType = operation.fixedSizeDecodedType()
+  test.equal decodedType.length, 128
+  test.end()
+
+tape "decoded time has a fixed size of 24 bytes", (test) ->
+  operation = new miniLockLib.EncryptOperation time: Date.now()
+  decodedTime = operation.fixedSizeDecodedTime()
+  test.equal decodedTime.length, 24
+  test.end()
+
+tape "encrypt version 1 attributes", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    version: 1
+    name: "untitled.txt"
+  operation.encryptVersion1Attributes()
+  test.same operation.ciphertextBytes.length, 1
+  decryptor = miniLockLib.NACL.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+4+16)
+  decryptedBytes = decryptor.decryptChunk(operation.ciphertextBytes[0], no)
+  test.equal decryptedBytes.length, 256
+  filteredBytes = (byte for byte in decryptedBytes when byte isnt 0)
+  decryptedName = miniLockLib.NACL.util.encodeUTF8(filteredBytes)
+  test.equal decryptedName, "untitled.txt"
+  test.end()
+
+tape "encrypt version 2 attributes", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    version: 2
+    name: "untitled.txt"
+    type: "text/plain"
+    time: (new Date "2014-08-17T07:06:50.095Z").getTime()
+  operation.encryptVersion2Attributes()
+  test.same operation.ciphertextBytes.length, 1
+  decryptor = miniLockLib.NACL.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+4+16)
+  decryptedBytes = decryptor.decryptChunk(operation.ciphertextBytes[0], no)
+  test.equal decryptedBytes.length, 256+128+24
+
+  decryptedNameBytes = decryptedBytes.subarray(0, 256)
+  filteredNameBytes = (byte for byte in decryptedNameBytes when byte isnt 0)
+  decryptedName = miniLockLib.NACL.util.encodeUTF8(filteredNameBytes)
+  test.equal decryptedName, "untitled.txt"
+
+  decryptedTypeBytes = decryptedBytes.subarray(256, 256+128)
+  filteredTypeBytes = (byte for byte in decryptedTypeBytes when byte isnt 0)
+  decryptedType = miniLockLib.NACL.util.encodeUTF8(filteredTypeBytes)
+  test.equal decryptedType, "text/plain"
+
+  decryptedTimeBytes = decryptedBytes.subarray(256+128, 256+128+24)
+  filteredTimeBytes = (byte for byte in decryptedTimeBytes when byte isnt 0)
+  decryptedTime = miniLockLib.NACL.util.encodeUTF8(filteredTimeBytes)
+  test.equal decryptedTime, "2014-08-17T07:06:50.095Z"
   test.end()
 
 tape "construct a permit to decrypt for a recipient", (test) ->

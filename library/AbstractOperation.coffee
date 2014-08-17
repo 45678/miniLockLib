@@ -3,19 +3,19 @@ class AbstractOperation
 
   chunkSize: 1024 * 1024
 
-  end: (error, blob) ->
+  end: (error, blob, attributes) ->
     @endedAt = Date.now()
     @duration = @endedAt - @startedAt
     if error
       @onerror(error)
     else
-      @oncomplete(blob)
+      @oncomplete(blob, attributes)
 
   onerror: (error) ->
     console.info("onerror", error)
 
-  oncomplete: (blob) ->
-    console.info("oncomplete", blob)
+  oncomplete: (blob, attributes) ->
+    console.info("oncomplete", blob, attributes)
 
   readSliceOfData: (start, end, callback) ->
     @fileReader ?= new FileReader

@@ -57,11 +57,14 @@ miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair
 # Refer to EncryptOperation.coffee to see how it works.
 
 miniLockLib.encrypt = (params) ->
-  {data, name, miniLockIDs, keys, callback} = params
+  {data, name, type, time, miniLockIDs, keys, version, callback} = params
   new miniLockLib.EncryptOperation
     data: data
     name: name
+    type: type
+    time: time
     keys: keys
+    version: version
     miniLockIDs: miniLockIDs
     saveName: name+".minilock"
     callback: callback

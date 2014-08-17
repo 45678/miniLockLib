@@ -25,7 +25,10 @@
       }
       this.end = __bind(this.end, this);
       this.start = __bind(this.start, this);
-      this.data = params.data, this.keys = params.keys, this.name = params.name, this.miniLockIDs = params.miniLockIDs, this.callback = params.callback;
+      this.data = params.data, this.keys = params.keys, this.name = params.name, this.type = params.type, this.time = params.time, this.miniLockIDs = params.miniLockIDs, this.version = params.version, this.callback = params.callback;
+      if (this.version === void 0) {
+        this.version = 1;
+      }
       this.ephemeral = NACL.box.keyPair();
       this.fileKey = NACL.randomBytes(32);
       this.fileNonce = NACL.randomBytes(24).subarray(0, 16);
@@ -54,17 +57,20 @@
         throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
       }
       this.startedAt = Date.now();
+      if (this.time === void 0) {
+        this.time = this.startedAt;
+      }
       return this.run();
     };
 
     EncryptOperation.prototype.run = function() {
-      this.encryptName();
+      this["encryptVersion" + this.version + "Attributes"]();
       return this.encryptData(0, (function(_this) {
         return function(error, dataWasEncrypted) {
           var fileFormat;
           if (dataWasEncrypted != null) {
             _this.constructHeader();
-            fileFormat = ["miniLock", _this.lengthOfHeaderIn4Bytes, _this.headerJSONBytes].concat(__slice.call(_this.ciphertextBytes));
+            fileFormat = ["miniLock", _this.sizeOfHeaderIn4Bytes, _this.headerJSONBytes].concat(__slice.call(_this.ciphertextBytes));
             return _this.end(error, new Blob(fileFormat, {
               type: "application/minilock"
             }));
@@ -86,6 +92,8 @@
       return this.callback(void 0, {
         data: blob,
         name: this.name + ".minilock",
+        type: this.type,
+        time: this.time,
         senderID: miniLockLib.ID.encode(this.keys.publicKey),
         duration: this.duration,
         startedAt: this.startedAt,
@@ -97,14 +105,41 @@
       return this.callback(error);
     };
 
-    EncryptOperation.prototype.encryptName = function() {
+    EncryptOperation.prototype.encryptVersion1Attributes = function() {
       var encryptedBytes;
       this.constructStreamEncryptor();
-      if (encryptedBytes = this.streamEncryptor.encryptChunk(this.fixedLengthDecodedName(), false)) {
+      if (encryptedBytes = this.streamEncryptor.encryptChunk(this.fixedSizeDecodedName(), false)) {
         this.hash.update(encryptedBytes);
         return this.ciphertextBytes.push(encryptedBytes);
       } else {
-        throw "EncryptOperation failed to encrypt file name.";
+        throw "EncryptOperation failed to record the version 1 attributes.";
+      }
+    };
+
+    EncryptOperation.prototype.encryptVersion2Attributes = function() {
+      var b, bytes, encryptedBytes, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+      this.constructStreamEncryptor();
+      bytes = [];
+      _ref = this.fixedSizeDecodedName();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        b = _ref[_i];
+        bytes.push(b);
+      }
+      _ref1 = this.fixedSizeDecodedType();
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        b = _ref1[_j];
+        bytes.push(b);
+      }
+      _ref2 = this.fixedSizeDecodedTime();
+      for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+        b = _ref2[_k];
+        bytes.push(b);
+      }
+      if (encryptedBytes = this.streamEncryptor.encryptChunk(bytes, false)) {
+        this.hash.update(encryptedBytes);
+        return this.ciphertextBytes.push(encryptedBytes);
+      } else {
+        throw "EncryptOperation failed to record version 2 attributes.";
       }
     };
 
@@ -136,12 +171,12 @@
     EncryptOperation.prototype.constructHeader = function() {
       var headerJSON;
       this.header = {
-        version: 1,
+        version: this.version,
         ephemeral: NACL.util.encodeBase64(this.ephemeral.publicKey),
         decryptInfo: this.encodedEncryptedPermits()
       };
       headerJSON = JSON.stringify(this.header);
-      this.lengthOfHeaderIn4Bytes = numberToByteArray(headerJSON.length);
+      this.sizeOfHeaderIn4Bytes = numberToByteArray(headerJSON.length);
       this.headerJSONBytes = NACL.util.decodeUTF8(headerJSON);
       return this.header;
     };
@@ -150,15 +185,36 @@
       return this.streamEncryptor != null ? this.streamEncryptor : this.streamEncryptor = NACL.stream.createEncryptor(this.fileKey, this.fileNonce, this.chunkSize);
     };
 
-    EncryptOperation.prototype.fixedLengthDecodedName = function() {
-      var decodedName, fixedLength;
-      fixedLength = new Uint8Array(256);
-      decodedName = NACL.util.decodeUTF8(this.name);
-      if (decodedName.length > fixedLength.length) {
-        throw "EncryptOperation file name is too long. 256-characters max please.";
+    EncryptOperation.prototype.fixedSizeDecodedName = function() {
+      var decodedName, fixedSize;
+      fixedSize = new Uint8Array(256);
+      if (this.name) {
+        decodedName = NACL.util.decodeUTF8(this.name);
+        if (decodedName.length > fixedSize.length) {
+          throw "EncryptOperation file name is too long. 256-characters max please.";
+        }
+        fixedSize.set(decodedName);
       }
-      fixedLength.set(decodedName);
-      return fixedLength;
+      return fixedSize;
+    };
+
+    EncryptOperation.prototype.fixedSizeDecodedType = function() {
+      var decodedType, fixedSize;
+      fixedSize = new Uint8Array(128);
+      decodedType = NACL.util.decodeUTF8(this.type);
+      if (decodedType.length > fixedSize.length) {
+        throw "EncryptOperation media type is too long. 128-characters max please.";
+      }
+      fixedSize.set(decodedType);
+      return fixedSize;
+    };
+
+    EncryptOperation.prototype.fixedSizeDecodedTime = function() {
+      var fixedSize, timestamp;
+      fixedSize = new Uint8Array(24);
+      timestamp = (new Date(this.time)).toJSON();
+      fixedSize.set(NACL.util.decodeUTF8(timestamp));
+      return fixedSize;
     };
 
     EncryptOperation.prototype.encodedEncryptedPermits = function() {

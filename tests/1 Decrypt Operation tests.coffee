@@ -55,14 +55,10 @@ tape "construct map of byte addresses in a file", (test) ->
     operation = new miniLockLib.DecryptOperation
       data: blob
     operation.constructMap (error, map) ->
-      test.same map, {
-        magicBytes:         {start: 0,   end: 8  }
-        sizeOfHeaderBytes:  {start: 8,   end: 12 }
-        headerBytes:        {start: 12,  end: 646}
-        ciphertextBytes:    {start: 646, end: 962}
-        encryptedNameBytes: {start: 646, end: 646+256+4+16}
-        encryptedDataBytes: {start: 646+256+4+16, end: 962}
-      }
+      test.same map.magicBytes, {start: 0, end: 8}
+      test.same map.sizeOfHeaderBytes, {start: 8,   end: 12 }
+      test.same map.headerBytes, {start: 12,  end: 646}
+      test.same map.ciphertextBytes, {start: 646, end: 962}
       test.end(error)
 
 tape "read size of header", (test) ->
@@ -123,11 +119,26 @@ tape "decrypt uniqueNonce and permit", (test) ->
       test.same permit.fileInfo.fileNonce.length, 16
       test.end()
 
-tape "decrypt file name", (test) ->
-  read "alice.txt.minilock", (blob) ->
+tape "decrypt version 1 attributes", (test) ->
+  read "alice.txt.v1.minilock", (blob) ->
     operation = new miniLockLib.DecryptOperation
       data: blob
       keys: Alice.keys
-    operation.decryptName (error, name) ->
-      test.same name, "alice.txt"
+    operation.decryptVersion1Attributes (error, attributes) ->
+      test.same attributes, {
+        name: "alice.txt.v1"
+      }
+      test.end(error)
+
+tape "decrypt version 2 attributes", (test) ->
+  read "alice.txt.v2.minilock", (blob) ->
+    operation = new miniLockLib.DecryptOperation
+      data: blob
+      keys: Alice.keys
+    operation.decryptVersion2Attributes (error, attributes) ->
+      test.same attributes, {
+        name: "alice.txt.v2"
+        type: "text/plain"
+        time: "2014-08-17T07:06:50.095Z"
+      }
       test.end(error)

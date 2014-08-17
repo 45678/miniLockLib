@@ -10,13 +10,13 @@
 
     AbstractOperation.prototype.chunkSize = 1024 * 1024;
 
-    AbstractOperation.prototype.end = function(error, blob) {
+    AbstractOperation.prototype.end = function(error, blob, attributes) {
       this.endedAt = Date.now();
       this.duration = this.endedAt - this.startedAt;
       if (error) {
         return this.onerror(error);
       } else {
-        return this.oncomplete(blob);
+        return this.oncomplete(blob, attributes);
       }
     };
 
@@ -24,8 +24,8 @@
       return console.info("onerror", error);
     };
 
-    AbstractOperation.prototype.oncomplete = function(blob) {
-      return console.info("oncomplete", blob);
+    AbstractOperation.prototype.oncomplete = function(blob, attributes) {
+      return console.info("oncomplete", blob, attributes);
     };
 
     AbstractOperation.prototype.readSliceOfData = function(start, end, callback) {
@@ -1566,17 +1566,12 @@ module.exports = (function () {
     };
 
     DecryptOperation.prototype.run = function() {
-      return this.constructMap((function(_this) {
-        return function(error, map) {
-          if (error != null) {
-            return _this.end(error);
-          }
-          return _this.decryptName(function(error) {
-            var encryptedDataBytes;
+      return this.readHeader((function(_this) {
+        return function(error, header) {
+          return _this["decryptVersion" + header.version + "Attributes"](function(error, attributes, startOfEncryptedDataBytes) {
             if (error === void 0) {
-              encryptedDataBytes = map.encryptedDataBytes;
-              return _this.decryptData(encryptedDataBytes.start, function(error, blob) {
-                return _this.end(error, blob);
+              return _this.decryptData(startOfEncryptedDataBytes, function(error, blob) {
+                return _this.end(error, blob, attributes);
               });
             } else {
               return _this.end(error);
@@ -1586,17 +1581,19 @@ module.exports = (function () {
       })(this));
     };
 
-    DecryptOperation.prototype.end = function(error, blob) {
+    DecryptOperation.prototype.end = function(error, blob, attributes) {
       if (this.streamDecryptor != null) {
         this.streamDecryptor.clean();
       }
-      return AbstractOperation.prototype.end.call(this, error, blob);
+      return AbstractOperation.prototype.end.call(this, error, blob, attributes);
     };
 
-    DecryptOperation.prototype.oncomplete = function(blob) {
+    DecryptOperation.prototype.oncomplete = function(blob, attributes) {
       return this.callback(void 0, {
         data: blob,
-        name: this.name,
+        name: attributes.name,
+        type: attributes.type,
+        time: attributes.time,
         senderID: this.permit.senderID,
         recipientID: this.permit.recipientID,
         duration: this.duration,
@@ -1609,81 +1606,114 @@ module.exports = (function () {
       return this.callback(error);
     };
 
-    DecryptOperation.prototype.constructMap = function(callback) {
-      return this.readSliceOfData(8, 12, (function(_this) {
-        return function(error, sliceOfBytes) {
-          var sizeOfHeader;
-          if (sliceOfBytes) {
-            sizeOfHeader = byteArrayToNumber(sliceOfBytes);
-            return callback(error, {
-              magicBytes: {
-                start: 0,
-                end: 8
-              },
-              sizeOfHeaderBytes: {
-                start: 8,
-                end: 12
-              },
-              headerBytes: {
-                start: 12,
-                end: 12 + sizeOfHeader
-              },
-              ciphertextBytes: {
-                start: 12 + sizeOfHeader,
-                end: _this.data.size
-              },
-              encryptedNameBytes: {
-                start: 12 + sizeOfHeader,
-                end: 12 + sizeOfHeader + 256 + 4 + 16
-              },
-              encryptedDataBytes: {
-                start: 12 + sizeOfHeader + 256 + 4 + 16,
-                end: _this.data.size
-              }
-            });
-          } else {
-            return callback(error);
-          }
-        };
-      })(this));
-    };
-
-    DecryptOperation.prototype.decryptName = function(callback) {
+    DecryptOperation.prototype.decryptVersion1Attributes = function(callback) {
       return this.constructMap((function(_this) {
         return function(error, map) {
-          var ciphertextBytes;
           if (error) {
             return callback(error);
           }
-          ciphertextBytes = map.ciphertextBytes;
           return _this.constructStreamDecryptor(function(error) {
-            var endPosition, startPosition;
+            var ciphertextBytes, end, start;
             if (error) {
               return callback(error);
             }
-            startPosition = ciphertextBytes.start;
-            endPosition = ciphertextBytes.start + 256 + 4 + 16;
-            return _this.readSliceOfData(startPosition, endPosition, function(error, sliceOfBytes) {
-              var byte, fixedSizeNameAsBytes, nameAsBytes;
+            ciphertextBytes = map.ciphertextBytes;
+            start = ciphertextBytes.start;
+            end = ciphertextBytes.start + 256 + 4 + 16;
+            return _this.readSliceOfData(start, end, function(error, sliceOfBytes) {
+              var attributes, byte, decryptedBytes, nameAsBytes;
               if (error) {
                 return callback(error);
               }
-              if (fixedSizeNameAsBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false)) {
+              if (decryptedBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false)) {
                 nameAsBytes = (function() {
                   var _i, _len, _results;
                   _results = [];
-                  for (_i = 0, _len = fixedSizeNameAsBytes.length; _i < _len; _i++) {
-                    byte = fixedSizeNameAsBytes[_i];
+                  for (_i = 0, _len = decryptedBytes.length; _i < _len; _i++) {
+                    byte = decryptedBytes[_i];
                     if (byte !== 0) {
                       _results.push(byte);
                     }
                   }
                   return _results;
                 })();
-                _this.name = encodeUTF8(nameAsBytes);
-                return callback(void 0, _this.name);
+                attributes = {
+                  name: encodeUTF8(nameAsBytes)
+                };
+                return callback(void 0, attributes, end);
               } else {
-                return callback("DecryptOperation failed to decrypt file name.");
+                return callback("DecryptOperation failed to decrypt version 1 attributes.");
+              }
+            });
+          });
+        };
+      })(this));
+    };
+
+    DecryptOperation.prototype.decryptVersion2Attributes = function(callback) {
+      return this.constructMap((function(_this) {
+        return function(error, map) {
+          if (error) {
+            return callback(error);
+          }
+          return _this.constructStreamDecryptor(function(error) {
+            var ciphertextBytes, end, start;
+            if (error) {
+              return callback(error);
+            }
+            ciphertextBytes = map.ciphertextBytes;
+            start = ciphertextBytes.start;
+            end = ciphertextBytes.start + 256 + 128 + 24 + 4 + 16;
+            return _this.readSliceOfData(start, end, function(error, sliceOfBytes) {
+              var attributes, byte, decryptedBytes, decryptedNameBytes, decryptedTimeBytes, decryptedTypeBytes, nameAsBytes, timeAsBytes, typeAsBytes;
+              if (error) {
+                return callback(error);
+              }
+              if (decryptedBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false)) {
+                decryptedNameBytes = decryptedBytes.subarray(0, 256);
+                nameAsBytes = (function() {
+                  var _i, _len, _results;
+                  _results = [];
+                  for (_i = 0, _len = decryptedNameBytes.length; _i < _len; _i++) {
+                    byte = decryptedNameBytes[_i];
+                    if (byte !== 0) {
+                      _results.push(byte);
+                    }
+                  }
+                  return _results;
+                })();
+                decryptedTypeBytes = decryptedBytes.subarray(256, 256 + 128);
+                typeAsBytes = (function() {
+                  var _i, _len, _results;
+                  _results = [];
+                  for (_i = 0, _len = decryptedTypeBytes.length; _i < _len; _i++) {
+                    byte = decryptedTypeBytes[_i];
+                    if (byte !== 0) {
+                      _results.push(byte);
+                    }
+                  }
+                  return _results;
+                })();
+                decryptedTimeBytes = decryptedBytes.subarray(256 + 128, 256 + 128 + 24);
+                timeAsBytes = (function() {
+                  var _i, _len, _results;
+                  _results = [];
+                  for (_i = 0, _len = decryptedTimeBytes.length; _i < _len; _i++) {
+                    byte = decryptedTimeBytes[_i];
+                    if (byte !== 0) {
+                      _results.push(byte);
+                    }
+                  }
+                  return _results;
+                })();
+                attributes = {
+                  name: encodeUTF8(nameAsBytes),
+                  type: encodeUTF8(typeAsBytes),
+                  time: encodeUTF8(timeAsBytes)
+                };
+                return callback(void 0, attributes, end);
+              } else {
+                return callback("DecryptOperation failed to decrypt version 2 attributes.");
               }
             });
           });
@@ -1714,6 +1744,38 @@ module.exports = (function () {
             } else {
               return callback("DecryptOperation failed to decrypt file data.");
             }
+          });
+        };
+      })(this));
+    };
+
+    DecryptOperation.prototype.constructMap = function(callback) {
+      return this.readHeader((function(_this) {
+        return function(error, header, sizeOfHeader) {
+          var ciphertextBytes, headerBytes, magicBytes, sizeOfHeaderBytes;
+          if ((error === void 0) && (sizeOfHeader != null)) {
+            magicBytes = {
+              start: 0,
+              end: 8
+            };
+            sizeOfHeaderBytes = {
+              start: 8,
+              end: 12
+            };
+            headerBytes = {
+              start: 12,
+              end: 12 + sizeOfHeader
+            };
+            ciphertextBytes = {
+              start: headerBytes.end,
+              end: _this.data.size
+            };
+          }
+          return callback(error, {
+            magicBytes: magicBytes,
+            sizeOfHeaderBytes: sizeOfHeaderBytes,
+            headerBytes: headerBytes,
+            ciphertextBytes: ciphertextBytes
           });
         };
       })(this));
@@ -1807,37 +1869,33 @@ module.exports = (function () {
     };
 
     DecryptOperation.prototype.readHeader = function(callback) {
-      return this.constructMap((function(_this) {
-        return function(error, map) {
-          var headerBytes;
+      return this.readSizeOfHeader((function(_this) {
+        return function(error, sizeOfHeader) {
           if (error) {
             return callback(error);
           }
-          headerBytes = map.headerBytes;
-          return _this.readSliceOfData(headerBytes.start, headerBytes.end, function(error, sliceOfBytes) {
+          return _this.readSliceOfData(12, 12 + sizeOfHeader, function(error, sliceOfBytes) {
             var header, headerAsString;
             if (error) {
               return callback(error);
             }
             headerAsString = encodeUTF8(sliceOfBytes);
             header = JSON.parse(headerAsString);
-            return callback(void 0, header);
+            return callback(void 0, header, sizeOfHeader);
           });
         };
       })(this));
     };
 
     DecryptOperation.prototype.readSizeOfHeader = function(callback) {
-      return this.constructMap((function(_this) {
-        return function(error, map) {
-          var headerBytes, sizeOfHeader;
-          if (map) {
-            headerBytes = map.headerBytes;
-            sizeOfHeader = headerBytes.end - headerBytes.start;
-            return callback(error, sizeOfHeader);
-          } else {
+      return this.readSliceOfData(8, 12, (function(_this) {
+        return function(error, sliceOfBytes) {
+          var sizeOfHeader;
+          if (error) {
             return callback(error);
           }
+          sizeOfHeader = byteArrayToNumber(sliceOfBytes);
+          return callback(error, sizeOfHeader);
         };
       })(this));
     };
@@ -1876,7 +1934,10 @@ module.exports = (function () {
       }
       this.end = __bind(this.end, this);
       this.start = __bind(this.start, this);
-      this.data = params.data, this.keys = params.keys, this.name = params.name, this.miniLockIDs = params.miniLockIDs, this.callback = params.callback;
+      this.data = params.data, this.keys = params.keys, this.name = params.name, this.type = params.type, this.time = params.time, this.miniLockIDs = params.miniLockIDs, this.version = params.version, this.callback = params.callback;
+      if (this.version === void 0) {
+        this.version = 1;
+      }
       this.ephemeral = NACL.box.keyPair();
       this.fileKey = NACL.randomBytes(32);
       this.fileNonce = NACL.randomBytes(24).subarray(0, 16);
@@ -1905,17 +1966,20 @@ module.exports = (function () {
         throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
       }
       this.startedAt = Date.now();
+      if (this.time === void 0) {
+        this.time = this.startedAt;
+      }
       return this.run();
     };
 
     EncryptOperation.prototype.run = function() {
-      this.encryptName();
+      this["encryptVersion" + this.version + "Attributes"]();
       return this.encryptData(0, (function(_this) {
         return function(error, dataWasEncrypted) {
           var fileFormat;
           if (dataWasEncrypted != null) {
             _this.constructHeader();
-            fileFormat = ["miniLock", _this.lengthOfHeaderIn4Bytes, _this.headerJSONBytes].concat(__slice.call(_this.ciphertextBytes));
+            fileFormat = ["miniLock", _this.sizeOfHeaderIn4Bytes, _this.headerJSONBytes].concat(__slice.call(_this.ciphertextBytes));
             return _this.end(error, new Blob(fileFormat, {
               type: "application/minilock"
             }));
@@ -1937,6 +2001,8 @@ module.exports = (function () {
       return this.callback(void 0, {
         data: blob,
         name: this.name + ".minilock",
+        type: this.type,
+        time: this.time,
         senderID: miniLockLib.ID.encode(this.keys.publicKey),
         duration: this.duration,
         startedAt: this.startedAt,
@@ -1948,14 +2014,41 @@ module.exports = (function () {
       return this.callback(error);
     };
 
-    EncryptOperation.prototype.encryptName = function() {
+    EncryptOperation.prototype.encryptVersion1Attributes = function() {
       var encryptedBytes;
       this.constructStreamEncryptor();
-      if (encryptedBytes = this.streamEncryptor.encryptChunk(this.fixedLengthDecodedName(), false)) {
+      if (encryptedBytes = this.streamEncryptor.encryptChunk(this.fixedSizeDecodedName(), false)) {
         this.hash.update(encryptedBytes);
         return this.ciphertextBytes.push(encryptedBytes);
       } else {
-        throw "EncryptOperation failed to encrypt file name.";
+        throw "EncryptOperation failed to record the version 1 attributes.";
+      }
+    };
+
+    EncryptOperation.prototype.encryptVersion2Attributes = function() {
+      var b, bytes, encryptedBytes, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
+      this.constructStreamEncryptor();
+      bytes = [];
+      _ref = this.fixedSizeDecodedName();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        b = _ref[_i];
+        bytes.push(b);
+      }
+      _ref1 = this.fixedSizeDecodedType();
+      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+        b = _ref1[_j];
+        bytes.push(b);
+      }
+      _ref2 = this.fixedSizeDecodedTime();
+      for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+        b = _ref2[_k];
+        bytes.push(b);
+      }
+      if (encryptedBytes = this.streamEncryptor.encryptChunk(bytes, false)) {
+        this.hash.update(encryptedBytes);
+        return this.ciphertextBytes.push(encryptedBytes);
+      } else {
+        throw "EncryptOperation failed to record version 2 attributes.";
       }
     };
 
@@ -1987,12 +2080,12 @@ module.exports = (function () {
     EncryptOperation.prototype.constructHeader = function() {
       var headerJSON;
       this.header = {
-        version: 1,
+        version: this.version,
         ephemeral: NACL.util.encodeBase64(this.ephemeral.publicKey),
         decryptInfo: this.encodedEncryptedPermits()
       };
       headerJSON = JSON.stringify(this.header);
-      this.lengthOfHeaderIn4Bytes = numberToByteArray(headerJSON.length);
+      this.sizeOfHeaderIn4Bytes = numberToByteArray(headerJSON.length);
       this.headerJSONBytes = NACL.util.decodeUTF8(headerJSON);
       return this.header;
     };
@@ -2001,15 +2094,36 @@ module.exports = (function () {
       return this.streamEncryptor != null ? this.streamEncryptor : this.streamEncryptor = NACL.stream.createEncryptor(this.fileKey, this.fileNonce, this.chunkSize);
     };
 
-    EncryptOperation.prototype.fixedLengthDecodedName = function() {
-      var decodedName, fixedLength;
-      fixedLength = new Uint8Array(256);
-      decodedName = NACL.util.decodeUTF8(this.name);
-      if (decodedName.length > fixedLength.length) {
-        throw "EncryptOperation file name is too long. 256-characters max please.";
+    EncryptOperation.prototype.fixedSizeDecodedName = function() {
+      var decodedName, fixedSize;
+      fixedSize = new Uint8Array(256);
+      if (this.name) {
+        decodedName = NACL.util.decodeUTF8(this.name);
+        if (decodedName.length > fixedSize.length) {
+          throw "EncryptOperation file name is too long. 256-characters max please.";
+        }
+        fixedSize.set(decodedName);
       }
-      fixedLength.set(decodedName);
-      return fixedLength;
+      return fixedSize;
+    };
+
+    EncryptOperation.prototype.fixedSizeDecodedType = function() {
+      var decodedType, fixedSize;
+      fixedSize = new Uint8Array(128);
+      decodedType = NACL.util.decodeUTF8(this.type);
+      if (decodedType.length > fixedSize.length) {
+        throw "EncryptOperation media type is too long. 128-characters max please.";
+      }
+      fixedSize.set(decodedType);
+      return fixedSize;
+    };
+
+    EncryptOperation.prototype.fixedSizeDecodedTime = function() {
+      var fixedSize, timestamp;
+      fixedSize = new Uint8Array(24);
+      timestamp = (new Date(this.time)).toJSON();
+      fixedSize.set(NACL.util.decodeUTF8(timestamp));
+      return fixedSize;
     };
 
     EncryptOperation.prototype.encodedEncryptedPermits = function() {
@@ -2216,12 +2330,15 @@ module.exports = (function () {
   miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair;
 
   miniLockLib.encrypt = function(params) {
-    var callback, data, keys, miniLockIDs, name;
-    data = params.data, name = params.name, miniLockIDs = params.miniLockIDs, keys = params.keys, callback = params.callback;
+    var callback, data, keys, miniLockIDs, name, time, type, version;
+    data = params.data, name = params.name, type = params.type, time = params.time, miniLockIDs = params.miniLockIDs, keys = params.keys, version = params.version, callback = params.callback;
     return new miniLockLib.EncryptOperation({
       data: data,
       name: name,
+      type: type,
+      time: time,
       keys: keys,
+      version: version,
       miniLockIDs: miniLockIDs,
       saveName: name + ".minilock",
       callback: callback,

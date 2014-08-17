@@ -49,17 +49,12 @@
     };
 
     DecryptOperation.prototype.run = function() {
-      return this.constructMap((function(_this) {
-        return function(error, map) {
-          if (error != null) {
-            return _this.end(error);
-          }
-          return _this.decryptName(function(error) {
-            var encryptedDataBytes;
+      return this.readHeader((function(_this) {
+        return function(error, header) {
+          return _this["decryptVersion" + header.version + "Attributes"](function(error, attributes, startOfEncryptedDataBytes) {
             if (error === void 0) {
-              encryptedDataBytes = map.encryptedDataBytes;
-              return _this.decryptData(encryptedDataBytes.start, function(error, blob) {
-                return _this.end(error, blob);
+              return _this.decryptData(startOfEncryptedDataBytes, function(error, blob) {
+                return _this.end(error, blob, attributes);
               });
             } else {
               return _this.end(error);
@@ -69,17 +64,19 @@
       })(this));
     };
 
-    DecryptOperation.prototype.end = function(error, blob) {
+    DecryptOperation.prototype.end = function(error, blob, attributes) {
       if (this.streamDecryptor != null) {
         this.streamDecryptor.clean();
       }
-      return AbstractOperation.prototype.end.call(this, error, blob);
+      return AbstractOperation.prototype.end.call(this, error, blob, attributes);
     };
 
-    DecryptOperation.prototype.oncomplete = function(blob) {
+    DecryptOperation.prototype.oncomplete = function(blob, attributes) {
       return this.callback(void 0, {
         data: blob,
-        name: this.name,
+        name: attributes.name,
+        type: attributes.type,
+        time: attributes.time,
         senderID: this.permit.senderID,
         recipientID: this.permit.recipientID,
         duration: this.duration,
@@ -92,81 +89,114 @@
       return this.callback(error);
     };
 
-    DecryptOperation.prototype.constructMap = function(callback) {
-      return this.readSliceOfData(8, 12, (function(_this) {
-        return function(error, sliceOfBytes) {
-          var sizeOfHeader;
-          if (sliceOfBytes) {
-            sizeOfHeader = byteArrayToNumber(sliceOfBytes);
-            return callback(error, {
-              magicBytes: {
-                start: 0,
-                end: 8
-              },
-              sizeOfHeaderBytes: {
-                start: 8,
-                end: 12
-              },
-              headerBytes: {
-                start: 12,
-                end: 12 + sizeOfHeader
-              },
-              ciphertextBytes: {
-                start: 12 + sizeOfHeader,
-                end: _this.data.size
-              },
-              encryptedNameBytes: {
-                start: 12 + sizeOfHeader,
-                end: 12 + sizeOfHeader + 256 + 4 + 16
-              },
-              encryptedDataBytes: {
-                start: 12 + sizeOfHeader + 256 + 4 + 16,
-                end: _this.data.size
-              }
-            });
-          } else {
-            return callback(error);
-          }
-        };
-      })(this));
-    };
-
-    DecryptOperation.prototype.decryptName = function(callback) {
+    DecryptOperation.prototype.decryptVersion1Attributes = function(callback) {
       return this.constructMap((function(_this) {
         return function(error, map) {
-          var ciphertextBytes;
           if (error) {
             return callback(error);
           }
-          ciphertextBytes = map.ciphertextBytes;
           return _this.constructStreamDecryptor(function(error) {
-            var endPosition, startPosition;
+            var ciphertextBytes, end, start;
             if (error) {
               return callback(error);
             }
-            startPosition = ciphertextBytes.start;
-            endPosition = ciphertextBytes.start + 256 + 4 + 16;
-            return _this.readSliceOfData(startPosition, endPosition, function(error, sliceOfBytes) {
-              var byte, fixedSizeNameAsBytes, nameAsBytes;
+            ciphertextBytes = map.ciphertextBytes;
+            start = ciphertextBytes.start;
+            end = ciphertextBytes.start + 256 + 4 + 16;
+            return _this.readSliceOfData(start, end, function(error, sliceOfBytes) {
+              var attributes, byte, decryptedBytes, nameAsBytes;
               if (error) {
                 return callback(error);
               }
-              if (fixedSizeNameAsBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false)) {
+              if (decryptedBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false)) {
                 nameAsBytes = (function() {
                   var _i, _len, _results;
                   _results = [];
-                  for (_i = 0, _len = fixedSizeNameAsBytes.length; _i < _len; _i++) {
-                    byte = fixedSizeNameAsBytes[_i];
+                  for (_i = 0, _len = decryptedBytes.length; _i < _len; _i++) {
+                    byte = decryptedBytes[_i];
                     if (byte !== 0) {
                       _results.push(byte);
                     }
                   }
                   return _results;
                 })();
-                _this.name = encodeUTF8(nameAsBytes);
-                return callback(void 0, _this.name);
+                attributes = {
+                  name: encodeUTF8(nameAsBytes)
+                };
+                return callback(void 0, attributes, end);
               } else {
-                return callback("DecryptOperation failed to decrypt file name.");
+                return callback("DecryptOperation failed to decrypt version 1 attributes.");
+              }
+            });
+          });
+        };
+      })(this));
+    };
+
+    DecryptOperation.prototype.decryptVersion2Attributes = function(callback) {
+      return this.constructMap((function(_this) {
+        return function(error, map) {
+          if (error) {
+            return callback(error);
+          }
+          return _this.constructStreamDecryptor(function(error) {
+            var ciphertextBytes, end, start;
+            if (error) {
+              return callback(error);
+            }
+            ciphertextBytes = map.ciphertextBytes;
+            start = ciphertextBytes.start;
+            end = ciphertextBytes.start + 256 + 128 + 24 + 4 + 16;
+            return _this.readSliceOfData(start, end, function(error, sliceOfBytes) {
+              var attributes, byte, decryptedBytes, decryptedNameBytes, decryptedTimeBytes, decryptedTypeBytes, nameAsBytes, timeAsBytes, typeAsBytes;
+              if (error) {
+                return callback(error);
+              }
+              if (decryptedBytes = _this.streamDecryptor.decryptChunk(sliceOfBytes, false)) {
+                decryptedNameBytes = decryptedBytes.subarray(0, 256);
+                nameAsBytes = (function() {
+                  var _i, _len, _results;
+                  _results = [];
+                  for (_i = 0, _len = decryptedNameBytes.length; _i < _len; _i++) {
+                    byte = decryptedNameBytes[_i];
+                    if (byte !== 0) {
+                      _results.push(byte);
+                    }
+                  }
+                  return _results;
+                })();
+                decryptedTypeBytes = decryptedBytes.subarray(256, 256 + 128);
+                typeAsBytes = (function() {
+                  var _i, _len, _results;
+                  _results = [];
+                  for (_i = 0, _len = decryptedTypeBytes.length; _i < _len; _i++) {
+                    byte = decryptedTypeBytes[_i];
+                    if (byte !== 0) {
+                      _results.push(byte);
+                    }
+                  }
+                  return _results;
+                })();
+                decryptedTimeBytes = decryptedBytes.subarray(256 + 128, 256 + 128 + 24);
+                timeAsBytes = (function() {
+                  var _i, _len, _results;
+                  _results = [];
+                  for (_i = 0, _len = decryptedTimeBytes.length; _i < _len; _i++) {
+                    byte = decryptedTimeBytes[_i];
+                    if (byte !== 0) {
+                      _results.push(byte);
+                    }
+                  }
+                  return _results;
+                })();
+                attributes = {
+                  name: encodeUTF8(nameAsBytes),
+                  type: encodeUTF8(typeAsBytes),
+                  time: encodeUTF8(timeAsBytes)
+                };
+                return callback(void 0, attributes, end);
+              } else {
+                return callback("DecryptOperation failed to decrypt version 2 attributes.");
               }
             });
           });
@@ -197,6 +227,38 @@
             } else {
               return callback("DecryptOperation failed to decrypt file data.");
             }
+          });
+        };
+      })(this));
+    };
+
+    DecryptOperation.prototype.constructMap = function(callback) {
+      return this.readHeader((function(_this) {
+        return function(error, header, sizeOfHeader) {
+          var ciphertextBytes, headerBytes, magicBytes, sizeOfHeaderBytes;
+          if ((error === void 0) && (sizeOfHeader != null)) {
+            magicBytes = {
+              start: 0,
+              end: 8
+            };
+            sizeOfHeaderBytes = {
+              start: 8,
+              end: 12
+            };
+            headerBytes = {
+              start: 12,
+              end: 12 + sizeOfHeader
+            };
+            ciphertextBytes = {
+              start: headerBytes.end,
+              end: _this.data.size
+            };
+          }
+          return callback(error, {
+            magicBytes: magicBytes,
+            sizeOfHeaderBytes: sizeOfHeaderBytes,
+            headerBytes: headerBytes,
+            ciphertextBytes: ciphertextBytes
           });
         };
       })(this));
@@ -290,37 +352,33 @@
     };
 
     DecryptOperation.prototype.readHeader = function(callback) {
-      return this.constructMap((function(_this) {
-        return function(error, map) {
-          var headerBytes;
+      return this.readSizeOfHeader((function(_this) {
+        return function(error, sizeOfHeader) {
           if (error) {
             return callback(error);
           }
-          headerBytes = map.headerBytes;
-          return _this.readSliceOfData(headerBytes.start, headerBytes.end, function(error, sliceOfBytes) {
+          return _this.readSliceOfData(12, 12 + sizeOfHeader, function(error, sliceOfBytes) {
             var header, headerAsString;
             if (error) {
               return callback(error);
             }
             headerAsString = encodeUTF8(sliceOfBytes);
             header = JSON.parse(headerAsString);
-            return callback(void 0, header);
+            return callback(void 0, header, sizeOfHeader);
           });
         };
       })(this));
     };
 
     DecryptOperation.prototype.readSizeOfHeader = function(callback) {
-      return this.constructMap((function(_this) {
-        return function(error, map) {
-          var headerBytes, sizeOfHeader;
-          if (map) {
-            headerBytes = map.headerBytes;
-            sizeOfHeader = headerBytes.end - headerBytes.start;
-            return callback(error, sizeOfHeader);
-          } else {
+      return this.readSliceOfData(8, 12, (function(_this) {
+        return function(error, sliceOfBytes) {
+          var sizeOfHeader;
+          if (error) {
             return callback(error);
           }
+          sizeOfHeader = byteArrayToNumber(sliceOfBytes);
+          return callback(error, sizeOfHeader);
         };
       })(this));
     };

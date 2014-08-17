@@ -15,12 +15,15 @@
   miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair;
 
   miniLockLib.encrypt = function(params) {
-    var callback, data, keys, miniLockIDs, name;
-    data = params.data, name = params.name, miniLockIDs = params.miniLockIDs, keys = params.keys, callback = params.callback;
+    var callback, data, keys, miniLockIDs, name, time, type, version;
+    data = params.data, name = params.name, type = params.type, time = params.time, miniLockIDs = params.miniLockIDs, keys = params.keys, version = params.version, callback = params.callback;
     return new miniLockLib.EncryptOperation({
       data: data,
       name: name,
+      type: type,
+      time: time,
       keys: keys,
+      version: version,
       miniLockIDs: miniLockIDs,
       saveName: name + ".minilock",
       callback: callback,

@@ -7,7 +7,8 @@ class EncryptOperation extends AbstractOperation
   module.exports = this
 
   constructor: (params={})->
-    {@data, @keys, @name, @miniLockIDs, @callback} = params
+    {@data, @keys, @name, @type, @time, @miniLockIDs, @version, @callback} = params
+    @version = 1 if @version is undefined
     @ephemeral = NACL.box.keyPair()
     @fileKey = NACL.randomBytes(32)
     @fileNonce = NACL.randomBytes(24).subarray(0, 16)
@@ -26,16 +27,17 @@ class EncryptOperation extends AbstractOperation
     if typeof @callback isnt "function"
       throw "Can’t start miniLockLib.#{@constructor.name} without a callback."
     @startedAt = Date.now()
+    @time = @startedAt if @time is undefined
     @run()
 
   run: ->
-    @encryptName()
+    @["encryptVersion#{@version}Attributes"]()
     @encryptData 0, (error, dataWasEncrypted) =>
       if dataWasEncrypted?
         @constructHeader()
         fileFormat = [
           "miniLock"
-          @lengthOfHeaderIn4Bytes
+          @sizeOfHeaderIn4Bytes
           @headerJSONBytes
           @ciphertextBytes...
         ]
@@ -51,6 +53,8 @@ class EncryptOperation extends AbstractOperation
     @callback(undefined, {
       data: blob
       name: @name + ".minilock"
+      type: @type
+      time: @time
       senderID: miniLockLib.ID.encode(@keys.publicKey)
       duration: @duration
       startedAt: @startedAt
@@ -60,13 +64,25 @@ class EncryptOperation extends AbstractOperation
   onerror: (error) ->
     @callback(error)
 
-  encryptName: ->
+  encryptVersion1Attributes: ->
     @constructStreamEncryptor()
-    if encryptedBytes = @streamEncryptor.encryptChunk(@fixedLengthDecodedName(), no)
+    if encryptedBytes = @streamEncryptor.encryptChunk(@fixedSizeDecodedName(), no)
       @hash.update(encryptedBytes)
       @ciphertextBytes.push(encryptedBytes)
     else
-      throw "EncryptOperation failed to encrypt file name."
+      throw "EncryptOperation failed to record the version 1 attributes."
+
+  encryptVersion2Attributes: ->
+    @constructStreamEncryptor()
+    bytes = []
+    bytes.push b for b in @fixedSizeDecodedName()
+    bytes.push b for b in @fixedSizeDecodedType()
+    bytes.push b for b in @fixedSizeDecodedTime()
+    if encryptedBytes = @streamEncryptor.encryptChunk(bytes, no)
+      @hash.update(encryptedBytes)
+      @ciphertextBytes.push(encryptedBytes)
+    else
+      throw "EncryptOperation failed to record version 2 attributes."
 
   encryptData: (position, callback) ->
     @constructStreamEncryptor()
@@ -86,24 +102,39 @@ class EncryptOperation extends AbstractOperation
 
   constructHeader: ->
     @header =
-      version: 1
+      version: @version
       ephemeral: NACL.util.encodeBase64(@ephemeral.publicKey)
       decryptInfo: @encodedEncryptedPermits()
     headerJSON = JSON.stringify(@header)
-    @lengthOfHeaderIn4Bytes = numberToByteArray(headerJSON.length)
+    @sizeOfHeaderIn4Bytes = numberToByteArray(headerJSON.length)
     @headerJSONBytes = NACL.util.decodeUTF8(headerJSON)
     return @header
 
   constructStreamEncryptor: ->
     @streamEncryptor ?= NACL.stream.createEncryptor(@fileKey, @fileNonce, @chunkSize)
 
-  fixedLengthDecodedName: ->
-    fixedLength = new Uint8Array(256)
-    decodedName = NACL.util.decodeUTF8(@name)
-    if decodedName.length > fixedLength.length
-      throw "EncryptOperation file name is too long. 256-characters max please."
-    fixedLength.set(decodedName)
-    return fixedLength
+  fixedSizeDecodedName: ->
+    fixedSize = new Uint8Array(256)
+    if @name
+      decodedName = NACL.util.decodeUTF8(@name)
+      if decodedName.length > fixedSize.length
+        throw "EncryptOperation file name is too long. 256-characters max please."
+      fixedSize.set(decodedName)
+    return fixedSize
+
+  fixedSizeDecodedType: ->
+    fixedSize = new Uint8Array(128)
+    decodedType = NACL.util.decodeUTF8(@type)
+    if decodedType.length > fixedSize.length
+      throw "EncryptOperation media type is too long. 128-characters max please."
+    fixedSize.set(decodedType)
+    return fixedSize
+
+  fixedSizeDecodedTime: ->
+    fixedSize = new Uint8Array(24)
+    timestamp = (new Date(@time)).toJSON()
+    fixedSize.set(NACL.util.decodeUTF8(timestamp))
+    return fixedSize
 
   encodedEncryptedPermits: ->
     permits = {}

@@ -103,7 +103,7 @@ tape "read header of a file with two permits", (test) ->
       test.ok header.decryptInfo[uniqueNonces[1]].length is 508
       test.end()
 
-tape "decrypt uniqueNonce and permit from a file encrypted with miniLockLib", (test) ->
+tape "decrypt uniqueNonce and permit", (test) ->
   read "alice.txt.minilock", (blob) ->
     operation = new miniLockLib.DecryptOperation
       data: blob

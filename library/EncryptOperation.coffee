@@ -31,7 +31,7 @@ class EncryptOperation extends AbstractOperation
     @run()
 
   run: ->
-    @["encryptVersion#{@version}Attributes"]()
+    @encryptAttributes(@version)
     @encryptData 0, (error, dataWasEncrypted) =>
       if dataWasEncrypted?
         @constructHeader()
@@ -64,25 +64,20 @@ class EncryptOperation extends AbstractOperation
   onerror: (error) ->
     @callback(error)
 
-  encryptVersion1Attributes: ->
+  encryptAttributes: (version) ->
     @constructStreamEncryptor()
-    if encryptedBytes = @streamEncryptor.encryptChunk(@fixedSizeDecodedName(), no)
-      @hash.update(encryptedBytes)
-      @ciphertextBytes.push(encryptedBytes)
-    else
-      throw "EncryptOperation failed to record the version 1 attributes."
-
-  encryptVersion2Attributes: ->
-    @constructStreamEncryptor()
-    bytes = []
-    bytes.push b for b in @fixedSizeDecodedName()
-    bytes.push b for b in @fixedSizeDecodedType()
-    bytes.push b for b in @fixedSizeDecodedTime()
+    bytes = switch version
+      when 1 then new Uint8Array 256
+      when 2 then new Uint8Array 256+128+24
+      else throw "EncryptOperation does not support version #{version}. Version 1 or 2 please."
+    bytes.set @fixedSizeDecodedName(), 0
+    bytes.set @fixedSizeDecodedType(), 256 if version is 2
+    bytes.set @fixedSizeDecodedTime(), 256+128 if version is 2
     if encryptedBytes = @streamEncryptor.encryptChunk(bytes, no)
       @hash.update(encryptedBytes)
       @ciphertextBytes.push(encryptedBytes)
     else
-      throw "EncryptOperation failed to record version 2 attributes."
+      throw "EncryptOperation failed to record file attributes."
 
   encryptData: (position, callback) ->
     @constructStreamEncryptor()

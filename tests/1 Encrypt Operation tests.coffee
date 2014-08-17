@@ -118,7 +118,7 @@ tape "encrypt version 1 attributes", (test) ->
   operation = new miniLockLib.EncryptOperation
     version: 1
     name: "untitled.txt"
-  operation.encryptVersion1Attributes()
+  operation.encryptAttributes(1)
   test.same operation.ciphertextBytes.length, 1
   decryptor = miniLockLib.NACL.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+4+16)
   decryptedBytes = decryptor.decryptChunk(operation.ciphertextBytes[0], no)
@@ -134,7 +134,7 @@ tape "encrypt version 2 attributes", (test) ->
     name: "untitled.txt"
     type: "text/plain"
     time: (new Date "2014-08-17T07:06:50.095Z").getTime()
-  operation.encryptVersion2Attributes()
+  operation.encryptAttributes(2)
   test.same operation.ciphertextBytes.length, 1
   decryptor = miniLockLib.NACL.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+4+16)
   decryptedBytes = decryptor.decryptChunk(operation.ciphertextBytes[0], no)

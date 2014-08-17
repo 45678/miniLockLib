@@ -64,7 +64,7 @@
     };
 
     EncryptOperation.prototype.run = function() {
-      this["encryptVersion" + this.version + "Attributes"]();
+      this.encryptAttributes(this.version);
       return this.encryptData(0, (function(_this) {
         return function(error, dataWasEncrypted) {
           var fileFormat;
@@ -105,41 +105,31 @@
       return this.callback(error);
     };
 
-    EncryptOperation.prototype.encryptVersion1Attributes = function() {
-      var encryptedBytes;
+    EncryptOperation.prototype.encryptAttributes = function(version) {
+      var bytes, encryptedBytes;
       this.constructStreamEncryptor();
-      if (encryptedBytes = this.streamEncryptor.encryptChunk(this.fixedSizeDecodedName(), false)) {
-        this.hash.update(encryptedBytes);
-        return this.ciphertextBytes.push(encryptedBytes);
-      } else {
-        throw "EncryptOperation failed to record the version 1 attributes.";
+      bytes = (function() {
+        switch (version) {
+          case 1:
+            return new Uint8Array(256);
+          case 2:
+            return new Uint8Array(256 + 128 + 24);
+          default:
+            throw "EncryptOperation does not support version " + version + ". Version 1 or 2 please.";
+        }
+      })();
+      bytes.set(this.fixedSizeDecodedName(), 0);
+      if (version === 2) {
+        bytes.set(this.fixedSizeDecodedType(), 256);
       }
-    };
-
-    EncryptOperation.prototype.encryptVersion2Attributes = function() {
-      var b, bytes, encryptedBytes, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
-      this.constructStreamEncryptor();
-      bytes = [];
-      _ref = this.fixedSizeDecodedName();
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        b = _ref[_i];
-        bytes.push(b);
-      }
-      _ref1 = this.fixedSizeDecodedType();
-      for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-        b = _ref1[_j];
-        bytes.push(b);
-      }
-      _ref2 = this.fixedSizeDecodedTime();
-      for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
-        b = _ref2[_k];
-        bytes.push(b);
+      if (version === 2) {
+        bytes.set(this.fixedSizeDecodedTime(), 256 + 128);
       }
       if (encryptedBytes = this.streamEncryptor.encryptChunk(bytes, false)) {
         this.hash.update(encryptedBytes);
         return this.ciphertextBytes.push(encryptedBytes);
       } else {
-        throw "EncryptOperation failed to record version 2 attributes.";
+        throw "EncryptOperation failed to record " + version + " attributes.";
       }
     };
 

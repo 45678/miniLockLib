@@ -23,19 +23,19 @@ class DecryptOperation extends AbstractOperation
     @run()
 
   run: ->
-    @readHeader (error, header) =>
+    @readHeader (error, header, sizeOfHeader) =>
       @["decryptVersion#{header.version}Attributes"] (error, attributes, startOfEncryptedDataBytes) =>
         if error is undefined
           @decryptData startOfEncryptedDataBytes, (error, blob) =>
-            @end(error, blob, attributes)
+            @end(error, blob, attributes, header, sizeOfHeader)
         else
-          @end(error)
+          @end(error, undefined, attributes, header, sizeOfHeader)
 
-  end: (error, blob, attributes) ->
+  end: (error, blob, attributes, header, sizeOfHeader) ->
     @streamDecryptor.clean() if @streamDecryptor?
-    AbstractOperation::end.call(this, error, blob, attributes)
+    AbstractOperation::end.call(this, error, blob, attributes, header, sizeOfHeader)
 
-  oncomplete: (blob, attributes) ->
+  oncomplete: (blob, attributes, header, sizeOfHeader) ->
     @callback(undefined, {
       data: blob
       name: attributes.name
@@ -43,13 +43,16 @@ class DecryptOperation extends AbstractOperation
       time: attributes.time
       senderID: @permit.senderID
       recipientID: @permit.recipientID
+      fileKey: @permit.fileInfo.fileKey
+      fileNonce: @permit.fileInfo.fileNonce
+      fileHash: @permit.fileInfo.fileHash
       duration: @duration
       startedAt: @startedAt
       endedAt: @endedAt
-    })
+    }, header, sizeOfHeader)
 
-  onerror: (error) ->
-    @callback(error)
+  onerror: (error, header, sizeOfHeader) ->
+    @callback(error, undefined, header, sizeOfHeader)
 
   decryptVersion1Attributes: (callback) ->
     @constructMap (error, map) =>

@@ -9,13 +9,13 @@
 
     AbstractOperation.prototype.chunkSize = 1024 * 1024;
 
-    AbstractOperation.prototype.end = function(error, blob, attributes) {
+    AbstractOperation.prototype.end = function(error, blob, attributes, header, sizeOfHeader) {
       this.endedAt = Date.now();
       this.duration = this.endedAt - this.startedAt;
       if (error) {
-        return this.onerror(error);
+        return this.onerror(error, header, sizeOfHeader);
       } else {
-        return this.oncomplete(blob, attributes);
+        return this.oncomplete(blob, attributes, header, sizeOfHeader);
       }
     };
 
@@ -23,8 +23,8 @@
       return console.info("onerror", error);
     };
 
-    AbstractOperation.prototype.oncomplete = function(blob, attributes) {
-      return console.info("oncomplete", blob, attributes);
+    AbstractOperation.prototype.oncomplete = function(blob, attributes, header, sizeOfHeader) {
+      return console.info("oncomplete", blob, attributes, header, sizeOfHeader);
     };
 
     AbstractOperation.prototype.readSliceOfData = function(start, end, callback) {

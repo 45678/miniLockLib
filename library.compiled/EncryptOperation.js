@@ -129,7 +129,7 @@
         this.hash.update(encryptedBytes);
         return this.ciphertextBytes.push(encryptedBytes);
       } else {
-        throw "EncryptOperation failed to record " + version + " attributes.";
+        throw "EncryptOperation failed to record file attributes.";
       }
     };
 

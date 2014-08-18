@@ -10,13 +10,13 @@
 
     AbstractOperation.prototype.chunkSize = 1024 * 1024;
 
-    AbstractOperation.prototype.end = function(error, blob, attributes) {
+    AbstractOperation.prototype.end = function(error, blob, attributes, header, sizeOfHeader) {
       this.endedAt = Date.now();
       this.duration = this.endedAt - this.startedAt;
       if (error) {
-        return this.onerror(error);
+        return this.onerror(error, header, sizeOfHeader);
       } else {
-        return this.oncomplete(blob, attributes);
+        return this.oncomplete(blob, attributes, header, sizeOfHeader);
       }
     };
 
@@ -24,8 +24,8 @@
       return console.info("onerror", error);
     };
 
-    AbstractOperation.prototype.oncomplete = function(blob, attributes) {
-      return console.info("oncomplete", blob, attributes);
+    AbstractOperation.prototype.oncomplete = function(blob, attributes, header, sizeOfHeader) {
+      return console.info("oncomplete", blob, attributes, header, sizeOfHeader);
     };
 
     AbstractOperation.prototype.readSliceOfData = function(start, end, callback) {
@@ -1567,28 +1567,28 @@ module.exports = (function () {
 
     DecryptOperation.prototype.run = function() {
       return this.readHeader((function(_this) {
-        return function(error, header) {
+        return function(error, header, sizeOfHeader) {
           return _this["decryptVersion" + header.version + "Attributes"](function(error, attributes, startOfEncryptedDataBytes) {
             if (error === void 0) {
               return _this.decryptData(startOfEncryptedDataBytes, function(error, blob) {
-                return _this.end(error, blob, attributes);
+                return _this.end(error, blob, attributes, header, sizeOfHeader);
               });
             } else {
-              return _this.end(error);
+              return _this.end(error, void 0, attributes, header, sizeOfHeader);
             }
           });
         };
       })(this));
     };
 
-    DecryptOperation.prototype.end = function(error, blob, attributes) {
+    DecryptOperation.prototype.end = function(error, blob, attributes, header, sizeOfHeader) {
       if (this.streamDecryptor != null) {
         this.streamDecryptor.clean();
       }
-      return AbstractOperation.prototype.end.call(this, error, blob, attributes);
+      return AbstractOperation.prototype.end.call(this, error, blob, attributes, header, sizeOfHeader);
     };
 
-    DecryptOperation.prototype.oncomplete = function(blob, attributes) {
+    DecryptOperation.prototype.oncomplete = function(blob, attributes, header, sizeOfHeader) {
       return this.callback(void 0, {
         data: blob,
         name: attributes.name,
@@ -1596,14 +1596,17 @@ module.exports = (function () {
         time: attributes.time,
         senderID: this.permit.senderID,
         recipientID: this.permit.recipientID,
+        fileKey: this.permit.fileInfo.fileKey,
+        fileNonce: this.permit.fileInfo.fileNonce,
+        fileHash: this.permit.fileInfo.fileHash,
         duration: this.duration,
         startedAt: this.startedAt,
         endedAt: this.endedAt
-      });
+      }, header, sizeOfHeader);
     };
 
-    DecryptOperation.prototype.onerror = function(error) {
-      return this.callback(error);
+    DecryptOperation.prototype.onerror = function(error, header, sizeOfHeader) {
+      return this.callback(error, void 0, header, sizeOfHeader);
     };
 
     DecryptOperation.prototype.decryptVersion1Attributes = function(callback) {
@@ -2038,7 +2041,7 @@ module.exports = (function () {
         this.hash.update(encryptedBytes);
         return this.ciphertextBytes.push(encryptedBytes);
       } else {
-        throw "EncryptOperation failed to record " + version + " attributes.";
+        throw "EncryptOperation failed to record file attributes.";
       }
     };
 

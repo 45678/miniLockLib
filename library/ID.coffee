@@ -1,5 +1,5 @@
 Base58 = require("./Base58")
-BLAKE2 = require("./BLAKE2")
+BLAKE2s = require("./BLAKE2s")
 
 # ------------
 # miniLock IDs
@@ -17,7 +17,7 @@ ID.encode = (publicKey) ->
   if publicKey?.length is 32
     slots = new Uint8Array(33)
     slots[index] = publicKey[index] for index in [0..32]
-    slots[32] = (new BLAKE2 length: 1).update(publicKey).digest()[0]
+    slots[32] = (new BLAKE2s length: 1).update(publicKey).digest()[0]
     Base58.encode(slots)
   else
     undefined
@@ -29,6 +29,6 @@ ID.decode = (id) ->
   if slots.length is 33
     publicKey = new Uint8Array(slots.subarray(0, 32))
     encodedChecksum = slots[32]
-    trueChecksum = (new BLAKE2 length: 1).update(publicKey).digest()[0]
+    trueChecksum = (new BLAKE2s length: 1).update(publicKey).digest()[0]
     return publicKey if encodedChecksum is trueChecksum
   undefined

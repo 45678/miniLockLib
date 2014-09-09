@@ -1,6 +1,6 @@
 AbstractOperation = require("./AbstractOperation")
 NACL = require("./NACL")
-BLAKE2 = require("./BLAKE2")
+BLAKE2s = require("./BLAKE2s")
 {numberToByteArray} = require("./util")
 
 class EncryptOperation extends AbstractOperation
@@ -12,7 +12,7 @@ class EncryptOperation extends AbstractOperation
     @ephemeral = NACL.box.keyPair()
     @fileKey = NACL.randomBytes(32)
     @fileNonce = NACL.randomBytes(24).subarray(0, 16)
-    @hash = new BLAKE2(32)
+    @hash = new BLAKE2s(32)
     @ciphertextBytes = []
     @start() if params.start?
 

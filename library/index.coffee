@@ -92,11 +92,11 @@ miniLockLib.decrypt = (params, callback) ->
 
 
 
-miniLockLib.Base58 = Base58  = require("./Base58")
-miniLockLib.BLAKE2 = BLAKE2  = require("./BLAKE2")
-miniLockLib.NACL   = NACL    = require("./NACL")
-miniLockLib.scrypt = scrypt  = require("./scrypt-async")
-miniLockLib.zxcvbn = zxcvbn  = require("./zxcvbn")
+miniLockLib.Base58  = Base58  = require("./Base58")
+miniLockLib.BLAKE2s = BLAKE2s = require("./BLAKE2s")
+miniLockLib.NACL    = NACL    = require("./NACL")
+miniLockLib.scrypt  = scrypt  = require("./scrypt-async")
+miniLockLib.zxcvbn  = zxcvbn  = require("./zxcvbn")
 
 # Explanations of miniLock’s numeric error codes.
 miniLockLib.ErrorMessages =

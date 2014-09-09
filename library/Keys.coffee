@@ -1,4 +1,4 @@
-BLAKE2  = require("./BLAKE2")
+BLAKE2s = require("./BLAKE2s")
 NACL    = require("./NACL")
 scrypt  = require("./scrypt-async")
 zxcvbn  = require("./zxcvbn")
@@ -40,7 +40,7 @@ exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
       decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
       decodedEmailAddress = NACL.util.decodeUTF8(emailAddress)
       # Create a hash digest of the decoded secret phrase to increase its complexity.
-      hashDigestOfDecodedSecretPhrase = (new BLAKE2 length: 32).update(decodedSecretPhrase).digest()
+      hashDigestOfDecodedSecretPhrase = (new BLAKE2s length: 32).update(decodedSecretPhrase).digest()
       # Calculate keys for the hash of the secret phrase with email address as salt.
       calculateCurve25519KeyPair hashDigestOfDecodedSecretPhrase, decodedEmailAddress, (keys) ->
         callback(undefined, keys)

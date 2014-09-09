@@ -60,7 +60,7 @@ __Sources__
 
 `BLAKE2s.js` provides a subclass of [Dmitry Chestnykh’s implementation of the BLAKE2s](https://github.com/dchest/blake2s-js) cryptographic hash function. miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
 
-`nacl.js` is a copy of the [tweetnacl-js crypto library](https://github.com/dchest/tweetnacl-js) written by Dmitry Chestnykh. It has been modified to assign itself to `this` instead of `window` so that it can be imported seamlessly into a crypto worker. `nacl` is used throughout `miniLockLib` for a variety of cryptographic functions.
+`nacl.js` is a copy of the [tweetnacl-js crypto library](https://github.com/dchest/tweetnacl-js) written by Dmitry Chestnykh & Devi Mandiri. It has been modified to assign itself to `this` instead of `window` so that it can be imported seamlessly into a crypto worker. `nacl` is used throughout `miniLockLib` for a variety of cryptographic functions.
 
 `nacl-stream.js` is an unmodified copy of the [tweetnacl-js streaming encryption library](https://github.com/dchest/nacl-stream-js) written by Dmitry Chestnykh. Streaming encryption is employed in a crypto worker.
 

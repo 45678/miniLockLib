@@ -22,7 +22,7 @@
   "dependencies": {
     "BLAKE2s": "git+https://git@github.com/45678/blake2s-js.git",
     "nacl-stream": "^0.3.2",
-    "tweetnacl": "^0.11.1",
+    "tweetnacl": "^0.12.1",
     "zxcvbn": "^1.0.0"
   }
 }

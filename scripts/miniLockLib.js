@@ -4972,7 +4972,7 @@ module.exports = function (Buffer, Hash) {
   // and that if it is the last block, it already has the length and the 1 bit appended.
 
 
-  var isDV = new Buffer(1) instanceof DataView
+  var isDV = (typeof DataView !== 'undefined') && (new Buffer(1) instanceof DataView)
   function readInt32BE (X, i) {
     return isDV
       ? X.getInt32(i, false)
@@ -6242,18 +6242,6 @@ var gf0 = gf(),
     Y = gf([0x6658, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666, 0x6666]),
     I = gf([0xa0b0, 0x4a0e, 0x1b27, 0xc4ee, 0xe478, 0xad2f, 0x1806, 0x2f43, 0xd7a7, 0x3dfb, 0x0099, 0x2b4d, 0xdf0b, 0x4fc1, 0x2480, 0x2b83]);
 
-function ld32(x, i) {
-  var u = x[i+3] & 0xff;
-  u = (u<<8)|(x[i+2] & 0xff);
-  u = (u<<8)|(x[i+1] & 0xff);
-  return (u<<8)|(x[i+0] & 0xff);
-}
-
-function st32(x, j, u) {
-  var i;
-  for (i = 0; i < 4; i++) { x[j+i] = u & 255; u >>>= 8; }
-}
-
 function ts64(x, i, h, l) {
   x[i]   = (h >> 24) & 0xff;
   x[i+1] = (h >> 16) & 0xff;
@@ -6279,23 +6267,23 @@ function crypto_verify_32(x, xi, y, yi) {
   return vn(x,xi,y,yi,32);
 }
 
-function core_salsa20(out, inp, k, c) {
-  var j0 = ld32(c, 0),
-      j1 = ld32(k, 0),
-      j2 = ld32(k, 4),
-      j3 = ld32(k, 8),
-      j4 = ld32(k, 12),
-      j5 = ld32(c, 4),
-      j6 = ld32(inp, 0),
-      j7 = ld32(inp, 4),
-      j8 = ld32(inp, 8),
-      j9 = ld32(inp, 12),
-      j10 = ld32(c, 8),
-      j11 = ld32(k, 16),
-      j12 = ld32(k, 20),
-      j13 = ld32(k, 24),
-      j14 = ld32(k, 28),
-      j15 = ld32(c, 12);
+function core_salsa20(o, p, k, c) {
+  var j0  = c[ 0] & 0xff | (c[ 1] & 0xff)<<8 | (c[ 2] & 0xff)<<16 | (c[ 3] & 0xff)<<24,
+      j1  = k[ 0] & 0xff | (k[ 1] & 0xff)<<8 | (k[ 2] & 0xff)<<16 | (k[ 3] & 0xff)<<24,
+      j2  = k[ 4] & 0xff | (k[ 5] & 0xff)<<8 | (k[ 6] & 0xff)<<16 | (k[ 7] & 0xff)<<24,
+      j3  = k[ 8] & 0xff | (k[ 9] & 0xff)<<8 | (k[10] & 0xff)<<16 | (k[11] & 0xff)<<24,
+      j4  = k[12] & 0xff | (k[13] & 0xff)<<8 | (k[14] & 0xff)<<16 | (k[15] & 0xff)<<24,
+      j5  = c[ 4] & 0xff | (c[ 5] & 0xff)<<8 | (c[ 6] & 0xff)<<16 | (c[ 7] & 0xff)<<24,
+      j6  = p[ 0] & 0xff | (p[ 1] & 0xff)<<8 | (p[ 2] & 0xff)<<16 | (p[ 3] & 0xff)<<24,
+      j7  = p[ 4] & 0xff | (p[ 5] & 0xff)<<8 | (p[ 6] & 0xff)<<16 | (p[ 7] & 0xff)<<24,
+      j8  = p[ 8] & 0xff | (p[ 9] & 0xff)<<8 | (p[10] & 0xff)<<16 | (p[11] & 0xff)<<24,
+      j9  = p[12] & 0xff | (p[13] & 0xff)<<8 | (p[14] & 0xff)<<16 | (p[15] & 0xff)<<24,
+      j10 = c[ 8] & 0xff | (c[ 9] & 0xff)<<8 | (c[10] & 0xff)<<16 | (c[11] & 0xff)<<24,
+      j11 = k[16] & 0xff | (k[17] & 0xff)<<8 | (k[18] & 0xff)<<16 | (k[19] & 0xff)<<24,
+      j12 = k[20] & 0xff | (k[21] & 0xff)<<8 | (k[22] & 0xff)<<16 | (k[23] & 0xff)<<24,
+      j13 = k[24] & 0xff | (k[25] & 0xff)<<8 | (k[26] & 0xff)<<16 | (k[27] & 0xff)<<24,
+      j14 = k[28] & 0xff | (k[29] & 0xff)<<8 | (k[30] & 0xff)<<16 | (k[31] & 0xff)<<24,
+      j15 = c[12] & 0xff | (c[13] & 0xff)<<8 | (c[14] & 0xff)<<16 | (c[15] & 0xff)<<24;
 
   var x0 = j0, x1 = j1, x2 = j2, x3 = j3, x4 = j4, x5 = j5, x6 = j6, x7 = j7,
       x8 = j8, x9 = j9, x10 = j10, x11 = j11, x12 = j12, x13 = j13, x14 = j14,
@@ -6391,41 +6379,104 @@ function core_salsa20(out, inp, k, c) {
   x14 = x14 + j14 | 0;
   x15 = x15 + j15 | 0;
 
-  st32(out,  0, x0);
-  st32(out,  4, x1);
-  st32(out,  8, x2);
-  st32(out, 12, x3);
-  st32(out, 16, x4);
-  st32(out, 20, x5);
-  st32(out, 24, x6);
-  st32(out, 28, x7);
-  st32(out, 32, x8);
-  st32(out, 36, x9);
-  st32(out, 40, x10);
-  st32(out, 44, x11);
-  st32(out, 48, x12);
-  st32(out, 52, x13);
-  st32(out, 56, x14);
-  st32(out, 60, x15);
+  o[ 0] = x0 >>>  0 & 0xff;
+  o[ 1] = x0 >>>  8 & 0xff;
+  o[ 2] = x0 >>> 16 & 0xff;
+  o[ 3] = x0 >>> 24 & 0xff;
+
+  o[ 4] = x1 >>>  0 & 0xff;
+  o[ 5] = x1 >>>  8 & 0xff;
+  o[ 6] = x1 >>> 16 & 0xff;
+  o[ 7] = x1 >>> 24 & 0xff;
+
+  o[ 8] = x2 >>>  0 & 0xff;
+  o[ 9] = x2 >>>  8 & 0xff;
+  o[10] = x2 >>> 16 & 0xff;
+  o[11] = x2 >>> 24 & 0xff;
+
+  o[12] = x3 >>>  0 & 0xff;
+  o[13] = x3 >>>  8 & 0xff;
+  o[14] = x3 >>> 16 & 0xff;
+  o[15] = x3 >>> 24 & 0xff;
+
+  o[16] = x4 >>>  0 & 0xff;
+  o[17] = x4 >>>  8 & 0xff;
+  o[18] = x4 >>> 16 & 0xff;
+  o[19] = x4 >>> 24 & 0xff;
+
+  o[20] = x5 >>>  0 & 0xff;
+  o[21] = x5 >>>  8 & 0xff;
+  o[22] = x5 >>> 16 & 0xff;
+  o[23] = x5 >>> 24 & 0xff;
+
+  o[24] = x6 >>>  0 & 0xff;
+  o[25] = x6 >>>  8 & 0xff;
+  o[26] = x6 >>> 16 & 0xff;
+  o[27] = x6 >>> 24 & 0xff;
+
+  o[28] = x7 >>>  0 & 0xff;
+  o[29] = x7 >>>  8 & 0xff;
+  o[30] = x7 >>> 16 & 0xff;
+  o[31] = x7 >>> 24 & 0xff;
+
+  o[32] = x8 >>>  0 & 0xff;
+  o[33] = x8 >>>  8 & 0xff;
+  o[34] = x8 >>> 16 & 0xff;
+  o[35] = x8 >>> 24 & 0xff;
+
+  o[36] = x9 >>>  0 & 0xff;
+  o[37] = x9 >>>  8 & 0xff;
+  o[38] = x9 >>> 16 & 0xff;
+  o[39] = x9 >>> 24 & 0xff;
+
+  o[40] = x10 >>>  0 & 0xff;
+  o[41] = x10 >>>  8 & 0xff;
+  o[42] = x10 >>> 16 & 0xff;
+  o[43] = x10 >>> 24 & 0xff;
+
+  o[44] = x11 >>>  0 & 0xff;
+  o[45] = x11 >>>  8 & 0xff;
+  o[46] = x11 >>> 16 & 0xff;
+  o[47] = x11 >>> 24 & 0xff;
+
+  o[48] = x12 >>>  0 & 0xff;
+  o[49] = x12 >>>  8 & 0xff;
+  o[50] = x12 >>> 16 & 0xff;
+  o[51] = x12 >>> 24 & 0xff;
+
+  o[52] = x13 >>>  0 & 0xff;
+  o[53] = x13 >>>  8 & 0xff;
+  o[54] = x13 >>> 16 & 0xff;
+  o[55] = x13 >>> 24 & 0xff;
+
+  o[56] = x14 >>>  0 & 0xff;
+  o[57] = x14 >>>  8 & 0xff;
+  o[58] = x14 >>> 16 & 0xff;
+  o[59] = x14 >>> 24 & 0xff;
+
+  o[60] = x15 >>>  0 & 0xff;
+  o[61] = x15 >>>  8 & 0xff;
+  o[62] = x15 >>> 16 & 0xff;
+  o[63] = x15 >>> 24 & 0xff;
 }
 
-function core_hsalsa20(out,inp,k,c) {
-  var j0 = ld32(c, 0),
-      j1 = ld32(k, 0),
-      j2 = ld32(k, 4),
-      j3 = ld32(k, 8),
-      j4 = ld32(k, 12),
-      j5 = ld32(c, 4),
-      j6 = ld32(inp, 0),
-      j7 = ld32(inp, 4),
-      j8 = ld32(inp, 8),
-      j9 = ld32(inp, 12),
-      j10 = ld32(c, 8),
-      j11 = ld32(k, 16),
-      j12 = ld32(k, 20),
-      j13 = ld32(k, 24),
-      j14 = ld32(k, 28),
-      j15 = ld32(c, 12);
+function core_hsalsa20(o,p,k,c) {
+  var j0  = c[ 0] & 0xff | (c[ 1] & 0xff)<<8 | (c[ 2] & 0xff)<<16 | (c[ 3] & 0xff)<<24,
+      j1  = k[ 0] & 0xff | (k[ 1] & 0xff)<<8 | (k[ 2] & 0xff)<<16 | (k[ 3] & 0xff)<<24,
+      j2  = k[ 4] & 0xff | (k[ 5] & 0xff)<<8 | (k[ 6] & 0xff)<<16 | (k[ 7] & 0xff)<<24,
+      j3  = k[ 8] & 0xff | (k[ 9] & 0xff)<<8 | (k[10] & 0xff)<<16 | (k[11] & 0xff)<<24,
+      j4  = k[12] & 0xff | (k[13] & 0xff)<<8 | (k[14] & 0xff)<<16 | (k[15] & 0xff)<<24,
+      j5  = c[ 4] & 0xff | (c[ 5] & 0xff)<<8 | (c[ 6] & 0xff)<<16 | (c[ 7] & 0xff)<<24,
+      j6  = p[ 0] & 0xff | (p[ 1] & 0xff)<<8 | (p[ 2] & 0xff)<<16 | (p[ 3] & 0xff)<<24,
+      j7  = p[ 4] & 0xff | (p[ 5] & 0xff)<<8 | (p[ 6] & 0xff)<<16 | (p[ 7] & 0xff)<<24,
+      j8  = p[ 8] & 0xff | (p[ 9] & 0xff)<<8 | (p[10] & 0xff)<<16 | (p[11] & 0xff)<<24,
+      j9  = p[12] & 0xff | (p[13] & 0xff)<<8 | (p[14] & 0xff)<<16 | (p[15] & 0xff)<<24,
+      j10 = c[ 8] & 0xff | (c[ 9] & 0xff)<<8 | (c[10] & 0xff)<<16 | (c[11] & 0xff)<<24,
+      j11 = k[16] & 0xff | (k[17] & 0xff)<<8 | (k[18] & 0xff)<<16 | (k[19] & 0xff)<<24,
+      j12 = k[20] & 0xff | (k[21] & 0xff)<<8 | (k[22] & 0xff)<<16 | (k[23] & 0xff)<<24,
+      j13 = k[24] & 0xff | (k[25] & 0xff)<<8 | (k[26] & 0xff)<<16 | (k[27] & 0xff)<<24,
+      j14 = k[28] & 0xff | (k[29] & 0xff)<<8 | (k[30] & 0xff)<<16 | (k[31] & 0xff)<<24,
+      j15 = c[12] & 0xff | (c[13] & 0xff)<<8 | (c[14] & 0xff)<<16 | (c[15] & 0xff)<<24;
 
   var x0 = j0, x1 = j1, x2 = j2, x3 = j3, x4 = j4, x5 = j5, x6 = j6, x7 = j7,
       x8 = j8, x9 = j9, x10 = j10, x11 = j11, x12 = j12, x13 = j13, x14 = j14,
@@ -6504,14 +6555,46 @@ function core_hsalsa20(out,inp,k,c) {
     u = x14 + x13 | 0;
     x15 ^= u<<18 | u>>>(32-18);
   }
-  st32(out,  0, x0);
-  st32(out,  4, x5);
-  st32(out,  8, x10);
-  st32(out, 12, x15);
-  st32(out, 16, x6);
-  st32(out, 20, x7);
-  st32(out, 24, x8);
-  st32(out, 28, x9);
+
+  o[ 0] = x0 >>>  0 & 0xff;
+  o[ 1] = x0 >>>  8 & 0xff;
+  o[ 2] = x0 >>> 16 & 0xff;
+  o[ 3] = x0 >>> 24 & 0xff;
+
+  o[ 4] = x5 >>>  0 & 0xff;
+  o[ 5] = x5 >>>  8 & 0xff;
+  o[ 6] = x5 >>> 16 & 0xff;
+  o[ 7] = x5 >>> 24 & 0xff;
+
+  o[ 8] = x10 >>>  0 & 0xff;
+  o[ 9] = x10 >>>  8 & 0xff;
+  o[10] = x10 >>> 16 & 0xff;
+  o[11] = x10 >>> 24 & 0xff;
+
+  o[12] = x15 >>>  0 & 0xff;
+  o[13] = x15 >>>  8 & 0xff;
+  o[14] = x15 >>> 16 & 0xff;
+  o[15] = x15 >>> 24 & 0xff;
+
+  o[16] = x6 >>>  0 & 0xff;
+  o[17] = x6 >>>  8 & 0xff;
+  o[18] = x6 >>> 16 & 0xff;
+  o[19] = x6 >>> 24 & 0xff;
+
+  o[20] = x7 >>>  0 & 0xff;
+  o[21] = x7 >>>  8 & 0xff;
+  o[22] = x7 >>> 16 & 0xff;
+  o[23] = x7 >>> 24 & 0xff;
+
+  o[24] = x8 >>>  0 & 0xff;
+  o[25] = x8 >>>  8 & 0xff;
+  o[26] = x8 >>> 16 & 0xff;
+  o[27] = x8 >>> 24 & 0xff;
+
+  o[28] = x9 >>>  0 & 0xff;
+  o[29] = x9 >>>  8 & 0xff;
+  o[30] = x9 >>> 16 & 0xff;
+  o[31] = x9 >>> 24 & 0xff;
 }
 
 function crypto_core_salsa20(out,inp,k,c) {
@@ -6595,9 +6678,6 @@ function crypto_stream_xor(c,cpos,m,mpos,d,n,k) {
 * https://github.com/floodyberry/poly1305-donna
 */
 
-function U8TO16(p, i) { return (p[i] & 0xff) | ((p[i+1] & 0xff) << 8); }
-function U16TO8(p, i, v) { p[i] = (v >>> 0) & 0xff; p[i+1] = (v >>> 8) & 0xff; }
-
 var poly1305 = function(key) {
   this.buffer = new Uint8Array(16);
   this.r = new Uint16Array(10);
@@ -6606,63 +6686,240 @@ var poly1305 = function(key) {
   this.leftover = 0;
   this.fin = 0;
 
-  var i, t0, t1, t2, t3, t4, t5, t6, t7;
+  var t0, t1, t2, t3, t4, t5, t6, t7;
 
-  t0 = U8TO16(key, 0); this.r[0] = ( t0                     ) & 0x1fff;
-  t1 = U8TO16(key, 2); this.r[1] = ((t0 >>> 13) | (t1 <<  3)) & 0x1fff;
-  t2 = U8TO16(key, 4); this.r[2] = ((t1 >>> 10) | (t2 <<  6)) & 0x1f03;
-  t3 = U8TO16(key, 6); this.r[3] = ((t2 >>>  7) | (t3 <<  9)) & 0x1fff;
-  t4 = U8TO16(key, 8); this.r[4] = ((t3 >>>  4) | (t4 << 12)) & 0x00ff;
+  t0 = key[ 0] & 0xff | (key[ 1] & 0xff) << 8; this.r[0] = ( t0                     ) & 0x1fff;
+  t1 = key[ 2] & 0xff | (key[ 3] & 0xff) << 8; this.r[1] = ((t0 >>> 13) | (t1 <<  3)) & 0x1fff;
+  t2 = key[ 4] & 0xff | (key[ 5] & 0xff) << 8; this.r[2] = ((t1 >>> 10) | (t2 <<  6)) & 0x1f03;
+  t3 = key[ 6] & 0xff | (key[ 7] & 0xff) << 8; this.r[3] = ((t2 >>>  7) | (t3 <<  9)) & 0x1fff;
+  t4 = key[ 8] & 0xff | (key[ 9] & 0xff) << 8; this.r[4] = ((t3 >>>  4) | (t4 << 12)) & 0x00ff;
   this.r[5] = ((t4 >>>  1)) & 0x1ffe;
-  t5 = U8TO16(key,10); this.r[6] = ((t4 >>> 14) | (t5 <<  2)) & 0x1fff;
-  t6 = U8TO16(key,12); this.r[7] = ((t5 >>> 11) | (t6 <<  5)) & 0x1f81;
-  t7 = U8TO16(key,14); this.r[8] = ((t6 >>>  8) | (t7 <<  8)) & 0x1fff;
+  t5 = key[10] & 0xff | (key[11] & 0xff) << 8; this.r[6] = ((t4 >>> 14) | (t5 <<  2)) & 0x1fff;
+  t6 = key[12] & 0xff | (key[13] & 0xff) << 8; this.r[7] = ((t5 >>> 11) | (t6 <<  5)) & 0x1f81;
+  t7 = key[14] & 0xff | (key[15] & 0xff) << 8; this.r[8] = ((t6 >>>  8) | (t7 <<  8)) & 0x1fff;
   this.r[9] = ((t7 >>>  5)) & 0x007f;
 
-  for (i = 0; i < 8; i++) this.pad[i] = U8TO16(key, 16 + (2 * i));
+  this.pad[0] = key[16] & 0xff | (key[17] & 0xff) << 8;
+  this.pad[1] = key[18] & 0xff | (key[19] & 0xff) << 8;
+  this.pad[2] = key[20] & 0xff | (key[21] & 0xff) << 8;
+  this.pad[3] = key[22] & 0xff | (key[23] & 0xff) << 8;
+  this.pad[4] = key[24] & 0xff | (key[25] & 0xff) << 8;
+  this.pad[5] = key[26] & 0xff | (key[27] & 0xff) << 8;
+  this.pad[6] = key[28] & 0xff | (key[29] & 0xff) << 8;
+  this.pad[7] = key[30] & 0xff | (key[31] & 0xff) << 8;
 };
 
 poly1305.prototype.blocks = function(m, mpos, bytes) {
   var hibit = this.fin ? 0 : (1 << 11);
-  var t0, t1, t2, t3, t4, t5, t6, t7;
-  var d = new Uint32Array(10);
-  var c, i, j;
+  var t0, t1, t2, t3, t4, t5, t6, t7, c;
+  var d0, d1, d2, d3, d4, d5, d6, d7, d8, d9;
+
+  var h0 = this.h[0],
+      h1 = this.h[1],
+      h2 = this.h[2],
+      h3 = this.h[3],
+      h4 = this.h[4],
+      h5 = this.h[5],
+      h6 = this.h[6],
+      h7 = this.h[7],
+      h8 = this.h[8],
+      h9 = this.h[9];
+
+  var r0 = this.r[0],
+      r1 = this.r[1],
+      r2 = this.r[2],
+      r3 = this.r[3],
+      r4 = this.r[4],
+      r5 = this.r[5],
+      r6 = this.r[6],
+      r7 = this.r[7],
+      r8 = this.r[8],
+      r9 = this.r[9];
 
   while (bytes >= 16) {
-    t0 = U8TO16(m, mpos+0);  this.h[0] += ( t0                     ) & 0x1fff;
-    t1 = U8TO16(m, mpos+2);  this.h[1] += ((t0 >>> 13) | (t1 <<  3)) & 0x1fff;
-    t2 = U8TO16(m, mpos+4);  this.h[2] += ((t1 >>> 10) | (t2 <<  6)) & 0x1fff;
-    t3 = U8TO16(m, mpos+6);  this.h[3] += ((t2 >>>  7) | (t3 <<  9)) & 0x1fff;
-    t4 = U8TO16(m, mpos+8);  this.h[4] += ((t3 >>>  4) | (t4 << 12)) & 0x1fff;
-    this.h[5] += ((t4 >>>  1)) & 0x1fff;
-    t5 = U8TO16(m, mpos+10); this.h[6] += ((t4 >>> 14) | (t5 <<  2)) & 0x1fff;
-    t6 = U8TO16(m, mpos+12); this.h[7] += ((t5 >>> 11) | (t6 <<  5)) & 0x1fff;
-    t7 = U8TO16(m, mpos+14); this.h[8] += ((t6 >>>  8) | (t7 <<  8)) & 0x1fff;
-    this.h[9] += ((t7 >>> 5)) | hibit;
+    t0 = m[mpos+ 0] & 0xff | (m[mpos+ 1] & 0xff) << 8; h0 += ( t0                     ) & 0x1fff;
+    t1 = m[mpos+ 2] & 0xff | (m[mpos+ 3] & 0xff) << 8; h1 += ((t0 >>> 13) | (t1 <<  3)) & 0x1fff;
+    t2 = m[mpos+ 4] & 0xff | (m[mpos+ 5] & 0xff) << 8; h2 += ((t1 >>> 10) | (t2 <<  6)) & 0x1fff;
+    t3 = m[mpos+ 6] & 0xff | (m[mpos+ 7] & 0xff) << 8; h3 += ((t2 >>>  7) | (t3 <<  9)) & 0x1fff;
+    t4 = m[mpos+ 8] & 0xff | (m[mpos+ 9] & 0xff) << 8; h4 += ((t3 >>>  4) | (t4 << 12)) & 0x1fff;
+    h5 += ((t4 >>>  1)) & 0x1fff;
+    t5 = m[mpos+10] & 0xff | (m[mpos+11] & 0xff) << 8; h6 += ((t4 >>> 14) | (t5 <<  2)) & 0x1fff;
+    t6 = m[mpos+12] & 0xff | (m[mpos+13] & 0xff) << 8; h7 += ((t5 >>> 11) | (t6 <<  5)) & 0x1fff;
+    t7 = m[mpos+14] & 0xff | (m[mpos+15] & 0xff) << 8; h8 += ((t6 >>>  8) | (t7 <<  8)) & 0x1fff;
+    h9 += ((t7 >>> 5)) | hibit;
 
-    for (i = 0, c = 0; i < 10; i++) {
-      d[i] = c;
-      for (j = 0; j < 10; j++) {
-        d[i] += this.h[j] * ((j <= i) ? this.r[i - j] : (5 * this.r[i + 10 - j]));
-        if (j === 4) {
-          c = (d[i] >>> 13);
-          d[i] &= 0x1fff;
-        }
-      }
-      c += (d[i] >>> 13);
-      d[i] &= 0x1fff;
-    }
+    c = 0;
+
+    d0 = c;
+    d0 += h0 * r0;
+    d0 += h1 * (5 * r9);
+    d0 += h2 * (5 * r8);
+    d0 += h3 * (5 * r7);
+    d0 += h4 * (5 * r6);
+    c = (d0 >>> 13); d0 &= 0x1fff;
+    d0 += h5 * (5 * r5);
+    d0 += h6 * (5 * r4);
+    d0 += h7 * (5 * r3);
+    d0 += h8 * (5 * r2);
+    d0 += h9 * (5 * r1);
+    c += (d0 >>> 13); d0 &= 0x1fff;
+
+    d1 = c;
+    d1 += h0 * r1;
+    d1 += h1 * r0;
+    d1 += h2 * (5 * r9);
+    d1 += h3 * (5 * r8);
+    d1 += h4 * (5 * r7);
+    c = (d1 >>> 13); d1 &= 0x1fff;
+    d1 += h5 * (5 * r6);
+    d1 += h6 * (5 * r5);
+    d1 += h7 * (5 * r4);
+    d1 += h8 * (5 * r3);
+    d1 += h9 * (5 * r2);
+    c += (d1 >>> 13); d1 &= 0x1fff;
+
+    d2 = c;
+    d2 += h0 * r2;
+    d2 += h1 * r1;
+    d2 += h2 * r0;
+    d2 += h3 * (5 * r9);
+    d2 += h4 * (5 * r8);
+    c = (d2 >>> 13); d2 &= 0x1fff;
+    d2 += h5 * (5 * r7);
+    d2 += h6 * (5 * r6);
+    d2 += h7 * (5 * r5);
+    d2 += h8 * (5 * r4);
+    d2 += h9 * (5 * r3);
+    c += (d2 >>> 13); d2 &= 0x1fff;
+
+    d3 = c;
+    d3 += h0 * r3;
+    d3 += h1 * r2;
+    d3 += h2 * r1;
+    d3 += h3 * r0;
+    d3 += h4 * (5 * r9);
+    c = (d3 >>> 13); d3 &= 0x1fff;
+    d3 += h5 * (5 * r8);
+    d3 += h6 * (5 * r7);
+    d3 += h7 * (5 * r6);
+    d3 += h8 * (5 * r5);
+    d3 += h9 * (5 * r4);
+    c += (d3 >>> 13); d3 &= 0x1fff;
+
+    d4 = c;
+    d4 += h0 * r4;
+    d4 += h1 * r3;
+    d4 += h2 * r2;
+    d4 += h3 * r1;
+    d4 += h4 * r0;
+    c = (d4 >>> 13); d4 &= 0x1fff;
+    d4 += h5 * (5 * r9);
+    d4 += h6 * (5 * r8);
+    d4 += h7 * (5 * r7);
+    d4 += h8 * (5 * r6);
+    d4 += h9 * (5 * r5);
+    c += (d4 >>> 13); d4 &= 0x1fff;
+
+    d5 = c;
+    d5 += h0 * r5;
+    d5 += h1 * r4;
+    d5 += h2 * r3;
+    d5 += h3 * r2;
+    d5 += h4 * r1;
+    c = (d5 >>> 13); d5 &= 0x1fff;
+    d5 += h5 * r0;
+    d5 += h6 * (5 * r9);
+    d5 += h7 * (5 * r8);
+    d5 += h8 * (5 * r7);
+    d5 += h9 * (5 * r6);
+    c += (d5 >>> 13); d5 &= 0x1fff;
+
+    d6 = c;
+    d6 += h0 * r6;
+    d6 += h1 * r5;
+    d6 += h2 * r4;
+    d6 += h3 * r3;
+    d6 += h4 * r2;
+    c = (d6 >>> 13); d6 &= 0x1fff;
+    d6 += h5 * r1;
+    d6 += h6 * r0;
+    d6 += h7 * (5 * r9);
+    d6 += h8 * (5 * r8);
+    d6 += h9 * (5 * r7);
+    c += (d6 >>> 13); d6 &= 0x1fff;
+
+    d7 = c;
+    d7 += h0 * r7;
+    d7 += h1 * r6;
+    d7 += h2 * r5;
+    d7 += h3 * r4;
+    d7 += h4 * r3;
+    c = (d7 >>> 13); d7 &= 0x1fff;
+    d7 += h5 * r2;
+    d7 += h6 * r1;
+    d7 += h7 * r0;
+    d7 += h8 * (5 * r9);
+    d7 += h9 * (5 * r8);
+    c += (d7 >>> 13); d7 &= 0x1fff;
+
+    d8 = c;
+    d8 += h0 * r8;
+    d8 += h1 * r7;
+    d8 += h2 * r6;
+    d8 += h3 * r5;
+    d8 += h4 * r4;
+    c = (d8 >>> 13); d8 &= 0x1fff;
+    d8 += h5 * r3;
+    d8 += h6 * r2;
+    d8 += h7 * r1;
+    d8 += h8 * r0;
+    d8 += h9 * (5 * r9);
+    c += (d8 >>> 13); d8 &= 0x1fff;
+
+    d9 = c;
+    d9 += h0 * r9;
+    d9 += h1 * r8;
+    d9 += h2 * r7;
+    d9 += h3 * r6;
+    d9 += h4 * r5;
+    c = (d9 >>> 13); d9 &= 0x1fff;
+    d9 += h5 * r4;
+    d9 += h6 * r3;
+    d9 += h7 * r2;
+    d9 += h8 * r1;
+    d9 += h9 * r0;
+    c += (d9 >>> 13); d9 &= 0x1fff;
+
     c = (((c << 2) + c)) | 0;
-    c = (c + d[0]) | 0;
-    d[0] = c & 0x1fff;
+    c = (c + d0) | 0;
+    d0 = c & 0x1fff;
     c = (c >>> 13);
-    d[1] += c;
+    d1 += c;
 
-    for (i = 0; i < 10; i++) this.h[i] = d[i];
+    h0 = d0;
+    h1 = d1;
+    h2 = d2;
+    h3 = d3;
+    h4 = d4;
+    h5 = d5;
+    h6 = d6;
+    h7 = d7;
+    h8 = d8;
+    h9 = d9;
 
     mpos += 16;
     bytes -= 16;
   }
+  this.h[0] = h0;
+  this.h[1] = h1;
+  this.h[2] = h2;
+  this.h[3] = h3;
+  this.h[4] = h4;
+  this.h[5] = h5;
+  this.h[6] = h6;
+  this.h[7] = h7;
+  this.h[8] = h8;
+  this.h[9] = h9;
 };
 
 poly1305.prototype.finish = function(mac, macpos) {
@@ -6723,7 +6980,22 @@ poly1305.prototype.finish = function(mac, macpos) {
     this.h[i] = f & 0xffff;
   }
 
-  for (i = 0; i < 8; i++) U16TO8(mac, macpos + i*2, this.h[i]);
+  mac[macpos+ 0] = (this.h[0] >>> 0) & 0xff;
+  mac[macpos+ 1] = (this.h[0] >>> 8) & 0xff;
+  mac[macpos+ 2] = (this.h[1] >>> 0) & 0xff;
+  mac[macpos+ 3] = (this.h[1] >>> 8) & 0xff;
+  mac[macpos+ 4] = (this.h[2] >>> 0) & 0xff;
+  mac[macpos+ 5] = (this.h[2] >>> 8) & 0xff;
+  mac[macpos+ 6] = (this.h[3] >>> 0) & 0xff;
+  mac[macpos+ 7] = (this.h[3] >>> 8) & 0xff;
+  mac[macpos+ 8] = (this.h[4] >>> 0) & 0xff;
+  mac[macpos+ 9] = (this.h[4] >>> 8) & 0xff;
+  mac[macpos+10] = (this.h[5] >>> 0) & 0xff;
+  mac[macpos+11] = (this.h[5] >>> 8) & 0xff;
+  mac[macpos+12] = (this.h[6] >>> 0) & 0xff;
+  mac[macpos+13] = (this.h[6] >>> 8) & 0xff;
+  mac[macpos+14] = (this.h[7] >>> 0) & 0xff;
+  mac[macpos+15] = (this.h[7] >>> 8) & 0xff;
 };
 
 poly1305.prototype.update = function(m, mpos, bytes) {
@@ -7677,6 +7949,7 @@ var crypto_secretbox_KEYBYTES = 32,
     crypto_sign_BYTES = 64,
     crypto_sign_PUBLICKEYBYTES = 32,
     crypto_sign_SECRETKEYBYTES = 64,
+    crypto_sign_SEEDBYTES = 32,
     crypto_hash_BYTES = 64;
 
 nacl.lowlevel = {
@@ -7718,6 +7991,7 @@ nacl.lowlevel = {
   crypto_sign_BYTES : crypto_sign_BYTES,
   crypto_sign_PUBLICKEYBYTES : crypto_sign_PUBLICKEYBYTES,
   crypto_sign_SECRETKEYBYTES : crypto_sign_SECRETKEYBYTES,
+  crypto_sign_SEEDBYTES: crypto_sign_SEEDBYTES,
   crypto_hash_BYTES : crypto_hash_BYTES
 };
 
@@ -7861,7 +8135,7 @@ nacl.box.keyPair.fromSecretKey = function(secretKey) {
     throw new Error('bad secret key size');
   var pk = new Uint8Array(crypto_box_PUBLICKEYBYTES);
   crypto_scalarmult_base(pk, secretKey);
-  return {publicKey: pk, secretKey: secretKey};
+  return {publicKey: pk, secretKey: new Uint8Array(secretKey)};
 };
 
 nacl.box.publicKeyLength = crypto_box_PUBLICKEYBYTES;
@@ -7926,14 +8200,13 @@ nacl.sign.keyPair.fromSecretKey = function(secretKey) {
   if (secretKey.length !== crypto_sign_SECRETKEYBYTES)
     throw new Error('bad secret key size');
   var pk = new Uint8Array(crypto_sign_PUBLICKEYBYTES);
-  var i;
-  for (i = 0; i < 32; i++) pk[i] = secretKey[32+i];
-  return {publicKey: pk, secretKey: secretKey};
+  for (var i = 0; i < pk.length; i++) pk[i] = secretKey[32+i];
+  return {publicKey: pk, secretKey: new Uint8Array(secretKey)};
 };
 
 nacl.sign.keyPair.fromSeed = function(seed) {
   checkArrayTypes(seed);
-  if (seed.length !== 32)
+  if (seed.length !== crypto_sign_SEEDBYTES)
     throw new Error('bad seed size');
   var pk = new Uint8Array(crypto_sign_PUBLICKEYBYTES);
   var sk = new Uint8Array(crypto_sign_SECRETKEYBYTES);
@@ -7944,6 +8217,7 @@ nacl.sign.keyPair.fromSeed = function(seed) {
 
 nacl.sign.publicKeyLength = crypto_sign_PUBLICKEYBYTES;
 nacl.sign.secretKeyLength = crypto_sign_SECRETKEYBYTES;
+nacl.sign.seedLength = crypto_sign_SEEDBYTES;
 nacl.sign.signatureLength = crypto_sign_BYTES;
 
 nacl.hash = function(msg) {
@@ -8880,6 +9154,7 @@ var crypto_secretbox_KEYBYTES = 32,
     crypto_sign_BYTES = 64,
     crypto_sign_PUBLICKEYBYTES = 32,
     crypto_sign_SECRETKEYBYTES = 64,
+    crypto_sign_SEEDBYTES = 32,
     crypto_hash_BYTES = 64;
 
 nacl.lowlevel = {
@@ -8921,6 +9196,7 @@ nacl.lowlevel = {
   crypto_sign_BYTES : crypto_sign_BYTES,
   crypto_sign_PUBLICKEYBYTES : crypto_sign_PUBLICKEYBYTES,
   crypto_sign_SECRETKEYBYTES : crypto_sign_SECRETKEYBYTES,
+  crypto_sign_SEEDBYTES: crypto_sign_SEEDBYTES,
   crypto_hash_BYTES : crypto_hash_BYTES
 };
 
@@ -9064,7 +9340,7 @@ nacl.box.keyPair.fromSecretKey = function(secretKey) {
     throw new Error('bad secret key size');
   var pk = new Uint8Array(crypto_box_PUBLICKEYBYTES);
   crypto_scalarmult_base(pk, secretKey);
-  return {publicKey: pk, secretKey: secretKey};
+  return {publicKey: pk, secretKey: new Uint8Array(secretKey)};
 };
 
 nacl.box.publicKeyLength = crypto_box_PUBLICKEYBYTES;
@@ -9129,14 +9405,13 @@ nacl.sign.keyPair.fromSecretKey = function(secretKey) {
   if (secretKey.length !== crypto_sign_SECRETKEYBYTES)
     throw new Error('bad secret key size');
   var pk = new Uint8Array(crypto_sign_PUBLICKEYBYTES);
-  var i;
-  for (i = 0; i < 32; i++) pk[i] = secretKey[32+i];
-  return {publicKey: pk, secretKey: secretKey};
+  for (var i = 0; i < pk.length; i++) pk[i] = secretKey[32+i];
+  return {publicKey: pk, secretKey: new Uint8Array(secretKey)};
 };
 
 nacl.sign.keyPair.fromSeed = function(seed) {
   checkArrayTypes(seed);
-  if (seed.length !== 32)
+  if (seed.length !== crypto_sign_SEEDBYTES)
     throw new Error('bad seed size');
   var pk = new Uint8Array(crypto_sign_PUBLICKEYBYTES);
   var sk = new Uint8Array(crypto_sign_SECRETKEYBYTES);
@@ -9147,6 +9422,7 @@ nacl.sign.keyPair.fromSeed = function(seed) {
 
 nacl.sign.publicKeyLength = crypto_sign_PUBLICKEYBYTES;
 nacl.sign.secretKeyLength = crypto_sign_SECRETKEYBYTES;
+nacl.sign.seedLength = crypto_sign_SEEDBYTES;
 nacl.sign.signatureLength = crypto_sign_BYTES;
 
 nacl.hash = function(msg) {

@@ -1,6 +1,6 @@
 AbstractOperation = require("./AbstractOperation")
-NACL = require("./NACL")
-{encodeUTF8, decodeBase64} = NACL.util
+NaCl = require("./NaCl")
+{encodeUTF8, decodeBase64} = NaCl.util
 {byteArrayToNumber} = require("./util")
 
 class DecryptOperation extends AbstractOperation
@@ -130,7 +130,7 @@ class DecryptOperation extends AbstractOperation
         @permit = permit
         @fileKey = permit.fileInfo.fileKey
         @fileNonce = permit.fileInfo.fileNonce
-        @streamDecryptor = NACL.stream.createDecryptor(@fileKey, @fileNonce, @chunkSize)
+        @streamDecryptor = NaCl.stream.createDecryptor(@fileKey, @fileNonce, @chunkSize)
         @constructStreamDecryptor = (callback) -> callback(undefined)
         @constructStreamDecryptor(callback)
       else
@@ -158,7 +158,7 @@ class DecryptOperation extends AbstractOperation
     return undefined
 
   decryptPermit: (decodedEncryptedPermit, uniqueNonce, ephemeral) ->
-    decryptedPermitAsBytes = NACL.box.open(decodedEncryptedPermit, uniqueNonce, ephemeral, @keys.secretKey)
+    decryptedPermitAsBytes = NaCl.box.open(decodedEncryptedPermit, uniqueNonce, ephemeral, @keys.secretKey)
     if decryptedPermitAsBytes
       decryptedPermitAsString = encodeUTF8(decryptedPermitAsBytes)
       decryptedPermit = JSON.parse(decryptedPermitAsString)
@@ -170,7 +170,7 @@ class DecryptOperation extends AbstractOperation
       return undefined
 
   decryptFileInfo: (decodedEncryptedFileInfo, uniqueNonce, senderPublicKey) ->
-    decryptedFileInfoAsBytes = NACL.box.open(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey, @keys.secretKey)
+    decryptedFileInfoAsBytes = NaCl.box.open(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey, @keys.secretKey)
     if (decryptedFileInfoAsBytes)
       decryptedFileInfoAsString = encodeUTF8(decryptedFileInfoAsBytes)
       decryptedFileInfo = JSON.parse(decryptedFileInfoAsString)

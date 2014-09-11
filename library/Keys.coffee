@@ -1,5 +1,5 @@
 BLAKE2s = require("./BLAKE2s")
-NACL    = require("./NACL")
+NaCl    = require("./NaCl")
 scrypt  = require("./scrypt-async")
 zxcvbn  = require("./zxcvbn")
 
@@ -37,8 +37,8 @@ exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
       callback "Can’t make a pair of keys because the email address is unacceptable."
     when secretPhrase and emailAddress and callback
       # Decode each input into a Uint8Array of bytes.
-      decodedSecretPhrase = NACL.util.decodeUTF8(secretPhrase)
-      decodedEmailAddress = NACL.util.decodeUTF8(emailAddress)
+      decodedSecretPhrase = NaCl.util.decodeUTF8(secretPhrase)
+      decodedEmailAddress = NaCl.util.decodeUTF8(emailAddress)
       # Create a hash digest of the decoded secret phrase to increase its complexity.
       hashDigestOfDecodedSecretPhrase = (new BLAKE2s length: 32).update(decodedSecretPhrase).digest()
       # Calculate keys for the hash of the secret phrase with email address as salt.
@@ -50,8 +50,8 @@ exports.makeKeyPair = (secretPhrase, emailAddress, callback) ->
 calculateCurve25519KeyPair = (secret, salt, callback) ->
   # Decode and unpack the keys when the task is complete.
   whenKeysAreReady = (encodedBytes) ->
-    decodedBytes = NACL.util.decodeBase64(encodedBytes)
-    keys = NACL.box.keyPair.fromSecretKey(decodedBytes)
+    decodedBytes = NaCl.util.decodeBase64(encodedBytes)
+    keys = NaCl.box.keyPair.fromSecretKey(decodedBytes)
     callback(keys)
 
   # Define miniLock `scrypt` parameters for the calculation task:

@@ -1,4 +1,4 @@
 stream = require("nacl-stream").stream
-NACL = require("tweetnacl")
-NACL.stream = stream
-module.exports = NACL
+NaCl = require("tweetnacl")
+NaCl.stream = stream
+module.exports = NaCl

@@ -1,5 +1,5 @@
 AbstractOperation = require("./AbstractOperation")
-NACL = require("./NACL")
+NaCl = require("./NaCl")
 BLAKE2s = require("./BLAKE2s")
 {numberToByteArray} = require("./util")
 
@@ -9,9 +9,9 @@ class EncryptOperation extends AbstractOperation
   constructor: (params={})->
     {@data, @keys, @name, @type, @time, @miniLockIDs, @version, @callback} = params
     @version = 1 if @version is undefined
-    @ephemeral = NACL.box.keyPair()
-    @fileKey = NACL.randomBytes(32)
-    @fileNonce = NACL.randomBytes(24).subarray(0, 16)
+    @ephemeral = NaCl.box.keyPair()
+    @fileKey = NaCl.randomBytes(32)
+    @fileNonce = NaCl.randomBytes(24).subarray(0, 16)
     @hash = new BLAKE2s(32)
     @ciphertextBytes = []
     @start() if params.start?
@@ -98,20 +98,20 @@ class EncryptOperation extends AbstractOperation
   constructHeader: ->
     @header =
       version: @version
-      ephemeral: NACL.util.encodeBase64(@ephemeral.publicKey)
+      ephemeral: NaCl.util.encodeBase64(@ephemeral.publicKey)
       decryptInfo: @encodedEncryptedPermits()
     headerJSON = JSON.stringify(@header)
     @sizeOfHeaderIn4Bytes = numberToByteArray(headerJSON.length)
-    @headerJSONBytes = NACL.util.decodeUTF8(headerJSON)
+    @headerJSONBytes = NaCl.util.decodeUTF8(headerJSON)
     return @header
 
   constructStreamEncryptor: ->
-    @streamEncryptor ?= NACL.stream.createEncryptor(@fileKey, @fileNonce, @chunkSize)
+    @streamEncryptor ?= NaCl.stream.createEncryptor(@fileKey, @fileNonce, @chunkSize)
 
   fixedSizeDecodedName: ->
     fixedSize = new Uint8Array(256)
     if @name
-      decodedName = NACL.util.decodeUTF8(@name)
+      decodedName = NaCl.util.decodeUTF8(@name)
       if decodedName.length > fixedSize.length
         throw "EncryptOperation file name is too long. 256-characters max please."
       fixedSize.set(decodedName)
@@ -120,7 +120,7 @@ class EncryptOperation extends AbstractOperation
   fixedSizeDecodedType: ->
     fixedSize = new Uint8Array(128)
     if @type
-      decodedType = NACL.util.decodeUTF8(@type)
+      decodedType = NaCl.util.decodeUTF8(@type)
       if decodedType.length > fixedSize.length
         throw "EncryptOperation media type is too long. 128-characters max please."
       fixedSize.set(decodedType)
@@ -130,39 +130,39 @@ class EncryptOperation extends AbstractOperation
     fixedSize = new Uint8Array(24)
     if @time
       timestamp = (new Date(@time)).toJSON()
-      fixedSize.set(NACL.util.decodeUTF8(timestamp))
+      fixedSize.set(NaCl.util.decodeUTF8(timestamp))
     return fixedSize
 
   encodedEncryptedPermits: ->
     permits = {}
     for miniLockID in @miniLockIDs
       [uniqueNonce, encryptedPermit] = @encryptedPermit(miniLockID)
-      encodedUniqueNonce = NACL.util.encodeBase64(uniqueNonce)
-      encodedEncryptedPermit = NACL.util.encodeBase64(encryptedPermit)
+      encodedUniqueNonce = NaCl.util.encodeBase64(uniqueNonce)
+      encodedEncryptedPermit = NaCl.util.encodeBase64(encryptedPermit)
       permits[encodedUniqueNonce] = encodedEncryptedPermit
     return permits
 
   encryptedPermit: (miniLockID) ->
     [uniqueNonce, permit] = @permit(miniLockID)
-    decodedPermitJSON = NACL.util.decodeUTF8(JSON.stringify(permit))
+    decodedPermitJSON = NaCl.util.decodeUTF8(JSON.stringify(permit))
     recipientPublicKey = miniLockLib.ID.decode(miniLockID)
-    encryptedPermit = NACL.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, @ephemeral.secretKey)
+    encryptedPermit = NaCl.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, @ephemeral.secretKey)
     [uniqueNonce, encryptedPermit]
 
   permit: (miniLockID) ->
-    uniqueNonce = NACL.randomBytes(24)
+    uniqueNonce = NaCl.randomBytes(24)
     [uniqueNonce, {
       senderID: miniLockLib.ID.encode(@keys.publicKey)
       recipientID: miniLockID
-      fileInfo: NACL.util.encodeBase64(@encryptedFileInfo(miniLockID, uniqueNonce))
+      fileInfo: NaCl.util.encodeBase64(@encryptedFileInfo(miniLockID, uniqueNonce))
     }]
 
   encryptedFileInfo: (miniLockID, uniqueNonce) ->
-    decodedFileInfoJSON = NACL.util.decodeUTF8(JSON.stringify(@permitFileInfo()))
+    decodedFileInfoJSON = NaCl.util.decodeUTF8(JSON.stringify(@permitFileInfo()))
     recipientPublicKey = miniLockLib.ID.decode(miniLockID)
-    NACL.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, @keys.secretKey)
+    NaCl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, @keys.secretKey)
 
   permitFileInfo: ->
-    fileKey:   NACL.util.encodeBase64(@fileKey)
-    fileNonce: NACL.util.encodeBase64(@fileNonce)
-    fileHash:  NACL.util.encodeBase64(@hash.digest())
+    fileKey:   NaCl.util.encodeBase64(@fileKey)
+    fileNonce: NaCl.util.encodeBase64(@fileNonce)
+    fileHash:  NaCl.util.encodeBase64(@hash.digest())

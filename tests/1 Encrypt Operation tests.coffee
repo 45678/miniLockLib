@@ -120,11 +120,11 @@ tape "encrypt version 1 attributes", (test) ->
     name: "untitled.txt"
   operation.encryptAttributes(1)
   test.same operation.ciphertextBytes.length, 1
-  decryptor = miniLockLib.NACL.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+4+16)
+  decryptor = miniLockLib.NaCl.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+4+16)
   decryptedBytes = decryptor.decryptChunk(operation.ciphertextBytes[0], no)
   test.equal decryptedBytes.length, 256
   filteredBytes = (byte for byte in decryptedBytes when byte isnt 0)
-  decryptedName = miniLockLib.NACL.util.encodeUTF8(filteredBytes)
+  decryptedName = miniLockLib.NaCl.util.encodeUTF8(filteredBytes)
   test.equal decryptedName, "untitled.txt"
   test.end()
 
@@ -136,23 +136,23 @@ tape "encrypt version 2 attributes", (test) ->
     time: (new Date "2014-08-17T07:06:50.095Z").getTime()
   operation.encryptAttributes(2)
   test.same operation.ciphertextBytes.length, 1
-  decryptor = miniLockLib.NACL.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+4+16)
+  decryptor = miniLockLib.NaCl.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+4+16)
   decryptedBytes = decryptor.decryptChunk(operation.ciphertextBytes[0], no)
   test.equal decryptedBytes.length, 256+128+24
 
   decryptedNameBytes = decryptedBytes.subarray(0, 256)
   filteredNameBytes = (byte for byte in decryptedNameBytes when byte isnt 0)
-  decryptedName = miniLockLib.NACL.util.encodeUTF8(filteredNameBytes)
+  decryptedName = miniLockLib.NaCl.util.encodeUTF8(filteredNameBytes)
   test.equal decryptedName, "untitled.txt"
 
   decryptedTypeBytes = decryptedBytes.subarray(256, 256+128)
   filteredTypeBytes = (byte for byte in decryptedTypeBytes when byte isnt 0)
-  decryptedType = miniLockLib.NACL.util.encodeUTF8(filteredTypeBytes)
+  decryptedType = miniLockLib.NaCl.util.encodeUTF8(filteredTypeBytes)
   test.equal decryptedType, "text/plain"
 
   decryptedTimeBytes = decryptedBytes.subarray(256+128, 256+128+24)
   filteredTimeBytes = (byte for byte in decryptedTimeBytes when byte isnt 0)
-  decryptedTime = miniLockLib.NACL.util.encodeUTF8(filteredTimeBytes)
+  decryptedTime = miniLockLib.NaCl.util.encodeUTF8(filteredTimeBytes)
   test.equal decryptedTime, "2014-08-17T07:06:50.095Z"
   test.end()
 
@@ -170,10 +170,10 @@ tape "construct a permit to decrypt for a recipient", (test) ->
 tape "recipient can decrypt the key, nonce and hash of the file encoded in their permit", (test) ->
   operation = new miniLockLib.EncryptOperation keys: Alice.keys
   [uniqueNonce, permit] = operation.permit(Bobby.miniLockID)
-  decodedFileInfo = miniLockLib.NACL.util.decodeBase64(permit.fileInfo)
-  decryptedFileInfo = miniLockLib.NACL.box.open(decodedFileInfo, uniqueNonce, Alice.publicKey, Bobby.secretKey)
+  decodedFileInfo = miniLockLib.NaCl.util.decodeBase64(permit.fileInfo)
+  decryptedFileInfo = miniLockLib.NaCl.box.open(decodedFileInfo, uniqueNonce, Alice.publicKey, Bobby.secretKey)
   test.ok decryptedFileInfo
-  fileInfo = JSON.parse(miniLockLib.NACL.util.encodeUTF8(decryptedFileInfo))
+  fileInfo = JSON.parse(miniLockLib.NaCl.util.encodeUTF8(decryptedFileInfo))
   test.ok fileInfo.fileKey?
   test.ok fileInfo.fileNonce?
   test.ok fileInfo.fileHash is "aSF6MHmQgJThESHQQjVKfB9VtkgsoaUeGyUN/R7Q7vk="
@@ -192,7 +192,7 @@ tape "header has a Base64 encoded 32-byte ephemeral key", (test) ->
     keys: Alice.keys
     miniLockIDs: [Alice.miniLockID]
   operation.constructHeader()
-  test.ok miniLockLib.NACL.util.decodeBase64(operation.header.ephemeral).length is 32
+  test.ok miniLockLib.NaCl.util.decodeBase64(operation.header.ephemeral).length is 32
   test.end()
 
 tape "header for one recipient has one permit", (test) ->

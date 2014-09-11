@@ -1,4 +1,4 @@
-OriginalBLAKE2s = require("BLAKE2s")
+OriginalBLAKE2s = require("blake2s-js")
 
 # Thin wrapper around BLAKE2s with a more convenient API for our purposes.
 module.exports = class BLAKE2s extends OriginalBLAKE2s

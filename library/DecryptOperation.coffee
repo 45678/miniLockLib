@@ -179,7 +179,6 @@ class DecryptOperation extends AbstractOperation
         fileKey:   decodeBase64(decryptedFileInfo.fileKey)
         fileNonce: decodeBase64(decryptedFileInfo.fileNonce)
       }
-      return decryptedFileInfo
     else
       return undefined
 

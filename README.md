@@ -54,7 +54,7 @@ Pass `data` and `keys` when you `decrypt` a file:
 
 __Sources__
 
-`miniLockLib` is composed of code from six dandy little projects:
+`miniLockLib` is composed of code from several dandy little projects:
 
 `Base58.js` is a copy of the [cryptocoinjs bs58 library](https://github.com/cryptocoinjs/bs58). It has been modified to work in a web agent window instead of a node.js environment. And the filename was changed to match the global `Base58` address that it defines. `Base58` is used to encode and decode miniLock IDs.
 

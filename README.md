@@ -58,7 +58,7 @@ __Sources__
 
 `Base58.js` is a copy of the [cryptocoinjs bs58 library](https://github.com/cryptocoinjs/bs58). It has been modified to work in a web agent window instead of a node.js environment. And the filename was changed to match the global `Base58` address that it defines. `Base58` is used to encode and decode miniLock IDs.
 
-`BLAKE2s.js` provides a subclass of [Dmitry Chestnykh’s implementation of the BLAKE2s](https://github.com/dchest/blake2s-js) cryptographic hash function. miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
+`BLAKE2s.js` provides a subclass of [Dmitry Chestnykh’s implementation of the BLAKE2s](https://github.com/dchest/blake2s-js) cryptographic hash function. `miniLockLib` subclasses the original constructor to expose a modestly more convenient interface for its purposes.
 
 `nacl.js` provides the [tweetnacl-js crypto library](https://github.com/dchest/tweetnacl-js) written by Dmitry Chestnykh & Devi Mandiri. This instance of `NaCl` is extended with Dmitry’s [streaming encryption library](https://github.com/dchest/nacl-stream-js). `miniLockLib` relies on `NaCl` for a variety of cryptographic and encoding functions.
 

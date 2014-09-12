@@ -60,9 +60,7 @@ __Sources__
 
 `BLAKE2s.js` provides a subclass of [Dmitry Chestnykh’s implementation of the BLAKE2s](https://github.com/dchest/blake2s-js) cryptographic hash function. miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
 
-`nacl.js` is an unmodified copy of the [tweetnacl-js crypto library](https://github.com/dchest/tweetnacl-js) written by Dmitry Chestnykh & Devi Mandiri. `miniLockLib` relies on `NaCl` for a variety of cryptographic and encoding functions.
-
-`nacl-stream.js` is an unmodified copy of the [tweetnacl-js streaming encryption library](https://github.com/dchest/nacl-stream-js) written by Dmitry Chestnykh.
+`nacl.js` provides the [tweetnacl-js crypto library](https://github.com/dchest/tweetnacl-js) written by Dmitry Chestnykh & Devi Mandiri. This instance of `NaCl` is extended with Dmitry’s [streaming encryption library](https://github.com/dchest/nacl-stream-js). `miniLockLib` relies on `NaCl` for a variety of cryptographic and encoding functions.
 
 `scrypt-async.js` is an unmodified copy of Dmitry Chestnykh’s [scrypt-async-js](https://github.com/dchest/scrypt-async-js) project. It is used to derive a key pair from a secret phrase and email address with the curve25519 encryption scheme.
 

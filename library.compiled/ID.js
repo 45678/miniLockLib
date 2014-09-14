@@ -9,7 +9,7 @@
   ID = module.exports = {};
 
   ID.isAcceptable = function(id) {
-    return /^[1-9A-Za-z]{40,55}$/.test(id) && (miniLockLib.ID.decode(id) != null);
+    return /^[1-9A-Za-z]{40,55}$/.test(id) && (ID.decode(id) != null);
   };
 
   ID.encode = function(publicKey) {

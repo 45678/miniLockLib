@@ -9,7 +9,7 @@ ID = module.exports = {}
 
 # Returns `true` if `id` is acceptable and `false` if it is not.
 ID.isAcceptable = (id) ->
-  /^[1-9A-Za-z]{40,55}$/.test(id) and miniLockLib.ID.decode(id)?
+  /^[1-9A-Za-z]{40,55}$/.test(id) and ID.decode(id)?
 
 
 # Encode a 32-bit public key as a miniLockID.

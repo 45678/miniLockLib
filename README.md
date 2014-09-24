@@ -83,3 +83,11 @@ CoffeeScript library files are compiled to the `library.compiled` folder and sav
 CoffeeScript test files are compiled to the `tests.compiled` folder and saved as `scripts/tests.js`.
 
 Run `npm start` to re-compile the CoffeeScript files automatically as you make changes.
+
+__Demos__
+
+[miniLock file format version 1](https://45678.github.io/minilock-file-formats/1.html)
+
+[miniLock file format version 2](https://45678.github.io/minilock-file-formats/2.html)
+
+[Is it a miniLock ID?](https://45678.github.io/is-it-a-minilock-id/)

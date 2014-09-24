@@ -4,7 +4,11 @@ Download [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/
 
     <script src="miniLockLib.js" charset="utf-8"></script>
 
-Now you are ready to call `miniLockLib` methods from your Javascript program...
+Or `npm install 45678/miniLockLib.git` and require it in your program with:
+
+    miniLockLib = require('miniLockLib')
+
+Now you are ready to call `miniLockLib` methods from your computer program...
 
 __Examples__
 

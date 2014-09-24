@@ -72,8 +72,8 @@ And the filename of the script was changed to match the `Base58` address that it
 This instance of `NaCl` is extended with Dmitry’s [streaming encryption library](https://github.com/dchest/nacl-stream-js).
 `miniLockLib` relies on `NaCl` for a host of cryptographic and encoding functions.
 
-`scrypt-async.js` is an unmodified copy of Dmitry Chestnykh’s [scrypt-async-js](https://github.com/dchest/scrypt-async-js) project.
-It is used to derive a key pair from a secret phrase and email address with the curve25519 encryption scheme.
+`miniLockLib.scrypt` is a copy of `scrypt-async.js` from the [scrypt-async-js](https://github.com/dchest/scrypt-async-js) project which was also written by Mr. Chestnykh.
+`scrypt` derives a key pair from a secret and a salt with the curve25519 encryption scheme.
 
 `miniLockLib.zxcvbn` is Dropbox’s [zxcvbn password strength estimator](https://github.com/dropbox/zxcvbn).
 `miniLockLib` relies on this library to calculate the entropy present in secret phrases.

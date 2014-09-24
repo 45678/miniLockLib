@@ -3,6 +3,7 @@
   "description": "Do miniLock encryption operations on a web page of your own.",
   "version": "0.0.0",
   "author": "45678 <undefined@undefined>",
+  "license": "Public Domain",
   "main": "library.compiled/index.js",
   "scripts": {
     "start": "make && wr make library/*.coffee tests/*.coffee",
@@ -12,7 +13,6 @@
     "type": "git",
     "url": "git+https://git@github.com/45678/miniLockLib.git"
   },
-  "license": "Public Domain",
   "devDependencies": {
     "browserify": "5.9.x",
     "coffee-script": "1.8.x",

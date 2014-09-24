@@ -5,7 +5,7 @@
   "author":      "45678 <undefined@undefined>",
   "license":     "Public Domain",
   "main":        "library.compiled/index.js",
-  "repository":  "git+https://git@github.com/45678/miniLockLib.git",
+  "repository":  "git+https://github.com/45678/miniLockLib.git",
   "dependencies": {
     "blake2s-js": "1.0.3",
     "nacl-stream": "0.3.3",

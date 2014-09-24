@@ -54,6 +54,21 @@ Pass `data` and `keys` when you `decrypt` a file:
       }
     })
 
+[More examples...](https://github.com/45678/miniLockLib/blob/master/tests/0%20A%20demo%20of...%20tests.coffee)
+
+Or [read the source code](https://github.com/45678/miniLockLib/blob/master/library/index.coffee) for all the terrible details.
+
+__Demos__
+
+[miniLock file format version 1](https://45678.github.io/minilock-file-formats/1.html)
+
+[miniLock file format version 2](https://45678.github.io/minilock-file-formats/2.html)
+
+[Is it a miniLock ID?](https://45678.github.io/is-it-a-minilock-id/)
+
+[miniLock ID inspector](https://45678.github.io/minilock-id-inspector/)
+
+
 __Sources__
 
 `miniLockLib` is composed of code from several dandy little projects:
@@ -76,17 +91,6 @@ This instance of `NaCl` is extended with Dmitry’s [streaming encryption librar
 `miniLockLib.zxcvbn` is Dropbox’s [zxcvbn password strength estimator](https://github.com/dropbox/zxcvbn).
 `miniLockLib` relies on this library to calculate the entropy present in secret phrases.
 
-[See more examples in the tests](https://github.com/45678/miniLockLib/blob/master/tests/0%20A%20demo%20of...%20tests.coffee) or [read the source code](https://github.com/45678/miniLockLib/blob/master/library/index.coffee) for all the terrible details.
-
-__Demos__
-
-[miniLock file format version 1](https://45678.github.io/minilock-file-formats/1.html)
-
-[miniLock file format version 2](https://45678.github.io/minilock-file-formats/2.html)
-
-[Is it a miniLock ID?](https://45678.github.io/is-it-a-minilock-id/)
-
-[miniLock ID inspector](https://45678.github.io/minilock-id-inspector/)
 
 __Digging In__
 

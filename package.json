@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "blake2s-js": "1.0.3",
-    "nacl-stream": "^0.3.3",
+    "nacl-stream": "0.3.3",
     "tweetnacl": "0.12.x",
     "zxcvbn": "1.0.x"
   }

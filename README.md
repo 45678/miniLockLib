@@ -1,4 +1,4 @@
-`miniLockLib` is a little [miniLock](http://minilock.io/) library.
+`miniLockLib` is a little [miniLock](http://minilock.io/) library for [ECMAScript](http://www.ecmascript.org/).
 
 Download [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/scripts/miniLockLib.js) and add it to your page with a `<script>` tag:
 

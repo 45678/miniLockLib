@@ -70,7 +70,7 @@ __Digging In__
 
 `npm install 45678/miniLockLib.git` to get the source code.
 
-`npm test` launch the test kit in Google Chrome.
+`npm test` launch the test suite in Google Chrome.
 
 `npm start` to begin watching CoffeeScript files. Your saved changes will trigger automatic re-compilation.
 

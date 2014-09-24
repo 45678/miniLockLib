@@ -91,3 +91,5 @@ __Demos__
 [miniLock file format version 2](https://45678.github.io/minilock-file-formats/2.html)
 
 [Is it a miniLock ID?](https://45678.github.io/is-it-a-minilock-id/)
+
+[miniLock ID inspector](https://45678.github.io/minilock-id-inspector/)

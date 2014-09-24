@@ -68,7 +68,7 @@ __Sources__
 
 __Digging In__
 
-`npm install git+https://git@github.com/45678/miniLockLib.git` to get the source code.
+`npm install 45678/miniLockLib.git` to get the source code.
 
 `npm test` launch the test kit in Google Chrome.
 

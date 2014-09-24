@@ -79,10 +79,10 @@ __Digging In__
 Run `make` to re-compile the JavaScript files in the `scripts` folder.
 
 The CoffeeScript files in the `library` folder are compiled to the `library.compiled` folder.
-And then all  files in `library.compiled` are combined and written to `scripts/miniLockLib.js`.
+And then all files in `library.compiled` are combined and written to `scripts/miniLockLib.js`.
 
 The CoffeeScript files in the `test` folder are compiled to the `tests.compiled` folder.
-And then all  files in `tests.compiled` are combined and written to `scripts/tests.js`.
+And then all files in `tests.compiled` are combined and written to `scripts/tests.js`.
 
 Run `npm start` to re-compile the CoffeeScript files automatically as you make changes.
 

@@ -74,7 +74,7 @@ __Digging In__
 
 `npm start` to begin watching CoffeeScript files. Your saved changes will trigger automatic re-compilation.
 
-Run `make` to re-compile the `scripts`.
+Run `make` to re-compile the JavaScript files in the `scripts` folder.
 
 CoffeeScript library files are compiled to the `library.compiled` folder and saved as `scripts/miniLockLib.js`.
 

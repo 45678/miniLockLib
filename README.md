@@ -72,7 +72,7 @@ __Sources__
 
 __Digging In__
 
-`npm install 45678/miniLockLib.git` to get the source code.
+`git clone https://github.com/45678/miniLockLib.git` to get the source code.
 
 `npm test` to build and launch the test suite in Google Chrome.
 

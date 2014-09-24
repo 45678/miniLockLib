@@ -72,10 +72,10 @@ __Digging In__
 
 `npm test` launch the test suite in Google Chrome.
 
-`npm start` to begin watching CoffeeScript files. Your saved changes will trigger automatic re-compilation.
-
 Run `make` to re-compile the JavaScript files in the `scripts` folder.
 
 CoffeeScript library files are compiled to the `library.compiled` folder and saved as `scripts/miniLockLib.js`.
 
 CoffeeScript test files are compiled to the `tests.compiled` folder and saved as `scripts/tests.js`.
+
+Run `npm start` to re-compile the CoffeeScript files automatically as you make changes.

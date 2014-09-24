@@ -54,7 +54,7 @@ Pass `data` and `keys` when you `decrypt` a file:
       }
     })
 
-[More examples in the tests](https://github.com/45678/miniLockLib/blob/master/tests/0%20A%20demo%20of...%20tests.coffee) or [read the source code](https://github.com/45678/miniLockLib/blob/master/library/index.coffee) for all the terrible details.
+[More examples](https://github.com/45678/miniLockLib/blob/master/tests/0%20A%20demo%20of...%20tests.coffee) in the tests or [read the source code](https://github.com/45678/miniLockLib/blob/master/library/index.coffee) for all the terrible details.
 
 __Demos__
 

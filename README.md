@@ -74,7 +74,7 @@ __Digging In__
 
 `npm install 45678/miniLockLib.git` to get the source code.
 
-`npm test` launch the test suite in Google Chrome.
+`npm test` to build and launch the test suite in Google Chrome.
 
 Run `make` to re-compile the JavaScript files in the `scripts` folder.
 

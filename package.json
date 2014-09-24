@@ -15,7 +15,7 @@
   "license": "Public Domain",
   "devDependencies": {
     "browserify": "^5.9.1",
-    "coffee-script": "^1.7.1",
+    "coffee-script": "1.8.x",
     "tape": "^2.14.0",
     "wr": "^1.3.1"
   },

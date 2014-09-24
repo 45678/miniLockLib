@@ -74,4 +74,8 @@ __Digging In__
 
 `npm start` to begin watching CoffeeScript files. Your saved changes will trigger automatic re-compilation.
 
-`make` to re-compile the `scripts`. Source files are compiled to `library.compiled` and saved as `scripts/miniLockLib.js`. Tests are compiled to `tests.compiled` and saved as `scripts/tests.js`.
+Run `make` to re-compile the `scripts`.
+
+CoffeeScript library files are compiled to the `library.compiled` folder and saved as `scripts/miniLockLib.js`.
+
+CoffeeScript test files are compiled to the `tests.compiled` folder and saved as `scripts/tests.js`.

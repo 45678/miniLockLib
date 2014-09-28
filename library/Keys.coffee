@@ -65,8 +65,8 @@ calculateCurve25519KeyPair = (secret, salt, callback) ->
   scrypt(secret, salt, logN, r, dkLen, interruptStep, whenKeysAreReady, encoding)
 
 
-# miniLock only accepts secret phrases that are at least 32 characters long and
-# have at least 100 bits of entropy.
+# An acceptable secret phrases is at least 32 characters long and
+# has at least 100 bits of entropy.
 exports.secretPhraseIsAcceptable = (secretPhrase) ->
   secretPhrase?.length >= 32 and zxcvbn(secretPhrase).entropy >= 100
 

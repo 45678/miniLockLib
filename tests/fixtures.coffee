@@ -60,9 +60,10 @@ read.files =
       miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
       'callback': callback
 
-readFromNetwork = exports.readFromNetwork = (name, callback) ->
+exports.readFromNetwork = (name, callback) ->
   request = new XMLHttpRequest
-  request.open "GET", "/tests/fixtures/" + name, true
+  path = "/fixtures/" + name
+  request.open "GET", path, true
   request.responseType = "blob"
   request.onreadystatechange = (event) ->
     if request.readyState is 4

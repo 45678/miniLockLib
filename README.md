@@ -81,14 +81,8 @@ __Digging In__
 
 `git clone https://github.com/45678/miniLockLib.git` to get the source code.
 
-`make` to re-compile JavaScript files in the `library.compiled`, `tests.compiled` and `website` folders.
-
-The CoffeeScript files in the `library` folder are compiled to the `library.compiled` folder.
-And then all files in `library.compiled` are combined and written to `website/miniLockLib.js`.
-
-The CoffeeScript files in the `test` folder are compiled to the `tests.compiled` folder.
-And then all files in `tests.compiled` are combined and written to `website/tests.js`.
-
-`npm run tests` to open the test suite in a web agent `window`.
+`make` to compile [CoffeeScript](http://www.coffeescript.org/) files into [ECMAScript](http://www.ecmascript.org/) files in the `library.compiled`, `tests.compiled` and `website` folders.
 
 `make clean` to start over.
+
+`npm run tests` to open the test suite in a web agent `window`.

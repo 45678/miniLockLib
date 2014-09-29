@@ -87,7 +87,7 @@ read.files =
 
 exports.r<span class="hljs-function"><span class="hljs-title">eadFromNetwork</span> = <span class="hljs-params">(name, callback)</span> -&gt;</span>
   request = <span class="hljs-keyword">new</span> XMLHttpRequest
-  path = <span class="hljs-string">"/fixtures/"</span> + name
+  path = <span class="hljs-string">"fixtures/"</span> + name
   request.open <span class="hljs-string">"GET"</span>, path, <span class="hljs-literal">true</span>
   request.responseType = <span class="hljs-string">"blob"</span>
   request.o<span class="hljs-function"><span class="hljs-title">nreadystatechange</span> = <span class="hljs-params">(event)</span> -&gt;</span>

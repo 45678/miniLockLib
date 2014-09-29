@@ -9,6 +9,7 @@ body, section, article, header, footer, nav, div, pre, ol, ul, li, h1, h2, h3, h
 
 /* Type metrics ----------------------- */
 
+article h1,
 body {
   font-size: 21px;
   line-height: 30px;
@@ -30,6 +31,7 @@ article header.function code {
   font-size: 19px;
   line-height: 25px;
 }
+
 
 nav,
 #examples,
@@ -65,6 +67,7 @@ body.avenir strong {
   font-family: "AvenirNext-Bold";
 }
 body.avenir a:link,
+body.avenir h1,
 body.avenir h3,
 body.avenir em {
   font-family: "AvenirNext-DemiBold";
@@ -121,7 +124,8 @@ h2 {
   color: hsla(0, 0%, 0%, 0.5);
 }
 
-h2.selected,
+article h1.selected,
+article h2.selected,
 #page_nav a[href].selected,
 #introduction strong,
 #examples strong,
@@ -176,9 +180,10 @@ ul { margin: 20px 0; }
 code, tt { padding: 1px 5px; }
 
 article { margin: 60px 0px; }
+article > h1 { margin: 0; }
 article > a[id],
 article header.function a[id] {
-  position: absolute; top: -66px;
+  position: absolute; top: -55px;
 }
 
 article header.function { margin: 60px 0px 0px; }

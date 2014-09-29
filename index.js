@@ -32,7 +32,7 @@
     el = document.getElementById(id);
     $("*.selected").removeClass("selected");
     $("a[href='#" + id + "']").addClass("selected");
-    return $(el).next("h2").addClass("selected");
+    return $(el).next("h1, h2").addClass("selected");
   };
 
 }).call(this);

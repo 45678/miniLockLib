@@ -14,4 +14,4 @@ renderID = (id) ->
   el = document.getElementById(id)
   $("*.selected").removeClass("selected")
   $("a[href='##{id}']").addClass("selected")
-  $(el).next("h2").addClass("selected")
+  $(el).next("h1, h2").addClass("selected")

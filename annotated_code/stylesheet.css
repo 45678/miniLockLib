@@ -310,20 +310,20 @@ div.example a[href] img {
 }
 
 @media screen and (min-width: 1280px) {
-  #go_to_examples_from_introduction,
-  #page_nav a[href="#examples"] {
-    display: none;
-  }
   #examples {
     margin: 0;
     position: fixed;
     top: 0; bottom: 0; right: 0; left: 900px;
     margin-left: 180px;
-    padding: 0 60px;
+    padding: 15px 50px;
     overflow: auto;
   }
+  #examples p {
+    margin: 0;
+  }
   div.example {
-    margin: 0 0 30px;
+    padding: 15px 0 0;
+    margin: 0px 0 5px;
   }
   #examples a.window {
     max-width: 300px;

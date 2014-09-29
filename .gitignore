@@ -2,8 +2,4 @@
 node_modules
 library.compiled
 tests.compiled
-website/annotated_code
-website/annotated_code.js
-website/index.js
-website/miniLockLib.js
-website/tests.js
+website

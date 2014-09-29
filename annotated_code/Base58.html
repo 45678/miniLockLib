@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>miniLockLib/Base58.coffee</title>
+  <link rel="stylesheet" href="/stylesheet.css">
+  <script src="annotated_code.js"></script>
+</head>
+<body class="avenir calibri consolas annotated_code">
+
+<header>
+  <h1>
+    <a href="../"><svg viewBox="0 0 525 702" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="60" y="320" width="420" height="320"></rect>
+        <path fill="#000000" d="M347.8125,478.934579 C369.558712,478.934579 387.1875,461.310499 387.1875,439.570093 C387.1875,417.829688 369.558712,400.205607 347.8125,400.205607 C326.066288,400.205607 308.4375,417.829688 308.4375,439.570093 C308.4375,461.310499 326.066288,478.934579 347.8125,478.934579 Z M177.1875,478.934579 C198.933712,478.934579 216.5625,461.310499 216.5625,439.570093 C216.5625,417.829688 198.933712,400.205607 177.1875,400.205607 C155.441288,400.205607 137.8125,417.829688 137.8125,439.570093 C137.8125,461.310499 155.441288,478.934579 177.1875,478.934579 Z M177.1875,255.869159 L177.1875,223.065421 L177.228748,223.065421 C177.201304,221.975295 177.1875,220.881783 177.1875,219.785047 C177.1875,149.12873 234.481061,91.8504673 305.15625,91.8504673 C375.831439,91.8504673 433.125,149.12873 433.125,219.785047 C433.125,220.881783 433.111196,221.975295 433.083752,223.065421 L433.125,223.065421 L433.125,255.869159 L523.525694,255.869159 L525,255.869159 L525,219.785047 C525,98.4011172 426.5726,0 305.15625,0 C183.7399,0 85.3125,98.4011172 85.3125,219.785047 L85.3125,255.869159 L86.7868059,255.869159 L177.1875,255.869159 L177.1875,255.869159 Z M131.25,616.71028 C105.879419,616.71028 85.3125,596.148853 85.3125,570.785047 L85.3125,347.719626 L439.6875,347.719626 L439.6875,570.785047 C439.6875,596.148853 419.120581,616.71028 393.75,616.71028 L131.25,616.71028 L131.25,616.71028 Z M131.25,702 C58.7626266,702 0,643.253064 0,570.785047 L0,255.869159 L525,255.869159 L525,570.785047 C525,643.253064 466.237373,702 393.75,702 L131.25,702 L131.25,702 Z"></path>
+      </g>
+    </svg><b>mini</b><b>Lock</b><b>Lib</b></a>/<b>Base58<span class="ext">.coffee</span></b>
+  </h1>
+</header>
+
+
+
+<section id="section-1">
+  <div class="annotation"><p>Base58 encoding/decoding
+Originally written by Mike Hearn for BitcoinJ
+Copyright (c) 2011 Google Inc
+Ported to JavaScript by Stefan Thomas
+Merged Uint8Array refactorings from base58-native by Stephen Pair
+Copyright (c) 2013 BitPay Inc</p>
+</div>
+  <div class="code"><div class='highlight'><pre>Base58 = <span class="hljs-built_in">module</span>.exports = {}
+Base58.ALPHABET = <span class="hljs-string">"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"</span>
+Base58.ALPHABET_MAP = {}
+i = <span class="hljs-number">0</span>
+
+<span class="hljs-keyword">while</span> i &lt; Base58.ALPHABET.length
+  Base58.ALPHABET_MAP[Base58.ALPHABET.charAt(i)] = i
+  i++
+Base58.BASE = <span class="hljs-number">58</span>
+Base58.e<span class="hljs-function"><span class="hljs-title">ncode</span> = <span class="hljs-params">(buffer)</span> -&gt;</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-string">""</span>  <span class="hljs-keyword">if</span> buffer.length <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
+  i = <span class="hljs-literal">undefined</span>
+  j = <span class="hljs-literal">undefined</span>
+  digits = [<span class="hljs-number">0</span>]
+  i = <span class="hljs-number">0</span>
+  <span class="hljs-keyword">while</span> i &lt; buffer.length
+    j = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">while</span> j &lt; digits.length
+      digits[j] &lt;&lt;= <span class="hljs-number">8</span>
+      j++
+    digits[<span class="hljs-number">0</span>] += buffer[i]
+    carry = <span class="hljs-number">0</span>
+    j = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">while</span> j &lt; digits.length
+      digits[j] += carry
+      carry = (digits[j] / Base58.BASE) | <span class="hljs-number">0</span>
+      digits[j] %= Base58.BASE
+      ++j
+    <span class="hljs-keyword">while</span> carry
+      digits.push carry % Base58.BASE
+      carry = (carry / Base58.BASE) | <span class="hljs-number">0</span>
+    i++</pre></div></div>
+</section>
+
+
+<section id="section-2">
+  <div class="annotation"><p>deal with leading zeros</p>
+</div>
+  <div class="code"><div class='highlight'><pre>  i = <span class="hljs-number">0</span>
+  <span class="hljs-keyword">while</span> i &lt; buffer.length - <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> buffer[i] <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
+    digits.push <span class="hljs-number">0</span>
+    i++
+  digits.reverse().map(<span class="hljs-function"><span class="hljs-params">(digit)</span> -&gt;</span>
+    Base58.ALPHABET[digit]
+  ).join <span class="hljs-string">""</span>
+
+Base58.d<span class="hljs-function"><span class="hljs-title">ecode</span> = <span class="hljs-params">(string)</span> -&gt;</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Uint8Array(<span class="hljs-number">0</span>)  <span class="hljs-keyword">if</span> string.length <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
+  input = string.split(<span class="hljs-string">""</span>).map(<span class="hljs-function"><span class="hljs-params">(c)</span> -&gt;</span>
+    <span class="hljs-keyword">throw</span> <span class="hljs-string">"Non-base58 character"</span>  <span class="hljs-keyword">if</span> Base58.ALPHABET.indexOf(c) <span class="hljs-keyword">is</span> -<span class="hljs-number">1</span>
+    Base58.ALPHABET_MAP[c]
+  )
+  i = <span class="hljs-literal">undefined</span>
+  j = <span class="hljs-literal">undefined</span>
+  bytes = [<span class="hljs-number">0</span>]
+  i = <span class="hljs-number">0</span>
+  <span class="hljs-keyword">while</span> i &lt; input.length
+    j = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">while</span> j &lt; bytes.length
+      bytes[j] *= Base58.BASE
+      j++
+    bytes[<span class="hljs-number">0</span>] += input[i]
+    carry = <span class="hljs-number">0</span>
+    j = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">while</span> j &lt; bytes.length
+      bytes[j] += carry
+      carry = bytes[j] &gt;&gt; <span class="hljs-number">8</span>
+      bytes[j] &amp;= <span class="hljs-number">0xff</span>
+      ++j
+    <span class="hljs-keyword">while</span> carry
+      bytes.push carry &amp; <span class="hljs-number">0xff</span>
+      carry &gt;&gt;= <span class="hljs-number">8</span>
+    i++</pre></div></div>
+</section>
+
+
+<section id="section-3">
+  <div class="annotation"><p>deal with leading zeros</p>
+</div>
+  <div class="code"><div class='highlight'><pre>  i = <span class="hljs-number">0</span>
+  <span class="hljs-keyword">while</span> i &lt; input.length - <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> input[i] <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
+    bytes.push <span class="hljs-number">0</span>
+    i++
+  <span class="hljs-keyword">new</span> Uint8Array(bytes.reverse())</pre></div></div>
+</section>
+
+
+<nav class="files">
+  <a  >library/index<span class="ext">.coffee</span></a>
+  
+  
+  
+  <br>
+  <a href="AbstractOperation.html">library/AbstractOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="BLAKE2s.html">library/BLAKE2s<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a >library/Base58<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="DecryptOperation.html">library/DecryptOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="EncryptOperation.html">library/EncryptOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="ID.html">library/ID<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Keys.html">library/Keys<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="NaCl.html">library/NaCl<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  
+  
+  
+  <br>
+  <a href="util.html">library/util<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="0 A demo of... tests.html">tests/0 A demo of... tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="1 Acceptability tests.html">tests/1 Acceptability tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="1 Decrypt Operation tests.html">tests/1 Decrypt Operation tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="1 Encrypt Operation tests.html">tests/1 Encrypt Operation tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="1 Identification tests.html">tests/1 Identification tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="1 Key Pair tests.html">tests/1 Key Pair tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="2 Slow Operation tests.html">tests/2 Slow Operation tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="fixtures.html">tests/fixtures<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="tape_test_harness.html">tests/tape_test_harness<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="annotated_code.html">website/annotated_code<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  
+</nav>
+</body>
+</html>

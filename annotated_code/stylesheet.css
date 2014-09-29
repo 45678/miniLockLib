@@ -1,0 +1,384 @@
+a, b, i, em, strong { text-decoration: none; font-style: inherit; font-weight: inherit; }
+h1, h2, h3, h4, h5, h6 { font: inherit; }
+pre { overflow: hidden; white-space: pre-wrap; }
+body, section, article, header, footer, nav, div, pre, ol, ul, li, h1, h2, h3, h4, h5, h6 {
+  position: relative;
+  box-sizing: border-box;
+  margin: 0; padding: 0; border: 0;
+}
+
+/* Type metrics ----------------------- */
+
+body {
+  font-size: 21px;
+  line-height: 30px;
+}
+
+h1 {
+  font-size: 44px;
+  line-height: 45px;
+}
+
+h2 {
+  font-size: 30px;
+  line-height: 30px;
+}
+
+pre {
+  font-size: 19px;
+  line-height: 25px;
+}
+
+nav,
+div.example {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+/* Typefaces -------------------------- */
+
+/* Calibri */
+body.calibri {
+  font-family: "Calibri", sans-serif;
+}
+body.calibri strong {
+  font-family: "Calibri-Bold";
+}
+body.calibri b,
+body.calibri h2 {
+  font-family: "Calibri-Bold";
+}
+body.calibri span.ext {
+  font-family: "Calibri-Italic";
+  opacity: 0.5;
+  letter-spacing: -0.1ex;
+}
+
+/* Avenir Next */
+body.avenir {
+  font-family: "AvenirNext-Medium";
+}
+body.avenir strong {
+  font-family: "AvenirNext-Bold";
+}
+body.avenir a:link,
+body.avenir h3,
+body.avenir em {
+  font-family: "AvenirNext-DemiBold";
+}
+body.avenir b,
+body.avenir h2 {
+  font-family: "AvenirNext-Heavy";
+}
+body.avenir span.ext {
+  font-family: "AvenirNext-UltraLight";
+}
+
+/* Consolas */
+body.consolas pre,
+body.consolas pre *,
+body.consolas tt,
+body.consolas code {
+  font-family: "Consolas", "Menlo", "Courier", monospace;
+}
+body.consolas pre strong {
+  font-weight: bold;
+}
+
+/* Paint ------------------------------ */
+
+html {
+  /*background: fixed radial-gradient(900px at 250px 150px, hsl(210, 25%, 90%), hsl(210, 33%, 80%));
+  background: hsla(0, 0%, 95%, 1);
+  background: hsla(210, 15%, 80%, 1);*/
+}
+
+body {
+  background: hsl(60, 0%, 88%);
+  background: hsla(60, 0%, 95%, 1);
+  color: hsla(0, 0%, 33%, 1);
+}
+
+h1 a svg rect       { fill:  white; }
+h1 a svg path       { fill:  hsl(160, 66%, 50%); }
+h1 a b:nth-child(2) { color: hsl(210, 66%, 63%); }
+h1 a b:nth-child(3) { color: hsl(260, 66%, 66%); }
+h1 a b:nth-child(4) { color: hsl(310, 66%, 66%); }
+
+pre, code {
+  background: hsla(0, 0%, 100%, 1);
+  box-shadow: 0px 0px 1px hsla(0, 0%, 50%, 0.25);
+}
+
+tt {
+  background: hsla(0, 0%, 0%, 0.1);
+}
+
+h2 {
+  color: hsla(0, 0%, 0%, 0.5);
+}
+
+h2.selected,
+#page_nav a[href].selected,
+#introduction strong,
+#examples strong,
+#setup strong,
+pre.html strong {
+  color: black;
+}
+
+.hljs-comment {
+  color: orange;
+  background: black;
+}
+
+/* Green? */
+
+/* Blue */
+.hljs-string,
+.hljs-number,
+a[href]:link {
+  color: hsl(210, 66%, 53%);
+}
+
+/* Violet */
+a[href]:visited {
+  color: hsl(260, 66%, 56%);
+}
+
+/* Pink */
+.hljs-keyword,
+.hljs-built_in,
+.hljs-literal,
+.hljs-regexp {
+  color: hsl(310, 66%, 46%);
+}
+
+
+/* Layout ----------------------------- */
+
+body {
+  padding: 25px 50px 25px;
+  max-width: 900px;
+  outline: 1px solid hsla(0, 0%, 0%, 0.1);
+}
+
+h1 { margin: -30px 0 0; line-height: 45px; }
+h2 { margin: 30px 0 0; }
+h3 { margin: 30px 0 -15px; }
+p  { margin: 20px 0; }
+
+code, tt { padding: 1px 5px; }
+
+article { margin: 50px 0px; }
+article > a[id],
+article header.function a[id] {
+  position: absolute; top: -66px;
+}
+
+article header.function { margin: 50px 0px 0px; }
+article header.function h2 { margin: 0 0 5px; }
+article header.function code { background:transparent; padding: 0; margin: 0; box-shadow: none;}
+
+
+pre {
+  padding: 10px 0px 10px 50px;
+  margin: 0px -50px;
+}
+
+pre.html {
+  background: transparent;
+  box-shadow: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+body > footer {
+  margin-top: 480px;
+}
+
+/* miniLockLib Header ----------------- */
+
+body > header:first-child {
+  margin:15px 0 45px;
+}
+body > header:first-child h1 svg {
+  vertical-align: bottom;
+  position: relative;
+  height: 110px;
+  width: 80px;
+  top: 5px;
+}
+
+
+/* Navigation ------------------------- */
+
+#page_nav div { margin: 15px 0px 0px; }
+#page_nav div:first-child { margin: 0; }
+
+#page_nav div a:before { content: "• "; position: relative; opacity: 0.5; top: 1px; }
+#page_nav div a:first-child:before { content: "" }
+
+
+/* Function --------------------------- */
+
+
+
+/* Examples --------------------------- */
+
+div.example a.window {
+  display: block;
+  /*outline: 1px solid;*/
+  width: 100%;
+  overflow: hidden;
+  background: black;
+  box-shadow: 0px 2px 10px hsla(0, 0%, 0%, 0.66);
+  border-top: 10px solid hsl(0, 0%, 90%);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+div.example a[href] img {
+  display: block;
+  width: 100%;
+  margin-top: 0px;
+  transition: all 500ms ease-in-out;
+}
+
+
+/* ------------------------------------ */
+
+@media screen and (min-width: 900px) {
+  body {
+    margin: 0 0 0 180px;
+  }
+  #page_nav {
+    position: fixed;
+    z-index: -1;
+    overflow: auto;
+    left: 0; top: 0; bottom: 0;
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  #examples {
+    height: 330px;
+    margin: 30px 0 60px;
+  }
+
+  div.example {
+    position:absolute;
+    bottom: 0;
+    width: 45%;
+  }
+  div.example a.window {
+    margin: 5px -5px 0;
+  }
+  div.example a.window:hover img {
+    margin-top: -90px;
+  }
+
+  div.example:nth-child(2) {
+    left: 0%;
+    z-index: 2;
+  }
+  div.example:nth-child(3) {
+    left: 28%;
+    z-index: 3;
+    bottom: -10px;
+  }
+  div.example:nth-child(4) {
+    left: 56%;
+    bottom: -20px;
+    z-index: 1;
+  }
+  div.example:hover {
+    z-index: 4;
+  }
+
+  div.example:nth-child(2) a.window {
+    max-height: 210px;
+  }
+  div.example:nth-child(3) a.window {
+    max-height: 250px;
+  }
+  div.example:nth-child(4) a.window {
+    max-height: 290px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  #go_to_examples_from_introduction,
+  #page_nav a[href="#examples"] {
+    display: none;
+  }
+  #examples {
+    margin: 0;
+    position: fixed;
+    top: 0; bottom: 0; right: 0; left: 900px;
+    margin-left: 180px;
+    padding: 0 60px;
+    overflow: auto;
+  }
+  div.example {
+    margin: 0 0 30px;
+  }
+  #examples a.window {
+    max-width: 300px;
+    margin: 5px 0 0;
+  }
+  div.example div.repo {
+    position: relative;
+    left: 0;
+    top: 0;
+  }
+}
+
+/* ------------------------------------ */
+
+
+body.annotated_code {
+  margin: 0;
+  max-width: none;
+}
+
+
+/*body.annotated_code > header:first-child * {
+  white-space: nowrap;
+  font-size: 30px;
+}
+body.annotated_code > header:first-child h1 svg {
+  height: 75px; width: 50px;
+  left: -1px; top: 0px;
+}*/
+body.annotated_code section {
+  margin: 10px 0 30px;
+  /*line-height: 25px;*/
+}
+body.annotated_code div.annotation {
+  /*color: hsla(0, 0%, 0%, 0.5);*/
+  /*border-left: 5px solid hsla(0, 0%, 0%, 0.15);*/
+  /*padding-left: 15px;*/
+  /*padding: 0px 15px;*/
+}
+body.annotated_code div.annotation p {
+  padding: 0;
+  margin: 0;
+}
+body.annotated_code div.annotation a[href] {
+  color: inherit;
+  text-decoration: underline;
+  font-family: inherit;
+}
+body.annotated_code div.code pre {
+  background: transparent;
+  box-shadow: none;
+  padding: 10px;
+  margin: 0 -10px 0 -10px;
+  border: 1px dotted transparent;
+  color: black;
+}
+body.annotated_code nav.files {
+  margin-bottom: 30px;
+}

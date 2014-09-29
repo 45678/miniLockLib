@@ -82,20 +82,16 @@
   <code>miniLockLib.makeKeyPair(secretPhrase, emailAddress, callback)</code>
 </header>
 <p>
-  Make a set of keys for a secret phrase and email address.
-</p>
-<p>
-  <code>callback</code> function receives a pair of <code>keys</code> or an <code>error</code>:
+  Generate a public-and-private key pair from a secret phrase and an email address.
+  Returns an instance of <a href="#MakeKeyPairOperation"><code>MakeKeyPairOperation</code></a>.
 </p>
 <pre>
 miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
   if (keys) {
     keys.publicKey is a Uint8Array
     keys.secretKey is a Uint8Array
-    error is undefined
   } else {
-    error is a String explaining the failure
-    keys is undefined
+    error is a String
   }
 })
 </pre>
@@ -103,10 +99,19 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
   The <code>secretPhrase</code> and <code>emailAddress</code> arguments are both tested to ensure they comply with <a href="https://github.com/kaepora/miniLock/blob/master/README.md#2-key-derivation">miniLock’s input requirements</a>.
   The phrase must be at least 32 characters long and it must contain at least 100 bits of entropy.
   The address musn’t be invalid.
-  If either input is unacceptable the <code>error</code> argument received by <code>callback</code> will be a <code>String</code> that explains the problem.
 </p>
 <p>
-  Making a pair of keys will usually take a second or two.
+  If either input is unacceptable your <code>callback</code> will receive one of the following <code>error</code> strings:
+</p>
+<ul class="error_strings">
+  <li><code class="hljs-string">"Can’t make keys without a secret phrase."</code></li>
+  <li><code class="hljs-string">"Can’t make keys because <code>secretPhrase</code> is not an acceptable secret phrase."</code></li>
+  <li><code class="hljs-string">"Can’t make keys without an email address."</code></li>
+  <li><code class="hljs-string">"Can’t make keys because <code>emailAddress</code> is not an acceptable email address."</code></li>
+</ul>
+<p>
+  If all the input is OK your <code>callback</code> will receive a set of <code>keys</code> when the operation is complete.
+  It typically takes about two seconds to complete a key pair.
 </p>
 
 <header class="function">
@@ -115,59 +120,56 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
   <code>miniLockLib.encrypt({data, name, keys, miniLockIDs, callback})</code>
 </header>
 <p>
-  Create an encrypted miniLock file from a <a href="http://www.w3.org/TR/FileAPI/#blob"><code>Blob</code></a> of <code>data</code>.
-  Returns an <a href="#EncryptOperation"><code>EncryptOperation</code></a>.
+  Make an encrypted miniLock file from a <a href="http://www.w3.org/TR/FileAPI/#blob"><code>Blob</code></a>.
+  Returns an instance of <a href="#EncryptOperation"><code>EncryptOperation</code></a>.
 </p>
-<p>
-  Accepts the following parameters:
-</p>
-<ul>
-<li>
-  <code>data</code> is the <code>Blob</code> of binary data that will be encrypted.
-</li>
-<li>
-  <code>name</code> specifies encrypted filename as a <code>String</code>. Default is <code>"untitled"</code>.
-</li>
-<li>
-  <code>keys</code> is the public-and-private key pair of the author of this encrypted file.
-</li>
-<li>
-  <code>miniLockIDs</code> is an <code>Array</code> of miniLock ID strings.
-</li>
-<li>
-  <code>callback</code> receives a set of <code>keys</code> when the operation is complete or it receives one of the following <code>error</code> strings:
-  <ul>
-    <li>"Can’t make keys without a secret phrase."</li>
-    <li>"Can’t make keys because '#{@secretPhrase}' is not an acceptable secret phrase."</li>
-    <li>"Can’t make keys without an email address."</li>
-    <li>"Can’t make keys because '#{@emailAddress}' is not an acceptable email address."</li>
-  </ul>
-</li>
-</ul>
 <pre>
 miniLockLib.encrypt({
-  data: blob,
-  name: 'sensitive_document.txt'
+  data: Blob or File,
+  name: 'Sensitive Document.txt'
   keys: {publicKey: Uint8Array, secretKey: Uint8Array},
-  miniLockIDs: [aliceID, bobbyID, ...]
+  miniLockIDs: [myID, aliceID, bobbyID, ...]
   callback: function(error, encrypted) {
     if (encrypted) {
-      encrypted.data is a Blob of the encrypted data
+      encrypted.data is a Blob
       encrypted.data.size is the Number of bytes
       encrypted.data.type is 'application/minilock'
-      encrypted.name is 'sensitive document.txt.minilock'
-      encrypted.senderID is the miniLock ID of the person who encrypted the file
-      error is undefined
+      encrypted.name is 'Sensitive Document.txt.minilock'
+      encrypted.senderID identifies the author of this encrypted file.
     } else {
       error is a String
-      encrypted is undefined
     }
   }
 })
 </pre>
-<p>
 
+<p>
+  <code>miniLockLib.encrypt</code> accepts the following parameters:
 </p>
+<ul>
+<li>
+  <code>data</code> is the <a href="http://www.w3.org/TR/FileAPI/#blob"><code>Blob</code></a> to be encrypted.
+  An instance of <a href="http://www.w3.org/TR/FileAPI/#file"><code>File</code></a> is also acceptable.
+</li>
+<li>
+  <code>name</code> specifies the filename as a <code>String</code>. Default is <code>"untitled"</code>.
+</li>
+<li>
+  <code>keys</code> is the public-and-private key pair of the author of this file.
+</li>
+<li>
+  <code>miniLockIDs</code> define who is permitted to decrypt this file.
+</li>
+<li>
+  <code>callback</code> should be prepared to receive <code>encrypted.data</code> or an <code>error</code>.
+</li>
+</ul>
+<p>
+  Potential <code>error</code> strings are as follows:
+</p>
+<ul class="error_strings">
+  <li><code class="hljs-string">"EncryptOperation failed to encrypt file data.""</code></li>
+</ul>
 
 <header class="function">
   <a id="decrypt"></a>
@@ -176,29 +178,47 @@ miniLockLib.encrypt({
 </header>
 <p>
   Decrypt a miniLock file.
-  Returns a <code>miniLockLib.DecryptOperation</code>.
-  <code>callback</code> receives a set of <code>keys</code> or an <code>error</code>.
-  keys is an object with <code>publicKey</code> and <code>secretKey</code> members.
-  The error will be a <code>String</code> describing the reason for the failure.
+  Returns an instance of <a href="#DecryptOperation"><code>DecryptOperation</code></a>.
 </p>
 <pre>
 miniLockLib.decrypt({
-  data: blob,
+  data: Blob or File,
   keys: {publicKey: Uint8Array, secretKey: Uint8Array},
   callback: function(error, decrypted) {
     if (decrypted) {
-      decrypted.data is a Blob of the decrypted data
+      decrypted.data is a Blob
       decrypted.data.size is the Number of bytes
-      decrypted.name is the decrypted name of file as a String
-      decrypted.senderID is the miniLock ID of the person who encrypted the file
-      error is undefined
+      decrypted.name is the filename as a String
+      decrypted.senderID identifies the author of the encrypted file.
     } else {
-      error is a string describing the failure
-      decrypted is undefined
+      error is a String
     }
   }
 })
 </pre>
+<p>
+  Accepts the following parameters:
+</p>
+<ul>
+<li>
+  <code>data</code> is a <code>Blob</code> of encrypted data.
+</li>
+<li>
+  <code>keys</code> is the public-and-private key pair that will be used to unlock the file.
+</li>
+<li>
+  <code>callback</code> is a function that will receive <code>decrypted</code> data or an <code>error</code>.
+</li>
+</ul>
+<p>
+  Potential <code>error</code> strings are as follows:
+</p>
+<ul class="error_strings">
+  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 1 attributes."</code></li>
+  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 2 attributes."</code></li>
+  <li><code class="hljs-string">"DecryptOperation failed to decrypt file data."</code></li>
+  <li><code class="hljs-string">"File is not encrypted for this recipient."</code></li>
+</ul>
 </article>
 
 <article>

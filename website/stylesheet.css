@@ -195,7 +195,7 @@ pre.html {
 }
 
 body > footer {
-  margin-top: 480px;
+  margin-top: 30px;
 }
 
 /* miniLockLib Header ----------------- */
@@ -336,7 +336,7 @@ div.example a[href] img {
   }
 }
 
-@media screen and (min-height: 900px) and (min-width: 1280px) {
+@media screen and (min-height: 900px) and (min-height: 900px) {
   body > footer {
     position:fixed;
     left: 0;

@@ -18,10 +18,6 @@ tape "Encrypt a version 1 file for Alice", (test) ->
         test.ok encrypted.data.type is "application/minilock"
         test.ok encrypted.senderID is Alice.miniLockID
         test.end()
-        # a = document.getElementById("link_to_download")
-        # a.setAttribute("href", window.URL.createObjectURL(encrypted.data))
-        # a.setAttribute("download", encrypted.name)
-        # a.innerHTML = "Download: "+encrypted.name
 
 tape "Encrypt a version 2 file for Alice", (test) ->
   read "basic.txt", (blob) ->
@@ -38,10 +34,6 @@ tape "Encrypt a version 2 file for Alice", (test) ->
         test.same encrypted.data.type, "application/minilock"
         test.same encrypted.senderID, Alice.miniLockID
         test.end()
-        # a = document.getElementById("link_to_download")
-        # a.setAttribute("href", window.URL.createObjectURL(encrypted.data))
-        # a.setAttribute("download", encrypted.name)
-        # a.innerHTML = "Download: "+encrypted.name
 
 tape "Alice can decrypt version 1 file that was encrypted for her", (test) ->
   read "alice.txt.v1.minilock", (blob) ->
@@ -95,10 +87,6 @@ tape "Encrypt a file for Alice & Bobby", (test) ->
         test.equal encrypted.data.type, "application/minilock"
         test.equal encrypted.senderID, Alice.miniLockID
         test.end()
-        # a = document.getElementById("link_to_download")
-        # a.setAttribute("href", window.URL.createObjectURL(encrypted.data))
-        # a.setAttribute("download", encrypted.name)
-        # a.innerHTML = "Download: "+encrypted.name
 
 tape "Alice can decrypt file that was encrypted for Alice & Bobby", (test) ->
   read "alice_and_bobby.txt.minilock", (blob) ->

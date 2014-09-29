@@ -30,7 +30,8 @@ pre {
 }
 
 nav,
-div.example {
+#examples,
+footer {
   font-size: 15px;
   line-height: 20px;
 }
@@ -332,6 +333,17 @@ div.example a[href] img {
     position: relative;
     left: 0;
     top: 0;
+  }
+}
+
+@media screen and (min-height: 900px) and (min-width: 1280px) {
+  body > footer {
+    position:fixed;
+    left: 0;
+    bottom: 0;
+    padding: 15px;
+    margin: 0px;
+    width: 180px;
   }
 }
 

@@ -10,19 +10,20 @@ class MakeKeyPairOperation
   constructor: (params) ->
     {@secretPhrase, @emailAddress} = params
 
-  # Decode input into a Uint8Array of bytes.
+  # Decode secret phrase input string into a `Uint8Array` of bytes.
   secret: ->
     NaCl.util.decodeUTF8(@secretPhrase)
 
-  # Decode input into a Uint8Array of bytes.
+  # Decode email address input string into a `Uint8Array` of bytes.
   salt: ->
     NaCl.util.decodeUTF8(@emailAddress)
 
-  # Create a hash digest of the decoded secret phrase to increase its complexity.
+  # Hash digest of the `secret()` to increase its potential complexity (hand wave?).
   hashDigestOfSecret: ->
     (new BLAKE2s length: 32).update(@secret()).digest()
 
-  # Start the operation. `callback` receives `error` or `keys` when the operation is complete.
+  # Start the operation.
+  # `callback` receives `error` or `keys` when the operation is complete.
   start: (callback) ->
     switch
       when callback?.constructor isnt Function

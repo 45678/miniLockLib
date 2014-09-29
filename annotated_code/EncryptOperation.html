@@ -23,12 +23,12 @@
 
 <section id="section-1">
   <div class="annotation"></div>
-  <div class="code"><div class='highlight'><pre>AbstractOperation = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./AbstractOperation"</span>)
+  <div class="code"><div class='highlight'><pre>ReadOperation = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./ReadOperation"</span>)
 NaCl = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./NaCl"</span>)
 BLAKE2s = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./BLAKE2s"</span>)
 {numberToByteArray} = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./util"</span>)
 
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EncryptOperation</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AbstractOperation</span></span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EncryptOperation</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ReadOperation</span></span>
   <span class="hljs-built_in">module</span>.exports = <span class="hljs-keyword">this</span>
 
   <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(params={})</span>-&gt;</span>
@@ -72,7 +72,7 @@ BLAKE2s = <span class="hljs-built_in">require</span>(<span class="hljs-string">"
 
   <span class="hljs-attribute">end</span>: <span class="hljs-function"><span class="hljs-params">(error, blob)</span> =&gt;</span>
     <span class="hljs-property">@streamEncryptor</span>.clean() <span class="hljs-keyword">if</span> <span class="hljs-property">@streamEncryptor</span>?
-    <span class="hljs-attribute">AbstractOperation</span>::end.call(<span class="hljs-keyword">this</span>, error, blob)
+    <span class="hljs-attribute">ReadOperation</span>::end.call(<span class="hljs-keyword">this</span>, error, blob)
 
   <span class="hljs-attribute">oncomplete</span>: <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     <span class="hljs-property">@callback</span>(<span class="hljs-literal">undefined</span>, {
@@ -200,12 +200,6 @@ BLAKE2s = <span class="hljs-built_in">require</span>(<span class="hljs-string">"
   
   
   <br>
-  <a href="AbstractOperation.html">library/AbstractOperation<span class="ext">.coffee</span></a>
-  
-  
-  
-  
-  <br>
   <a href="BLAKE2s.html">library/BLAKE2s<span class="ext">.coffee</span></a>
   
   
@@ -242,12 +236,6 @@ BLAKE2s = <span class="hljs-built_in">require</span>(<span class="hljs-string">"
   
   
   <br>
-  <a href="Keys.html">library/Keys<span class="ext">.coffee</span></a>
-  
-  
-  
-  
-  <br>
   <a href="MakeKeyPairOperation.html">library/MakeKeyPairOperation<span class="ext">.coffee</span></a>
   
   
@@ -255,6 +243,12 @@ BLAKE2s = <span class="hljs-built_in">require</span>(<span class="hljs-string">"
   
   <br>
   <a href="NaCl.html">library/NaCl<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="ReadOperation.html">library/ReadOperation<span class="ext">.coffee</span></a>
   
   
   

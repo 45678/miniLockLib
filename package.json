@@ -19,7 +19,7 @@
     "wr": "1.3.x"
   },
   "scripts": {
-    "annotate": "docco --output website/annotated_code --template website/annotated_code.html.jst --css website/stylesheet.css */*.coffee",
+    "annotate": "docco --output website/annotated_code --template website/annotated_code.html.jst --css website/stylesheet.css library/*.coffee tests/*.coffee",
     "start": "make; npm run annotate; wr 'make; npm run annotate;' */*.coffee website/*.jst",
     "tests": "make; open http://minilocklib.dev/tests.html",
     "test": "npm run tests;"

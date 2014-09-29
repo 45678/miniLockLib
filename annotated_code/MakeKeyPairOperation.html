@@ -38,7 +38,7 @@
 
 
 <section id="section-2">
-  <div class="annotation"><p>Decode input into a Uint8Array of bytes.</p>
+  <div class="annotation"><p>Decode secret phrase input string into a <code>Uint8Array</code> of bytes.</p>
 </div>
   <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">secret</span>:<span class="hljs-function"> -&gt;</span>
     NaCl.util.decodeUTF8(<span class="hljs-property">@secretPhrase</span>)</pre></div></div>
@@ -46,7 +46,7 @@
 
 
 <section id="section-3">
-  <div class="annotation"><p>Decode input into a Uint8Array of bytes.</p>
+  <div class="annotation"><p>Decode email address input string into a <code>Uint8Array</code> of bytes.</p>
 </div>
   <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">salt</span>:<span class="hljs-function"> -&gt;</span>
     NaCl.util.decodeUTF8(<span class="hljs-property">@emailAddress</span>)</pre></div></div>
@@ -54,7 +54,7 @@
 
 
 <section id="section-4">
-  <div class="annotation"><p>Create a hash digest of the decoded secret phrase to increase its complexity.</p>
+  <div class="annotation"><p>Hash digest of the <code>secret()</code> to increase its potential complexity (hand wave?).</p>
 </div>
   <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">hashDigestOfSecret</span>:<span class="hljs-function"> -&gt;</span>
     (<span class="hljs-keyword">new</span> BLAKE2s <span class="hljs-attribute">length</span>: <span class="hljs-number">32</span>).update(<span class="hljs-property">@secret</span>()).digest()</pre></div></div>
@@ -62,7 +62,8 @@
 
 
 <section id="section-5">
-  <div class="annotation"><p>Start the operation. <code>callback</code> receives <code>error</code> or <code>keys</code> when the operation is complete.</p>
+  <div class="annotation"><p>Start the operation.
+<code>callback</code> receives <code>error</code> or <code>keys</code> when the operation is complete.</p>
 </div>
   <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">start</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     <span class="hljs-keyword">switch</span>

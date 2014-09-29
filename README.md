@@ -16,41 +16,48 @@ Call `miniLockLib.makeKeyPair` with a `secretPhrase` and `emailAddress` to get a
 
     miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
       if (keys) {
-        keys.publicKey is a Uint8Array
-        keys.secretKey is a Uint8Array
-        error is undefined
+        keys.publicKey is instanceof Uint8Array
+        keys.secretKey is instanceof Uint8Array
       } else {
-        error is a String explaining the failure
-        keys is undefined
+        console.error(error)
        }
     })
 
 Pass `data`, `name`, `keys` and `miniLockIDs` when you `encrypt` a file:
 
     miniLockLib.encrypt({
-      data: blob,
-      name: 'sensitive_document.txt'
+      data: instanceof Blob or File,
+      name: 'Untitled.txt'
       keys: {publicKey: Uint8Array, secretKey: Uint8Array},
-      miniLockIDs: [aliceID, bobbyID, ...]
+      miniLockIDs: [myID, aliceID, bobbyID, ...]
       callback: function(error, encrypted) {
-        encrypted.data is a Blob of the encrypted data
-        encrypted.data.size is the Number of bytes in the encrypted file
-        encrypted.data.type is 'application/minilock'
-        encrypted.name is 'sensitive document.txt.minilock'
-        encrypted.senderID is the miniLock ID of the person who encrypted the file
+        if (encrypted) {
+          encrypted.data is an instanceof Blob
+          encrypted.data.size is the Number of bytes in the Blob
+          encrypted.data.type is 'application/minilock'
+          encrypted.name is 'Untitled.txt.minilock'
+          encrypted.senderID identifies the owner of the keys
+        } else {
+          console.error(error)
+        }
       }
     })
 
 Pass `data` and `keys` when you `decrypt` a file:
 
     miniLockLib.decrypt({
-      data: blob,
+      data: encrypted.data
       keys: {publicKey: Uint8Array, secretKey: Uint8Array},
       callback: function(error, decrypted) {
-        decrypted.data is a Blob of the decrypted data
-        decrypted.data.size is the Number of bytes in the decrypted file
-        decrypted.name is the decrypted name of file as a String
-        decrypted.senderID is the miniLock ID of the person who encrypted the file
+        if (decrypted) {
+          decrypted.data is an instanceof Blob
+          encrypted.data.size is the Number of bytes in the Blob
+          encrypted.data.type is 'text/plain'
+          decrypted.name is 'Untitled.txt'
+          decrypted.senderID identifies the owner of the keys
+        } else {
+          console.error(error)
+        }
       }
     })
 

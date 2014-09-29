@@ -211,6 +211,9 @@ body > header:first-child h1 svg {
 #page_nav div { margin: 0px 0px 15px; }
 #page_nav div a:before { content: "• "; position: relative; opacity: 0.5; top: 1px; }
 
+#page_nav div.public_domain a:before {
+  display: none;
+}
 
 /* Examples --------------------------- */
 

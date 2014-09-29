@@ -3,34 +3,6 @@ tape = require "./tape_test_harness"
 
 tape "Identification", (test) -> test.end()
 
-tape "Alice’s ID is acceptable", (test) ->
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID), true
-  test.end()
-
-tape "Bobby’s ID is acceptable", (test) ->
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID), true
-  test.end()
-
-tape "Undefined ID is unacceptable", (test) ->
-  test.same miniLockLib.ID.isAcceptable(`undefined`), false
-  test.end()
-
-tape "Blank ID is unacceptable", (test) ->
-  test.same miniLockLib.ID.isAcceptable(""), false
-  test.same miniLockLib.ID.isAcceptable(" "), false
-  test.same miniLockLib.ID.isAcceptable("  "), false
-  test.end()
-
-tape "Truncated ID is unacceptable", (test) ->
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID.slice(0, -1)), false
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID.slice(1)), false
-  test.end()
-
-tape "ID with extra characters is unacceptable", (test) ->
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID + "A"), false
-  test.same miniLockLib.ID.isAcceptable("A" + Alice.miniLockID), false
-  test.end()
-
 tape "Decode public key from Alice’s ID", (test) ->
   publicKey = miniLockLib.ID.decode(Alice.miniLockID)
   test.same publicKey, Alice.publicKey

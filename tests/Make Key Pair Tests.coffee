@@ -1,7 +1,7 @@
 tape = require "./tape_test_harness"
 {Alice, Bobby} = require "./fixtures"
 
-tape "Keys", (test) -> test.end()
+tape "Make A Pair Of Keys", (test) -> test.end()
 
 tape "make a pair of keys for Alice", (test) ->
   miniLockLib.makeKeyPair Alice.secretPhrase, Alice.emailAddress, (error, keys) ->
@@ -19,27 +19,27 @@ tape "make a pair of keys for Bobby", (test) ->
 
 tape "can’t make keys without a callback", (test) ->
   returned = miniLockLib.makeKeyPair()
-  test.same returned, "Can’t make a pair of keys without a callback function."
+  test.same returned, "Can’t make keys without a callback function."
   returned = miniLockLib.makeKeyPair(Bobby.secretPhrase, Bobby.emailAddress)
-  test.same returned, "Can’t make a pair of keys without a callback function."
+  test.same returned, "Can’t make keys without a callback function."
   test.end()
 
 tape "can’t make keys without a secret phrase", (test) ->
   miniLockLib.makeKeyPair undefined, Bobby.emailAddress, (error) ->
-    test.same error, "Can’t make a pair of keys without a secret phrase."
+    test.same error, "Can’t make keys without a secret phrase."
     test.end()
 
 tape "can’t make keys with unacceptable secret phrase", (test) ->
   miniLockLib.makeKeyPair "My password is password.", Bobby.emailAddress, (error) ->
-    test.same error, "Can’t make a pair of keys because the secret phrase is unacceptable."
+    test.same error, "Can’t make keys because 'My password is password.' is not an acceptable secret phrase."
     test.end()
 
 tape "can’t make keys without an email address", (test) ->
   miniLockLib.makeKeyPair Bobby.secretPhrase, undefined, (error) ->
-    test.same error, "Can’t make a pair of keys without an email address."
+    test.same error, "Can’t make keys without an email address."
     test.end()
 
 tape "can’t make keys with unacceptable email address", (test) ->
   miniLockLib.makeKeyPair Bobby.secretPhrase, "undefined@undefined", (error) ->
-    test.same error, "Can’t make a pair of keys because the email address is unacceptable."
+    test.same error, "Can’t make keys because 'undefined@undefined' is not an acceptable email address."
     test.end()

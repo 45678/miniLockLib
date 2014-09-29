@@ -1,4 +1,8 @@
-default: website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js
+default: miniLockLib.js website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js
+
+# Create a standalone copy of miniLockLib.js in the website folder.
+miniLockLib.js: website/miniLockLib.js
+	cp website/miniLockLib.js miniLockLib.js
 
 # Create a standalone copy of miniLockLib.js in the website folder.
 website/miniLockLib.js: library/%.coffee library.compiled/scrypt-async.js library.compiled/zxcvbn.js

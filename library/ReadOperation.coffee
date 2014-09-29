@@ -11,12 +11,6 @@ class ReadOperation
     else
       @oncomplete(blob, attributes, header, sizeOfHeader)
 
-  onerror: (error) ->
-    console.info("onerror", error)
-
-  oncomplete: (blob, attributes, header, sizeOfHeader) ->
-    console.info("oncomplete", blob, attributes, header, sizeOfHeader)
-
   readSliceOfData: (start, end, callback) ->
     @fileReader ?= new FileReader
     @fileReader.readAsArrayBuffer(@data.slice(start, end))

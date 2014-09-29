@@ -971,14 +971,6 @@
       }
     };
 
-    ReadOperation.prototype.onerror = function(error) {
-      return console.info("onerror", error);
-    };
-
-    ReadOperation.prototype.oncomplete = function(blob, attributes, header, sizeOfHeader) {
-      return console.info("oncomplete", blob, attributes, header, sizeOfHeader);
-    };
-
     ReadOperation.prototype.readSliceOfData = function(start, end, callback) {
       if (this.fileReader == null) {
         this.fileReader = new FileReader;

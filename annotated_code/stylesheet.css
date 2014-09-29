@@ -88,12 +88,6 @@ body.consolas pre strong {
 
 /* Paint ------------------------------ */
 
-html {
-  /*background: fixed radial-gradient(900px at 250px 150px, hsl(210, 25%, 90%), hsl(210, 33%, 80%));
-  background: hsla(0, 0%, 95%, 1);
-  background: hsla(210, 15%, 80%, 1);*/
-}
-
 body {
   background: hsl(60, 0%, 88%);
   background: hsla(60, 0%, 95%, 1);
@@ -159,7 +153,7 @@ a[href]:visited {
 /* Layout ----------------------------- */
 
 body {
-  padding: 25px 50px 25px;
+  padding: 30px 60px;
   max-width: 900px;
   outline: 1px solid hsla(0, 0%, 0%, 0.1);
 }
@@ -171,20 +165,20 @@ p  { margin: 20px 0; }
 
 code, tt { padding: 1px 5px; }
 
-article { margin: 50px 0px; }
+article { margin: 60px 0px; }
 article > a[id],
 article header.function a[id] {
   position: absolute; top: -66px;
 }
 
-article header.function { margin: 50px 0px 0px; }
+article header.function { margin: 60px 0px 0px; }
 article header.function h2 { margin: 0 0 5px; }
 article header.function code { background:transparent; padding: 0; margin: 0; box-shadow: none;}
 
 
 pre {
-  padding: 10px 0px 10px 50px;
-  margin: 0px -50px;
+  padding: 10px 0px 10px 60px;
+  margin: 0px -60px;
 }
 
 pre.html {
@@ -195,7 +189,7 @@ pre.html {
 }
 
 body > footer {
-  margin-top: 480px;
+  margin-top: 30px;
 }
 
 /* miniLockLib Header ----------------- */
@@ -215,21 +209,13 @@ body > header:first-child h1 svg {
 /* Navigation ------------------------- */
 
 #page_nav div { margin: 0px 0px 15px; }
-/*#page_nav div:first-child { margin-top: 15px; }*/
-
 #page_nav div a:before { content: "• "; position: relative; opacity: 0.5; top: 1px; }
-/*#page_nav div a:first-child:before { content: "" }*/
-
-
-/* Function --------------------------- */
-
 
 
 /* Examples --------------------------- */
 
 div.example a.window {
   display: block;
-  /*outline: 1px solid;*/
   width: 100%;
   overflow: hidden;
   background: black;
@@ -244,22 +230,6 @@ div.example a[href] img {
   width: 100%;
   margin-top: 0px;
   transition: all 500ms ease-in-out;
-}
-
-
-/* ------------------------------------ */
-
-@media screen and (min-width: 900px) {
-  body {
-    margin: 0 0 0 180px;
-  }
-  #page_nav {
-    position: fixed;
-    z-index: -1;
-    overflow: auto;
-    left: 0; top: 0; bottom: 0;
-    padding: 15px;
-  }
 }
 
 @media screen and (max-width: 1280px) {
@@ -315,7 +285,7 @@ div.example a[href] img {
     position: fixed;
     top: 0; bottom: 0; right: 0; left: 900px;
     margin-left: 180px;
-    padding: 15px 50px;
+    padding: 15px 45px;
     overflow: auto;
   }
   #examples p {
@@ -336,7 +306,23 @@ div.example a[href] img {
   }
 }
 
-@media screen and (min-height: 900px) and (min-width: 1280px) {
+/* ------------------------------------ */
+
+@media screen and (min-width: 900px) {
+  body {
+    margin: 0 0 0 180px;
+  }
+  #page_nav {
+    position: fixed;
+    z-index: -1;
+    overflow: auto;
+    left: 0; top: 0; bottom: 0;
+    padding: 15px;
+  }
+}
+
+
+@media screen and (min-height: 900px) and (min-height: 900px) {
   body > footer {
     position:fixed;
     left: 0;
@@ -349,30 +335,12 @@ div.example a[href] img {
 
 /* ------------------------------------ */
 
-
 body.annotated_code {
   margin: 0;
   max-width: none;
 }
-
-
-/*body.annotated_code > header:first-child * {
-  white-space: nowrap;
-  font-size: 30px;
-}
-body.annotated_code > header:first-child h1 svg {
-  height: 75px; width: 50px;
-  left: -1px; top: 0px;
-}*/
 body.annotated_code section {
   margin: 10px 0 30px;
-  /*line-height: 25px;*/
-}
-body.annotated_code div.annotation {
-  /*color: hsla(0, 0%, 0%, 0.5);*/
-  /*border-left: 5px solid hsla(0, 0%, 0%, 0.15);*/
-  /*padding-left: 15px;*/
-  /*padding: 0px 15px;*/
 }
 body.annotated_code div.annotation p {
   padding: 0;

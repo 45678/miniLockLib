@@ -50,7 +50,7 @@ tests.compiled:
 clean:
 	rm -f library.compiled/*.js
 	rm -f tests.compiled/*.js
-	rm -f website/*.js
+	rm -f website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js 
 	rm -rf website/annotated_code
 
 install:

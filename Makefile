@@ -19,13 +19,13 @@ library.compiled:
 # Download scrypt-async.js and save it in the library.compiled folder.
 library.compiled/scrypt-async.js:
 	curl -s https://raw.githubusercontent.com/dchest/scrypt-async-js/master/scrypt-async.js \
-	  > library.compiled/scrypt-async.js
+		> library.compiled/scrypt-async.js
 
 # Make a copy of zxcvbn.js that exports itself as a module.
 library.compiled/zxcvbn.js:
 	cat node_modules/zxcvbn/zxcvbn.js \
-	  | sed "s/window.zxcvbn=o/module.exports=o/" \
-	  > library.compiled/zxcvbn.js
+		| sed "s/window.zxcvbn=o/module.exports=o/" \
+		> library.compiled/zxcvbn.js
 
 # Create annotated_code.js in the website folder.
 website/annotated_code.js: website/annotated_code.coffee
@@ -61,3 +61,9 @@ install:
 uninstall:
 	# Remove POW config.
 	rm -rf ~/.pow/minilocklib
+
+gh-pages:
+	git checkout gh-pages
+	cp -r website/* ./
+	git add --all
+	git status

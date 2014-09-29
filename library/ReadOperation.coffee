@@ -1,4 +1,4 @@
-class AbstractOperation
+class ReadOperation
   module.exports = this
 
   chunkSize: 1024 * 1024

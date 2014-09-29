@@ -1,9 +1,9 @@
-AbstractOperation = require("./AbstractOperation")
+ReadOperation = require("./ReadOperation")
 NaCl = require("./NaCl")
 BLAKE2s = require("./BLAKE2s")
 {numberToByteArray} = require("./util")
 
-class EncryptOperation extends AbstractOperation
+class EncryptOperation extends ReadOperation
   module.exports = this
 
   constructor: (params={})->
@@ -47,7 +47,7 @@ class EncryptOperation extends AbstractOperation
 
   end: (error, blob) =>
     @streamEncryptor.clean() if @streamEncryptor?
-    AbstractOperation::end.call(this, error, blob)
+    ReadOperation::end.call(this, error, blob)
 
   oncomplete: (blob) ->
     @callback(undefined, {

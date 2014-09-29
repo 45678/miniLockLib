@@ -23,23 +23,160 @@
 
 <section id="section-1">
   <div class="annotation"></div>
-  <div class="code"><div class='highlight'><pre><span class="hljs-keyword">if</span> location.hostname <span class="hljs-keyword">is</span> <span class="hljs-string">"45678.github.io"</span> <span class="hljs-keyword">and</span> location.protocol <span class="hljs-keyword">isnt</span> <span class="hljs-string">"https:"</span>
-  <span class="hljs-built_in">window</span>.location = location.toString().replace(<span class="hljs-string">"http:"</span>, <span class="hljs-string">"https:"</span>)
+  <div class="code"><div class='highlight'><pre>miniLockLib = <span class="hljs-built_in">module</span>.exports = {}
 
-$<span class="hljs-function"><span class="hljs-params">(<span class="hljs-built_in">document</span>)</span>.<span class="hljs-title">ready</span> <span class="hljs-params">(event)</span> -&gt;</span>
-  hljs.highlightBlock(pre) <span class="hljs-keyword">for</span> pre <span class="hljs-keyword">in</span> <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">"pre"</span>)
+miniLockLib.Keys             = <span class="hljs-built_in">require</span> <span class="hljs-string">"./Keys"</span>
+miniLockLib.ID               = <span class="hljs-built_in">require</span> <span class="hljs-string">"./ID"</span>
+miniLockLib.EncryptOperation = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./EncryptOperation"</span>)
+miniLockLib.DecryptOperation = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./DecryptOperation"</span>)</pre></div></div>
+</section>
 
-$<span class="hljs-function"><span class="hljs-params">(<span class="hljs-built_in">document</span>)</span>.<span class="hljs-title">ready</span> <span class="hljs-params">(event)</span> -&gt;</span>
-  renderID location.hash.replace(<span class="hljs-string">"#"</span>, <span class="hljs-string">""</span>) <span class="hljs-keyword">if</span> location.hash
 
-$<span class="hljs-function"><span class="hljs-params">(<span class="hljs-built_in">document</span>)</span>.<span class="hljs-title">on</span> "<span class="hljs-title">click</span>", "<span class="hljs-title">a</span>[<span class="hljs-title">href</span>^='#']", <span class="hljs-params">(event)</span> -&gt;</span>
-  renderID event.target.href.toString().split(<span class="hljs-string">"#"</span>)[<span class="hljs-number">1</span>]
-<span class="hljs-function">
-<span class="hljs-title">renderID</span> = <span class="hljs-params">(id)</span> -&gt;</span>
-  el = <span class="hljs-built_in">document</span>.getElementById(id)
-  $(<span class="hljs-string">"*.selected"</span>).removeClass(<span class="hljs-string">"selected"</span>)
-  $(<span class="hljs-string">"a[href='#<span class="hljs-subst">#{id}</span>']"</span>).addClass(<span class="hljs-string">"selected"</span>)
-  $(el).next(<span class="hljs-string">"h2"</span>).addClass(<span class="hljs-string">"selected"</span>)</pre></div></div>
+<section id="section-2">
+  <div class="annotation"><hr>
+</div>
+  <div class="code"><div class='highlight'><pre></pre></div></div>
+</section>
+
+
+<section id="section-3">
+  <div class="annotation"><h2 id="make-a-set-of-keys">Make a set of Keys</h2>
+</div>
+  <div class="code"><div class='highlight'><pre></pre></div></div>
+</section>
+
+
+<section id="section-4">
+  <div class="annotation"><p>Call <code>miniLockLib.makeKeyPair</code> to generate a set of keys from a secret phrase
+and email address. Your <code>callback</code> receives a pair of <code>keys</code> like this:</p>
+<p>  miniLockLib.makeKeyPair secretPhrase, emailAddress, (error, keys) -&gt;
+   if keys
+     keys.publicKey is a Uint8Array
+     keys.secretKey is a Uint8Array
+     error is undefined
+   else
+     error is a String explaining the failure
+     keys is undefined</p>
+<p><code>miniLockLib.makeKeyPair</code> is defined in Keys.coffee. Refer to that file for
+details about unacceptable secret phrases, unacceptable email addresses and
+other failure conditions.</p>
+</div>
+  <div class="code"><div class='highlight'><pre>
+miniLockLib.makeKeyPair = miniLockLib.Keys.makeKeyPair</pre></div></div>
+</section>
+
+
+<section id="section-5">
+  <div class="annotation"><hr>
+</div>
+  <div class="code"><div class='highlight'><pre></pre></div></div>
+</section>
+
+
+<section id="section-6">
+  <div class="annotation"><h2 id="encrypt-a-file">Encrypt a File</h2>
+</div>
+  <div class="code"><div class='highlight'><pre></pre></div></div>
+</section>
+
+
+<section id="section-7">
+  <div class="annotation"><pre><code>miniLockLib.encrypt
+  <span class="hljs-attribute">data</span>: File <span class="hljs-keyword">or</span> Blob,
+  <span class="hljs-attribute">name</span>: <span class="hljs-string">"alice_and_bobby.txt"</span>
+  <span class="hljs-attribute">keys</span>: {<span class="hljs-attribute">publicKey</span>: Uint8Array, <span class="hljs-attribute">secretKey</span>: Uint8Array}
+  <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID, Bobby.miniLockID]
+  <span class="hljs-attribute">callback</span>: <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+    <span class="hljs-keyword">if</span> encrypted
+      encrypted.name <span class="hljs-keyword">is</span> <span class="hljs-string">"alice_and_bobby.txt.minilock"</span>
+      encrypted.data <span class="hljs-keyword">is</span> a Blob
+      encrypted.data.size <span class="hljs-keyword">is</span> Number
+      encrypted.senderID <span class="hljs-keyword">is</span> Alice.miniLockID
+      error <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+    <span class="hljs-keyword">else</span>
+      error <span class="hljs-keyword">is</span> a String explaing the failure
+      encrypted <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+</code></pre><p>A <code>miniLockLib.EncryptOperation</code> is constructed when you call <code>encrypt</code>.
+Refer to EncryptOperation.coffee to see how it works.</p>
+</div>
+  <div class="code"><div class='highlight'><pre>
+miniLockLib.e<span class="hljs-function"><span class="hljs-title">ncrypt</span> = <span class="hljs-params">(params, callback)</span> -&gt;</span>
+  params.callback = callback <span class="hljs-keyword">if</span> callback
+  params.start = <span class="hljs-literal">yes</span>
+  <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation params</pre></div></div>
+</section>
+
+
+<section id="section-8">
+  <div class="annotation"><hr>
+</div>
+  <div class="code"><div class='highlight'><pre></pre></div></div>
+</section>
+
+
+<section id="section-9">
+  <div class="annotation"><h2 id="decrypt-a-file">Decrypt a File</h2>
+</div>
+  <div class="code"><div class='highlight'><pre></pre></div></div>
+</section>
+
+
+<section id="section-10">
+  <div class="annotation"><pre><code>miniLockLib.decrypt
+  <span class="hljs-attribute">data</span>: File <span class="hljs-keyword">or</span> Blob,
+  <span class="hljs-attribute">keys</span>: {<span class="hljs-attribute">publicKey</span>: Uint8Array, <span class="hljs-attribute">secretKey</span>: Uint8Array}
+  <span class="hljs-attribute">callback</span>: <span class="hljs-function"><span class="hljs-params">(error, decrypted)</span> -&gt;</span>
+    <span class="hljs-keyword">if</span> decrypted
+      decrypted.name <span class="hljs-keyword">is</span> <span class="hljs-string">"alice_and_bobby.txt"</span>
+      decrypted.data.constructor <span class="hljs-keyword">is</span> Blob
+      decrypted.data.size.constructor <span class="hljs-keyword">is</span> Number
+      decrypted.senderID <span class="hljs-keyword">is</span> Alice.miniLockID
+      error <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+    <span class="hljs-keyword">else</span>
+      error <span class="hljs-keyword">is</span> a String explaing the failure
+      encrypted <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+</code></pre><p>A <code>miniLockLib.DecryptOperation</code> is constructed when you call <code>decrypt</code>.
+Refer to DecryptOperation.coffee to see how it works.</p>
+</div>
+  <div class="code"><div class='highlight'><pre>
+miniLockLib.d<span class="hljs-function"><span class="hljs-title">ecrypt</span> = <span class="hljs-params">(params, callback)</span> -&gt;</span>
+  params.callback = callback <span class="hljs-keyword">if</span> callback
+  params.start = <span class="hljs-literal">yes</span>
+  <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation params
+
+
+
+miniLockLib.Base58  = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./Base58"</span>)
+miniLockLib.BLAKE2s = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./BLAKE2s"</span>)
+miniLockLib.NaCl    = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./NaCl"</span>)
+miniLockLib.scrypt  = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./scrypt-async"</span>)
+miniLockLib.zxcvbn  = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./zxcvbn"</span>)</pre></div></div>
+</section>
+
+
+<section id="section-11">
+  <div class="annotation"><p>Explanations of miniLock’s numeric error codes.</p>
+</div>
+  <div class="code"><div class='highlight'><pre>miniLockLib.ErrorMessages =</pre></div></div>
+</section>
+
+
+<section id="section-12">
+  <div class="annotation"><p>Encryption errors</p>
+</div>
+  <div class="code"><div class='highlight'><pre>  <span class="hljs-number">1</span>: <span class="hljs-string">"General encryption error"</span></pre></div></div>
+</section>
+
+
+<section id="section-13">
+  <div class="annotation"><p>Decryption errors</p>
+</div>
+  <div class="code"><div class='highlight'><pre>  <span class="hljs-number">2</span>: <span class="hljs-string">"General decryption error"</span>
+  <span class="hljs-number">3</span>: <span class="hljs-string">"Could not parse header"</span>
+  <span class="hljs-number">4</span>: <span class="hljs-string">"Invalid header version"</span>
+  <span class="hljs-number">5</span>: <span class="hljs-string">"Could not validate sender ID"</span>
+  <span class="hljs-number">6</span>: <span class="hljs-string">"File is not encrypted for this recipient"</span>
+  <span class="hljs-number">7</span>: <span class="hljs-string">"Could not validate ciphertext hash"</span></pre></div></div>
 </section>
 
 
@@ -155,15 +292,6 @@ $<span class="hljs-function"><span class="hljs-params">(<span class="hljs-built_
   
   <br>
   <a href="tape_test_harness.html">tests/tape_test_harness<span class="ext">.coffee</span></a>
-  
-  
-  
-  
-  <br>
-  <a href="annotated_code.html">website/annotated_code<span class="ext">.coffee</span></a>
-  
-  
-  
   
   
 </nav>

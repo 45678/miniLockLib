@@ -223,7 +223,7 @@ miniLockLib.decrypt({
 
 <article>
 <a id="SecretPhrase"></a>
-<h2>SecretPhrase</h2>
+<h1>SecretPhrase</h1>
 <p>
   <code>miniLockLib.SecretPhrase</code> supplies an acceptance test for secret phrase input.
 </p>
@@ -233,13 +233,14 @@ miniLockLib.decrypt({
   <code>miniLockLib.SecretPhrase.isAcceptable(secretPhrase)</code>
 </header>
 <p>
-  Validate a secret phrase string, returns <code>true</code> or <code>false</code>.
+  Validates a secret phrase input <code>String</code>.
+  Returns <code>true</code> or <code>false</code>.
 </p>
 </article>
 
 <article>
 <a id="EmailAddress"></a>
-<h2>EmailAddress</h2>
+<h1>EmailAddress</h1>
 <p>
   <code>miniLockLib.EmailAddress</code> supplies an acceptance test for email address input.
 </p>
@@ -249,13 +250,14 @@ miniLockLib.decrypt({
   <code>miniLockLib.EmailAddress.isAcceptable(emailAddress)</code>
 </header>
 <p>
-  Validate an email address string, returns <code>true</code> or <code>false</code>.
+  Validates an email address input <code>String</code>.
+  Returns <code>true</code> or <code>false</code>.
 </p>
 </article>
 
 <article>
 <a id="ID"></a>
-<h2>ID</h2>
+<h1>ID</h1>
 <p>
   <code>miniLockLib.ID</code> provides functions for encoding and decoding miniLock IDs.
   And it also includes an acceptance test for miniLock ID input.
@@ -290,17 +292,14 @@ miniLockLib.decrypt({
 </article>
 
 <article>
-<a id="EncryptOperation"></a>
-<h2>EncryptOperation</h2>
+<header class="constructor function">
+  <a id="EncryptOperation"></a>
+  <h2>EncryptOperation</h2>
+  <code>encryptOperation = new miniLockLib.EncryptOperation(params)</code>
+</header>
 <p>
   Instances of <code>EncryptOperation</code> make miniLock files.
 </p>
-
-<header class="function">
-  <a id="EncryptOperation::constructor"></a>
-  <h2>EncryptOperation::constructor</h2>
-  <code>encryptOperation = new miniLockLib.EncryptOperation(params)</code>
-</header>
 <p>
   Constructs an instance of <code>DecryptOperation</code>.
 </p>
@@ -324,8 +323,7 @@ miniLockLib.decrypt({
   <code>encryptOperation.name = "secret_filename.txt"</code>
 </header>
 <p>
-  Define the keys that will be used to encrypt the data.
-  <code>keys</code> is the public-and-private key pair that will be used to unlock the file.
+  Defines the filename.
 </p>
 
 <header class="function">
@@ -334,7 +332,7 @@ miniLockLib.decrypt({
   <code>encryptOperation.keys = keys</code>
 </header>
 <p>
-  Define the keys that will be used to encrypt the data.
+  Defines the public–secret key pair that will be used to lock this file.
 </p>
 
 <header class="function">
@@ -343,7 +341,7 @@ miniLockLib.decrypt({
   <code>encryptOperation.miniLockIDs = [aliceID, bobbyID, ...]</code>
 </header>
 <p>
-  Define the keys that will be used to encrypt the data.
+  Defines who is permitted to unlock this file.
 </p>
 
 <header class="function">
@@ -366,22 +364,33 @@ miniLockLib.decrypt({
 </article>
 
 <article>
-<a id="DecryptOperation"></a>
-<h2>DecryptOperation</h2>
-<p>
-  <code>DecryptOperation</code> instances unlock miniLock files.
-</p>
-<p>
-  <code>params</code> are optional. You may define <code>data</code>, <code>name</code>, <code>keys</code> and <code>miniLockIDs</code>.
-</p>
-
-<header class="function">
-  <a id="DecryptOperation::constructor"></a>
-  <h2>DecryptOperation::constructor</h2>
-  <code>decryptOperation = new miniLockLib.DecryptOperation</code>
+<header class="constructor function">
+  <a id="DecryptOperation"></a>
+  <h2>DecryptOperation</h2>
+  <!-- <code>decryptOperation = new miniLockLib.DecryptOperation(params)</code> -->
 </header>
+<pre>
+decryptOperation = new miniLockLib.DecryptOperation(params)
+
+decryptOperation.start(function(error, decrypted){
+  if (decrypted) {
+    decrypted.data is a Blob
+    decrypted.data.size is the Number of bytes
+    decrypted.name is the filename as a String
+    decrypted.senderID identifies the author of the encrypted file.
+  } else {
+    console.error(error)
+  }
+})
+</pre>
 <p>
-  Construct an instance of <code>DecryptOperation</code>.
+  Decrypt operations read and unlock encrypted miniLock files.
+</p>
+<p>
+  All <code>params</code> are optional durring construction.
+  You may define <code>data</code>, <code>name</code>, <code>keys</code> and <code>miniLockIDs</code>.
+</p>
+<p>
 </p>
 
 <header class="function">
@@ -399,7 +408,7 @@ miniLockLib.decrypt({
   <code>decryptOperation.keys = keys</code>
 </header>
 <p>
-  Define the keys that will be used to unlock the data.
+  Defines the public–secret key pair that will be used to unlock this file.
 </p>
 
 <header class="function">
@@ -414,7 +423,7 @@ miniLockLib.decrypt({
 
 <article>
 <a id="Extras"></a>
-<h2>Special Extras</h2>
+<h1>Special Extras</h1>
 <p>
   <code>miniLockLib</code> is composed of code from several dandy projects.
   All of these fine modules are exported so that you can easily apply their functions in your own computer programs.
@@ -441,7 +450,7 @@ It is used to measure the entropy in secret phrases.</p>
 
 <article>
 <a id="Giants"></a>
-<h2>Friendly Giants</h2>
+<h1>Friendly Giants</h1>
 <p>
   We send magic seahorses to <a href="https://github.com/dchest">Dmitry Chestnykh</a> &amp; <a href="https://github.com/kaepora">Nadim Kobeissi</a> everyday.
   Their ongoing work on <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> &amp; <a href="https://github.com/kaepora/miniLock">miniLock</a> form the core of this library.
@@ -475,27 +484,25 @@ It is used to measure the entropy in secret phrases.</p>
 
   <a href="#EncryptOperation">EncryptOperation</a><br>
   <div>
-    <a href="#EncryptOperation::constructor">constructor</a><br>
     <a href="#EncryptOperation::data">data</a><br>
-    <a href="#EncryptOperation::keys">keys</a><br>
+    <a href="#EncryptOperation::name">name</a><br>
     <a href="#EncryptOperation::miniLockIDs">miniLockIDs</a><br>
+    <a href="#EncryptOperation::keys">keys</a><br>
     <a href="#EncryptOperation::start">start</a><br>
   </div>
 
   <a href="#DecryptOperation">DecryptOperation</a><br>
   <div>
-    <a href="#DecryptOperation::constructor">constructor</a><br>
     <a href="#DecryptOperation::data">data</a><br>
     <a href="#DecryptOperation::keys">keys</a><br>
     <a href="#DecryptOperation::start">start</a><br>
   </div>
 
-  <a href="#MakeKeyPairOperation">MakeKeyPairOperation</a><br>
+  <a href="#KeyPairOperation">KeyPairOperation</a><br>
   <div>
-    <a href="#MakeKeyPairOperation::constructor">constructor</a><br>
-    <a href="#MakeKeyPairOperation::secretKey">secretKey</a><br>
-    <a href="#MakeKeyPairOperation::publicKey">publicKey</a><br>
-    <a href="#MakeKeyPairOperation::start">start</a><br>
+    <a href="#KeyPairOperation::secretPhrase">secretPhrase</a><br>
+    <a href="#KeyPairOperation::emailAddress">emailAddress</a><br>
+    <a href="#KeyPairOperation::start">start</a><br>
   </div>
 
   <a href="#Extras">Special Extras</a><br>

@@ -214,11 +214,11 @@ body > header:first-child h1 svg {
 
 /* Navigation ------------------------- */
 
-#page_nav div { margin: 15px 0px 0px; }
-#page_nav div:first-child { margin: 0; }
+#page_nav div { margin: 0px 0px 15px; }
+/*#page_nav div:first-child { margin-top: 15px; }*/
 
 #page_nav div a:before { content: "• "; position: relative; opacity: 0.5; top: 1px; }
-#page_nav div a:first-child:before { content: "" }
+/*#page_nav div a:first-child:before { content: "" }*/
 
 
 /* Function --------------------------- */

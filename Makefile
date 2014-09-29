@@ -50,7 +50,7 @@ tests.compiled:
 clean:
 	rm -f library.compiled/*.js
 	rm -f tests.compiled/*.js
-	rm -f website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js 
+	rm -f website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js
 	rm -rf website/annotated_code
 
 install:
@@ -62,8 +62,11 @@ uninstall:
 	# Remove POW config.
 	rm -rf ~/.pow/minilocklib
 
-gh-pages:
+build-gh-pages:
+	mkdir -p gh-pages
+	cp -r website/* gh-pages
 	git checkout gh-pages
-	cp -r website/* ./
+	rm -f *.html *.js *.css
+	cp -r gh-pages/* ./
 	git add --all
 	git status

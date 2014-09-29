@@ -63,6 +63,7 @@ uninstall:
 	rm -rf ~/.pow/minilocklib
 
 build-gh-pages:
+	git checkout master
 	mkdir -p gh-pages
 	cp -r website/* gh-pages
 	git checkout gh-pages
@@ -70,3 +71,5 @@ build-gh-pages:
 	cp -r gh-pages/* ./
 	git add --all
 	git status
+	git commit -m "Update."
+	git checkout master

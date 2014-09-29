@@ -62,7 +62,7 @@ uninstall:
 	# Remove POW config.
 	rm -rf ~/.pow/minilocklib
 
-build-gh-pages:
+gh-pages:
 	git checkout master
 	mkdir -p gh-pages
 	cp -r website/* gh-pages
@@ -71,5 +71,7 @@ build-gh-pages:
 	cp -r gh-pages/* ./
 	git add --all
 	git status
-	git commit -m "Update."
+	git commit -m "Updated pages."
+	git status
+	rm -rf gh-pages
 	git checkout master

@@ -95,7 +95,8 @@ body {
   color: hsla(0, 0%, 33%, 1);
 }
 
-strong {
+strong,
+p em {
   color: black;
 }
 

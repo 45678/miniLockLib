@@ -59,6 +59,7 @@
   </div>
 </div>
 
+<article>
 <p>
   <em>Go!</em>
   Get <a href="https://raw.githubusercontent.com/45678/miniLockLib/master/miniLockLib.js">miniLockLib.js</a>
@@ -115,30 +116,34 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
 </header>
 <p>
   Create an encrypted miniLock file from a <a href="http://www.w3.org/TR/FileAPI/#blob"><code>Blob</code></a> of <code>data</code>.
+  Returns an <a href="#EncryptOperation"><code>EncryptOperation</code></a>.
 </p>
 <p>
   Accepts the following parameters:
 </p>
 <ul>
 <li>
-  <code>data</code> is a Blob of binary data that will be encrypted
+  <code>data</code> is the <code>Blob</code> of binary data that will be encrypted.
 </li>
 <li>
-  <code>keys</code> is the author’s keypair.
+  <code>name</code> specifies encrypted filename as a <code>String</code>. Default is <code>"untitled"</code>.
 </li>
 <li>
-  <code>name</code> specifies a secret filename.
+  <code>keys</code> is the public-and-private key pair of the author of this encrypted file.
 </li>
 <li>
   <code>miniLockIDs</code> is an <code>Array</code> of miniLock ID strings.
 </li>
+<li>
+  <code>callback</code> receives a set of <code>keys</code> when the operation is complete or it receives one of the following <code>error</code> strings:
+  <ul>
+    <li>"Can’t make keys without a secret phrase."</li>
+    <li>"Can’t make keys because '#{@secretPhrase}' is not an acceptable secret phrase."</li>
+    <li>"Can’t make keys without an email address."</li>
+    <li>"Can’t make keys because '#{@emailAddress}' is not an acceptable email address."</li>
+  </ul>
+</li>
 </ul>
-<p>
-  The error will be a String describing the reason for the failure.
-</p>
-<p>
-  Returns a miniLockLib.EncryptOperation.
-</p>
 <pre>
 miniLockLib.encrypt({
   data: blob,
@@ -148,7 +153,7 @@ miniLockLib.encrypt({
   callback: function(error, encrypted) {
     if (encrypted) {
       encrypted.data is a Blob of the encrypted data
-      encrypted.data.size is the Number of bytes in the encrypted file
+      encrypted.data.size is the Number of bytes
       encrypted.data.type is 'application/minilock'
       encrypted.name is 'sensitive document.txt.minilock'
       encrypted.senderID is the miniLock ID of the person who encrypted the file
@@ -161,8 +166,7 @@ miniLockLib.encrypt({
 })
 </pre>
 <p>
-  A `miniLockLib.EncryptOperation` is constructed when you call `encrypt`.
-  Refer to EncryptOperation.coffee to see how it works.
+
 </p>
 
 <header class="function">
@@ -184,7 +188,7 @@ miniLockLib.decrypt({
   callback: function(error, decrypted) {
     if (decrypted) {
       decrypted.data is a Blob of the decrypted data
-      decrypted.data.size is the Number of bytes in the decrypted file
+      decrypted.data.size is the Number of bytes
       decrypted.name is the decrypted name of file as a String
       decrypted.senderID is the miniLock ID of the person who encrypted the file
       error is undefined

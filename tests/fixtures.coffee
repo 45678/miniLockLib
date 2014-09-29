@@ -62,7 +62,7 @@ read.files =
 
 exports.readFromNetwork = (name, callback) ->
   request = new XMLHttpRequest
-  path = "/fixtures/" + name
+  path = "fixtures/" + name
   request.open "GET", path, true
   request.responseType = "blob"
   request.onreadystatechange = (event) ->

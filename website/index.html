@@ -222,6 +222,38 @@ miniLockLib.decrypt({
 </article>
 
 <article>
+<a id="SecretPhrase"></a>
+<h2>SecretPhrase</h2>
+<p>
+  <code>miniLockLib.SecretPhrase</code> supplies an acceptance test for secret phrase input.
+</p>
+<header class="function">
+  <a id="SecretPhrase.isAcceptable"></a>
+  <h2>SecretPhrase.isAcceptable</h2>
+  <code>miniLockLib.SecretPhrase.isAcceptable(secretPhrase)</code>
+</header>
+<p>
+  Validate a secret phrase string, returns <code>true</code> or <code>false</code>.
+</p>
+</article>
+
+<article>
+<a id="EmailAddress"></a>
+<h2>EmailAddress</h2>
+<p>
+  <code>miniLockLib.EmailAddress</code> supplies an acceptance test for email address input.
+</p>
+<header class="function">
+  <a id="EmailAddress.isAcceptable"></a>
+  <h2>EmailAddress.isAcceptable</h2>
+  <code>miniLockLib.EmailAddress.isAcceptable(emailAddress)</code>
+</header>
+<p>
+  Validate an email address string, returns <code>true</code> or <code>false</code>.
+</p>
+</article>
+
+<article>
 <a id="ID"></a>
 <h2>ID</h2>
 <p>
@@ -254,38 +286,6 @@ miniLockLib.decrypt({
 </header>
 <p>
   Validate a miniLock ID string, returns <code>true</code> or <code>false</code>.
-</p>
-</article>
-
-<article>
-<a id="EmailAddress"></a>
-<h2>EmailAddress</h2>
-<p>
-  <code>miniLockLib.EmailAddress</code> supplies an acceptance test for email address input.
-</p>
-<header class="function">
-  <a id="EmailAddress.isAcceptable"></a>
-  <h2>EmailAddress.isAcceptable</h2>
-  <code>miniLockLib.EmailAddress.isAcceptable(emailAddress)</code>
-</header>
-<p>
-  Validate an email address string, returns <code>true</code> or <code>false</code>.
-</p>
-</article>
-
-<article>
-<a id="SecretPhrase"></a>
-<h2>SecretPhrase</h2>
-<p>
-  <code>miniLockLib.SecretPhrase</code> supplies an acceptance test for secret phrase input.
-</p>
-<header class="function">
-  <a id="SecretPhrase.isAcceptable"></a>
-  <h2>SecretPhrase.isAcceptable</h2>
-  <code>miniLockLib.SecretPhrase.isAcceptable(secretPhrase)</code>
-</header>
-<p>
-  Validate a secret phrase string, returns <code>true</code> or <code>false</code>.
 </p>
 </article>
 
@@ -439,11 +439,9 @@ It is used to measure the entropy in secret phrases.</p>
     <a href="#decrypt">decrypt</a><br>
   </div>
 
-  <a href="#ID">ID</a><br>
+  <a href="#SecretPhrase">SecretPhrase</a><br>
   <div>
-    <a href="#ID.encode">encode</a><br>
-    <a href="#ID.decode">decode</a><br>
-    <a href="#ID.isAcceptable">isAcceptable</a><br>
+    <a href="#SecretPhrase.isAcceptable">isAcceptable</a><br>
   </div>
 
   <a href="#EmailAddress">EmailAddress</a><br>
@@ -451,9 +449,11 @@ It is used to measure the entropy in secret phrases.</p>
     <a href="#EmailAddress.isAcceptable">isAcceptable</a><br>
   </div>
 
-  <a href="#SecretPhrase">SecretPhrase</a><br>
+  <a href="#ID">ID</a><br>
   <div>
-    <a href="#SecretPhrase.isAcceptable">isAcceptable</a><br>
+    <a href="#ID.encode">encode</a><br>
+    <a href="#ID.decode">decode</a><br>
+    <a href="#ID.isAcceptable">isAcceptable</a><br>
   </div>
 
   <a href="#EncryptOperation">EncryptOperation</a><br>

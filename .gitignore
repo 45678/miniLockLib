@@ -1,6 +1,7 @@
 .DS_Store
 index.js
 node_modules
+library.compiled
 tests.compiled
 website/annotated_code
 website/annotated_code.js

@@ -321,7 +321,6 @@ div.example a[href] img {
     overflow: auto;
     left: 0; top: 0; bottom: 0;
     width: 180px;
-    outline: 1px solid;
     padding: 15px;
   }
   #page_nav em {

@@ -293,7 +293,7 @@ miniLockLib.decrypt({
 <a id="EncryptOperation"></a>
 <h2>EncryptOperation</h2>
 <p>
-  <code>EncryptOperation</code> instances create miniLock files.
+  Instances of <code>EncryptOperation</code> make miniLock files.
 </p>
 
 <header class="function">
@@ -302,7 +302,11 @@ miniLockLib.decrypt({
   <code>encryptOperation = new miniLockLib.EncryptOperation(params)</code>
 </header>
 <p>
-  Construct an instance of <code>DecryptOperation</code>.
+  Constructs an instance of <code>DecryptOperation</code>.
+</p>
+<p>
+  <code>params</code> are optional.
+  You may define <code>data</code>, <code>name</code>, <code>keys</code> and <code>miniLockIDs</code>.
 </p>
 
 <header class="function">
@@ -311,7 +315,17 @@ miniLockLib.decrypt({
   <code>encryptOperation.data = blob</code>
 </header>
 <p>
-  Construct an instance of <code>EncryptOperation</code>.
+  <code>data</code> is a <code>Blob</code> or <code>File</code> instance.
+</p>
+
+<header class="function">
+  <a id="EncryptOperation::name"></a>
+  <h2>EncryptOperation::name</h2>
+  <code>encryptOperation.name = "secret_filename.txt"</code>
+</header>
+<p>
+  Define the keys that will be used to encrypt the data.
+  <code>keys</code> is the public-and-private key pair that will be used to unlock the file.
 </p>
 
 <header class="function">
@@ -333,15 +347,6 @@ miniLockLib.decrypt({
 </p>
 
 <header class="function">
-  <a id="EncryptOperation::name"></a>
-  <h2>EncryptOperation::miniLockIDs</h2>
-  <code>encryptOperation.name = "secret_filename.txt"</code>
-</header>
-<p>
-  Define the keys that will be used to encrypt the data.
-</p>
-
-<header class="function">
   <a id="EncryptOperation::start"></a>
   <h2>EncryptOperation::start</h2>
   <code>encryptOperation.start(callback)</code>
@@ -349,6 +354,15 @@ miniLockLib.decrypt({
 <p>
   Start the operation and optionally define the callback function.
 </p>
+<p>
+  Potential <code>error</code> strings are as follows:
+</p>
+<ul class="error_strings">
+  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 1 attributes."</code></li>
+  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 2 attributes."</code></li>
+  <li><code class="hljs-string">"DecryptOperation failed to decrypt file data."</code></li>
+  <li><code class="hljs-string">"File is not encrypted for this recipient."</code></li>
+</ul>
 </article>
 
 <article>
@@ -356,6 +370,9 @@ miniLockLib.decrypt({
 <h2>DecryptOperation</h2>
 <p>
   <code>DecryptOperation</code> instances unlock miniLock files.
+</p>
+<p>
+  <code>params</code> are optional. You may define <code>data</code>, <code>name</code>, <code>keys</code> and <code>miniLockIDs</code>.
 </p>
 
 <header class="function">

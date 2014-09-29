@@ -1038,11 +1038,11 @@
     return operation.start(callback);
   };
 
-  miniLockLib.ID = require("./ID");
+  miniLockLib.SecretPhrase = require("./SecretPhrase");
 
   miniLockLib.EmailAddress = require("./EmailAddress");
 
-  miniLockLib.SecretPhrase = require("./SecretPhrase");
+  miniLockLib.ID = require("./ID");
 
   miniLockLib.MakeKeyPairOperation = require("./MakeKeyPairOperation");
 

@@ -317,13 +317,18 @@ div.example a[href] img {
     z-index: -1;
     overflow: auto;
     left: 0; top: 0; bottom: 0;
+    width: 180px;
+    outline: 1px solid;
     padding: 15px;
+  }
+  #page_nav em {
+    white-space: nowrap;
   }
 }
 
 
 @media screen and (min-height: 1024px) and (min-width: 1024px) {
-  body > footer {
+  #page_nav div.public_domain {
     position:fixed;
     left: 0;
     bottom: 0;

@@ -1,0 +1,480 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>miniLockLib • a little miniLock library for ECMAScript</title>
+  <link rel="stylesheet" href="stylesheet.css">
+  <script src="http://zeptojs.com/zepto.min.js"></script>
+  <script src="highlight.pack.js"></script>
+  <script src="index.js"></script>
+</head>
+<body class="avenir calibri consolas">
+
+<header>
+  <h1>
+    <a><svg viewBox="0 0 525 702" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="60" y="320" width="420" height="320"></rect>
+        <path fill="#000000" d="M347.8125,478.934579 C369.558712,478.934579 387.1875,461.310499 387.1875,439.570093 C387.1875,417.829688 369.558712,400.205607 347.8125,400.205607 C326.066288,400.205607 308.4375,417.829688 308.4375,439.570093 C308.4375,461.310499 326.066288,478.934579 347.8125,478.934579 Z M177.1875,478.934579 C198.933712,478.934579 216.5625,461.310499 216.5625,439.570093 C216.5625,417.829688 198.933712,400.205607 177.1875,400.205607 C155.441288,400.205607 137.8125,417.829688 137.8125,439.570093 C137.8125,461.310499 155.441288,478.934579 177.1875,478.934579 Z M177.1875,255.869159 L177.1875,223.065421 L177.228748,223.065421 C177.201304,221.975295 177.1875,220.881783 177.1875,219.785047 C177.1875,149.12873 234.481061,91.8504673 305.15625,91.8504673 C375.831439,91.8504673 433.125,149.12873 433.125,219.785047 C433.125,220.881783 433.111196,221.975295 433.083752,223.065421 L433.125,223.065421 L433.125,255.869159 L523.525694,255.869159 L525,255.869159 L525,219.785047 C525,98.4011172 426.5726,0 305.15625,0 C183.7399,0 85.3125,98.4011172 85.3125,219.785047 L85.3125,255.869159 L86.7868059,255.869159 L177.1875,255.869159 L177.1875,255.869159 Z M131.25,616.71028 C105.879419,616.71028 85.3125,596.148853 85.3125,570.785047 L85.3125,347.719626 L439.6875,347.719626 L439.6875,570.785047 C439.6875,596.148853 419.120581,616.71028 393.75,616.71028 L131.25,616.71028 L131.25,616.71028 Z M131.25,702 C58.7626266,702 0,643.253064 0,570.785047 L0,255.869159 L525,255.869159 L525,570.785047 C525,643.253064 466.237373,702 393.75,702 L131.25,702 L131.25,702 Z"></path>
+      </g>
+    </svg><b>mini</b><b>Lock</b><b>Lib</b></a>
+  </h1>
+</header>
+
+<article>
+<div id="introduction">
+  <p>
+    <strong>miniLockLib</strong> is a
+    little <a href="https://minilock.io">miniLock</a> library
+    for <a href="https://en.wikipedia.org/wiki/ECMAScript">ECMAScript</a>.
+    It supplies a set of functions
+    to perform miniLock encryption operations
+    in a web agent <code>window</code> or in <a href="http://nodejs.org">Node.js</a>.
+  </p>
+  <p>
+    Our <a href="http://github.com/45678/miniLockLib/">code repository</a> is hosted at GitHub
+    where you might go to <a href="https://github.com/45678/miniLockLib/issues">discuss issues</a> and <a href="https://github.com/45678/miniLockLib/pulls">propose changes</a>.
+    And you might read the <a href="annotated_code/index.html">annotated code</a>
+    and run the <a href="tests.html">test suite</a> if you are particularly interested in the details.
+  </p>
+</div>
+
+<article id="examples">
+  <p>
+    <strong>Examples</strong>
+  </p>
+  <div class="example">
+    <div><em>is it a miniLock ID?</em></div>
+    <div class="repo">Get <a href="https://github.com/45678/is-it-a-minilock-id/">source code</a></div>
+    <a class="window" href="https://45678.github.io/is-it-a-miniLock/id?CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw"><img src="examples/it is a miniLock ID.png"></a>
+  </div>
+  <div class="example">
+    <div><em>minilock ID inspector</em></div>
+    <div class="repo">Get <a href="https://github.com/45678/minilock-id-inspector/">source code</a></div>
+    <a class="window" href="https://45678.github.io/minilock-id-inspector/"><img src="examples/inspector.png"></a>
+  </div>
+  <div class="example">
+    <div><em>minilock file format</em></div>
+    <div class="repo">Get <a href="https://github.com/45678/minilock-file-format/">source code</a></div>
+    <a class="window" href="https://45678.github.io/minilock-file-format/2.html"><img src="examples/file format version 2.png"></a>
+  </div>
+</article>
+
+<article id="setup">
+  <p>
+    <strong>Go!</strong>
+    Get <a href="https://raw.githubusercontent.com/45678/miniLockLib/master/miniLockLib.js">miniLockLib.js</a>
+    and add it to your web page with a script tag:
+  </p>
+  <pre class="html">
+&lt;head&gt;
+  &lt;title&gt;Untitled&lt;/title&gt;
+  <strong>&lt;script src="miniLockLib.js" charset="utf-8"&gt;&lt;/script&gt;</strong>
+  &lt;link rel="stylesheet" href="stylesheet.css"&gt;
+&lt;/head&gt;</pre>
+  <p>
+    When the script loads <code>miniLockLib</code> is defined in your <code>window</code>.
+    And then you can do encryption operations on your web page!
+  </p>
+</article>
+
+<header class="function">
+  <a id="makeKeyPair"></a>
+  <h2>makeKeyPair</h2>
+  <code>miniLockLib.makeKeyPair(secretPhrase, emailAddress, callback)</code>
+</header>
+<p>
+  Make a set of keys for a secret phrase and email address.
+</p>
+<p>
+  <code>callback</code> function receives a pair of <code>keys</code> or an <code>error</code>:
+</p>
+<pre>
+miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
+  if (keys) {
+    keys.publicKey is a Uint8Array
+    keys.secretKey is a Uint8Array
+    error is undefined
+  } else {
+    error is a String explaining the failure
+    keys is undefined
+  }
+})
+</pre>
+<p>
+  The <code>secretPhrase</code> and <code>emailAddress</code> arguments are both tested to ensure they comply with <a href="https://github.com/kaepora/miniLock/blob/master/README.md#2-key-derivation">miniLock’s input requirements</a>.
+  The phrase must be at least 32 characters long and it must contain at least 100 bits of entropy.
+  The address musn’t be invalid.
+  If either input is unacceptable the <code>error</code> argument received by <code>callback</code> will be a <code>String</code> that explains the problem.
+</p>
+<p>
+  Making a pair of keys will usually take a second or two.
+</p>
+
+<header class="function">
+  <a id="encrypt"></a>
+  <h2>encrypt</h2>
+  <code>miniLockLib.encrypt({data, name, keys, miniLockIDs, callback})</code>
+</header>
+<p>
+  Create an encrypted miniLock file from a <a href="http://www.w3.org/TR/FileAPI/#blob"><code>Blob</code></a> of <code>data</code>.
+</p>
+<p>
+  Accepts the following parameters:
+</p>
+<ul>
+<li>
+  <code>data</code> is a Blob of binary data that will be encrypted
+</li>
+<li>
+  <code>keys</code> is the author’s keypair.
+</li>
+<li>
+  <code>name</code> specifies a secret filename.
+</li>
+<li>
+  <code>miniLockIDs</code> is an <code>Array</code> of miniLock ID strings.
+</li>
+</ul>
+<p>
+  The error will be a String describing the reason for the failure.
+</p>
+<p>
+  Returns a miniLockLib.EncryptOperation.
+</p>
+<pre>
+miniLockLib.encrypt({
+  data: blob,
+  name: 'sensitive_document.txt'
+  keys: {publicKey: Uint8Array, secretKey: Uint8Array},
+  miniLockIDs: [aliceID, bobbyID, ...]
+  callback: function(error, encrypted) {
+    if (encrypted) {
+      encrypted.data is a Blob of the encrypted data
+      encrypted.data.size is the Number of bytes in the encrypted file
+      encrypted.data.type is 'application/minilock'
+      encrypted.name is 'sensitive document.txt.minilock'
+      encrypted.senderID is the miniLock ID of the person who encrypted the file
+      error is undefined
+    } else {
+      error is a String
+      encrypted is undefined
+    }
+  }
+})
+</pre>
+<p>
+  A `miniLockLib.EncryptOperation` is constructed when you call `encrypt`.
+  Refer to EncryptOperation.coffee to see how it works.
+</p>
+
+<header class="function">
+  <a id="decrypt"></a>
+  <h2>decrypt</h2>
+  <code>miniLockLib.decrypt({data, keys, callback})</code>
+</header>
+<p>
+  Decrypt a miniLock file.
+  Returns a <code>miniLockLib.DecryptOperation</code>.
+  <code>callback</code> receives a set of <code>keys</code> or an <code>error</code>.
+  keys is an object with <code>publicKey</code> and <code>secretKey</code> members.
+  The error will be a <code>String</code> describing the reason for the failure.
+</p>
+<pre>
+miniLockLib.decrypt({
+  data: blob,
+  keys: {publicKey: Uint8Array, secretKey: Uint8Array},
+  callback: function(error, decrypted) {
+    if (decrypted) {
+      decrypted.data is a Blob of the decrypted data
+      decrypted.data.size is the Number of bytes in the decrypted file
+      decrypted.name is the decrypted name of file as a String
+      decrypted.senderID is the miniLock ID of the person who encrypted the file
+      error is undefined
+    } else {
+      error is a string describing the failure
+      decrypted is undefined
+    }
+  }
+})
+</pre>
+</article>
+
+<article>
+<a id="ID"></a>
+<h2>ID</h2>
+<p>
+  <code>ID</code> provides methods for encoding and decoding miniLock IDs.
+  What is a miniLock ID?
+</p>
+
+<header class="function">
+  <a id="ID.encode"></a>
+  <h2>ID.encode</h2>
+  <code>miniLockLib.ID.encode(publicKey)</code>
+</header>
+<p>
+  Encode a 32-bit public key to a miniLock ID.
+</p>
+
+<header class="function">
+  <a id="ID.decode"></a>
+  <h2>ID.decode</h2>
+  <code>miniLockLib.ID.decode(miniLockID)</code>
+</header>
+<p>
+  Decode a miniLock ID to a 32-bit public key.
+</p>
+
+<header class="function">
+  <a id="ID.isAcceptable"></a>
+  <h2>ID.isAcceptable</h2>
+  <code>miniLockLib.ID.isAcceptable(miniLockID)</code>
+</header>
+<p>
+  Validate a miniLock ID string, returns <code>true</code> or <code>false</code>.
+</p>
+</article>
+
+<article>
+<a id="EmailAddress"></a>
+<h2>EmailAddress</h2>
+<p>
+  <code>EmailAddress</code> supplies an acceptance test for email address input.
+</p>
+<header class="function">
+  <a id="EmailAddress.isAcceptable"></a>
+  <h2>EmailAddress.isAcceptable</h2>
+  <code>miniLockLib.EmailAddress.isAcceptable(emailAddress)</code>
+</header>
+<p>
+  Validate a email address, returns <code>true</code> or <code>false</code>.
+</p>
+</article>
+
+<article>
+<a id="SecretPhrase"></a>
+<h2>SecretPhrase</h2>
+<p>
+  <code>SecretPhrase</code> supplies an acceptance test for secret phrase input.
+</p>
+<header class="function">
+  <a id="SecretPhrase.isAcceptable"></a>
+  <h2>SecretPhrase.isAcceptable</h2>
+  <code>miniLockLib.SecretPhrase.isAcceptable(emailAddress)</code>
+</header>
+<p>
+  Validate a secret phrase, returns <code>true</code> or <code>false</code>.
+</p>
+</article>
+
+<article>
+<a id="EncryptOperation"></a>
+<h2>EncryptOperation</h2>
+<p>
+  <code>EncryptOperation</code> instances create miniLock files.
+</p>
+
+<header class="function">
+  <a id="EncryptOperation::constructor"></a>
+  <h2>EncryptOperation::constructor</h2>
+  <code>encryptOperation = new miniLockLib.EncryptOperation(params)</code>
+</header>
+<p>
+  Construct an instance of <code>DecryptOperation</code>.
+</p>
+
+<header class="function">
+  <a id="EncryptOperation::data"></a>
+  <h2>EncryptOperation::data</h2>
+  <code>encryptOperation.data = blob</code>
+</header>
+<p>
+  Construct an instance of <code>EncryptOperation</code>.
+</p>
+
+<header class="function">
+  <a id="EncryptOperation::keys"></a>
+  <h2>EncryptOperation::keys</h2>
+  <code>encryptOperation.keys = keys</code>
+</header>
+<p>
+  Define the keys that will be used to encrypt the data.
+</p>
+
+<header class="function">
+  <a id="EncryptOperation::miniLockIDs"></a>
+  <h2>EncryptOperation::miniLockIDs</h2>
+  <code>encryptOperation.miniLockIDs = [aliceID, bobbyID, ...]</code>
+</header>
+<p>
+  Define the keys that will be used to encrypt the data.
+</p>
+
+<header class="function">
+  <a id="EncryptOperation::name"></a>
+  <h2>EncryptOperation::miniLockIDs</h2>
+  <code>encryptOperation.name = "secret_filename.txt"</code>
+</header>
+<p>
+  Define the keys that will be used to encrypt the data.
+</p>
+
+<header class="function">
+  <a id="EncryptOperation::start"></a>
+  <h2>EncryptOperation::start</h2>
+  <code>encryptOperation.start(callback)</code>
+</header>
+<p>
+  Start the operation and optionally define the callback function.
+</p>
+</article>
+
+<article>
+<a id="DecryptOperation"></a>
+<h2>DecryptOperation</h2>
+<p>
+  <code>DecryptOperation</code> instances unlock miniLock files.
+</p>
+
+<header class="function">
+  <a id="DecryptOperation::constructor"></a>
+  <h2>DecryptOperation::constructor</h2>
+  <code>decryptOperation = new miniLockLib.DecryptOperation</code>
+</header>
+<p>
+  Construct an instance of <code>DecryptOperation</code>.
+</p>
+
+<header class="function">
+  <a id="DecryptOperation::data"></a>
+  <h2>DecryptOperation::data</h2>
+  <code>decryptOperation.data = blob</code>
+</header>
+<p>
+  Define the encrypted data that will be decrypted.
+</p>
+
+<header class="function">
+  <a id="DecryptOperation::keys"></a>
+  <h2>DecryptOperation::keys</h2>
+  <code>decryptOperation.keys = keys</code>
+</header>
+<p>
+  Define the keys that will be used to unlock the data.
+</p>
+
+<header class="function">
+  <a id="DecryptOperation::start"></a>
+  <h2>DecryptOperation::start</h2>
+  <code>decryptOperation.start(callback)</code>
+</header>
+<p>
+  Start the operation and optionally define the callback function.
+</p>
+</article>
+
+<article>
+<div id="specialextras">
+  <h2>Special Extras</h2>
+  <p>
+    <code>miniLockLib</code> is composed of code from several dandy projects.
+    All of these fine modules are exported so that you can easily apply their functions in your own computer programs.
+  </p>
+
+  <p><code>miniLockLib.Base58</code> is a copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
+  It has been modified slightly to work in a web agent <code>window</code> instead of working only in a Node.js environment.
+  <code>Base58</code> is used to encode and decode miniLock IDs.</p>
+
+  <p><code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
+  <code>miniLockLib</code> subclasses the original constructor to expose a modestly more convenient interface for its purposes.</p>
+
+  <p><code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
+  This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
+  <code>miniLockLib</code> relies on <code>NaCl</code> for a host of cryptographic and encoding functions.</p>
+
+  <p><code>miniLockLib.scrypt</code> is a copy of <code>scrypt-async.js</code> from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a>
+    project which was also written by <a href="https://github.com/dchest">Mr. Chestnykh</a>.
+  <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.</p>
+
+  <p><code>miniLockLib.zxcvbn</code> is Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
+  It is used to measure the entropy in secret phrases.</p>
+</div>
+</article>
+
+<article>
+<div id="friendlygiants">
+  <h2>Friendly Giants</h2>
+  <p>
+    We send magic seahorses to <a href="https://github.com/dchest">Dmitry Chestnykh</a> and <a href="https://github.com/kaepora">Nadim Kobeissi</a> everyday.
+    Their ongoing public work forms the foundation of miniLockLib.
+  </p>
+</div>
+</article>
+
+<nav id="page_nav">
+  <div>
+    <em><a href="index.html" class="selected">miniLockLib</a></em><br>
+    <a href="#makeKeyPair">makeKeyPair</a><br>
+    <a href="#encrypt">encrypt</a><br>
+    <a href="#decrypt">decrypt</a><br>
+  </div>
+
+  <div>
+    <a href="#ID">ID</a><br>
+    <a href="#ID.encode">encode</a><br>
+    <a href="#ID.decode">decode</a><br>
+    <a href="#ID.isAcceptable">isAcceptable</a><br>
+  </div>
+
+  <div>
+    <a href="#EmailAddress">EmailAddress</a><br>
+    <a href="#EmailAddress.isAcceptable">isAcceptable</a><br>
+  </div>
+
+  <div>
+    <a href="#SecretPhrase">SecretPhrase</a><br>
+    <a href="#SecretPhrase.isAcceptable">isAcceptable</a><br>
+  </div>
+
+  <div>
+    <a href="#EncryptOperation">EncryptOperation</a><br>
+    <a href="#EncryptOperation::constructor">constructor</a><br>
+    <a href="#EncryptOperation::data">data</a><br>
+    <a href="#EncryptOperation::keys">keys</a><br>
+    <a href="#EncryptOperation::miniLockIDs">miniLockIDs</a><br>
+    <a href="#EncryptOperation::start">start</a><br>
+  </div>
+
+  <div>
+    <a href="#DecryptOperation">DecryptOperation</a><br>
+    <a href="#DecryptOperation::constructor">constructor</a><br>
+    <a href="#DecryptOperation::data">data</a><br>
+    <a href="#DecryptOperation::keys">keys</a><br>
+    <a href="#DecryptOperation::start">start</a><br>
+  </div>
+  <div>
+    <a href="#KeyPair">KeyPair</a><br>
+    <a href="#KeyPair::constructor">constructor</a><br>
+    <a href="#KeyPair::secretKey">secretKey</a><br>
+    <a href="#KeyPair::publicKey">publicKey</a><br>
+  </div>
+  <div>
+    <a href="#specialextras">Special Extras</a>
+  </div>
+  <div>
+    <a href="#friendlygiants">Friendly Giants</a>
+  </div>
+  <div>
+    <a href="#examples">Examples</a>
+  </div>
+</nav>
+
+<footer>
+  <p>
+    miniLockLib is in the <strong>public domain</strong>.
+  </p>
+</footer>
+
+</body>
+</html>

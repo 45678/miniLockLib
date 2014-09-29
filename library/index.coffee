@@ -21,13 +21,13 @@ miniLockLib.EmailAddress = require "./EmailAddress"
 miniLockLib.SecretPhrase = require "./SecretPhrase"
 
 # Export miniLock crypto operation constructors.
-miniLockLib.MakeKeyPairOperation = require("./MakeKeyPairOperation")
-miniLockLib.EncryptOperation = require("./EncryptOperation")
-miniLockLib.DecryptOperation = require("./DecryptOperation")
+miniLockLib.MakeKeyPairOperation = require "./MakeKeyPairOperation"
+miniLockLib.EncryptOperation = require "./EncryptOperation"
+miniLockLib.DecryptOperation = require "./DecryptOperation"
 
 # Export special extras.
-miniLockLib.Base58  = require("./Base58")
-miniLockLib.BLAKE2s = require("./BLAKE2s")
-miniLockLib.NaCl    = require("./NaCl")
-miniLockLib.scrypt  = require("./scrypt-async")
-miniLockLib.zxcvbn  = require("./zxcvbn")
+miniLockLib.Base58  = require "./Base58"
+miniLockLib.BLAKE2s = require "./BLAKE2s"
+miniLockLib.NaCl    = require "./NaCl"
+miniLockLib.scrypt  = require "./scrypt-async"
+miniLockLib.zxcvbn  = require "./zxcvbn"

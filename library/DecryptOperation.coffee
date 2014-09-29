@@ -1,7 +1,7 @@
-ReadOperation = require("./ReadOperation")
-NaCl = require("./NaCl")
+ReadOperation = require "./ReadOperation"
+NaCl = require "./NaCl"
 {encodeUTF8, decodeBase64} = NaCl.util
-{byteArrayToNumber} = require("./util")
+{byteArrayToNumber} = require "./util"
 
 class DecryptOperation extends ReadOperation
   module.exports = this

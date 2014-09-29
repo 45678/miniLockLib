@@ -1,7 +1,5 @@
 miniLockLib = module.exports = {}
 
-miniLockLib.Keys = require "./Keys"
-
 # Make a set of Keys.
 miniLockLib.makeKeyPair = (secretPhrase, emailAddress, callback) ->
   operation = new miniLockLib.MakeKeyPairOperation {secretPhrase, emailAddress}

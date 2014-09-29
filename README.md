@@ -1,6 +1,6 @@
 `miniLockLib` is a little [miniLock](http://minilock.io/) library for [ECMAScript](http://www.ecmascript.org/).
 
-Download [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/scripts/miniLockLib.js) and add it to your page with a `<script>` tag:
+Get [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/gh-pages/miniLockLib.js) and add it to your page with a script tag:
 
     <script src="miniLockLib.js" charset="utf-8"></script>
 
@@ -89,6 +89,6 @@ And then all files in `library.compiled` are combined and written to `website/mi
 The CoffeeScript files in the `test` folder are compiled to the `tests.compiled` folder.
 And then all files in `tests.compiled` are combined and written to `website/tests.js`.
 
-`npm test` to compile everthing and open the test suite in Google Chrome.
+`npm run tests` to open the test suite in a web agent `window`.
 
 `make clean` to start over.

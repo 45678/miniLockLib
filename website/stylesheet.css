@@ -285,7 +285,7 @@ div.example a[href] img {
     position: fixed;
     top: 0; bottom: 0; right: 0; left: 1024px;
     margin-left: 180px;
-    padding: 15px 0px;
+    padding: 15px 45px;
     overflow: auto;
   }
   #examples p {

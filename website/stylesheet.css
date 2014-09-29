@@ -154,7 +154,7 @@ a[href]:visited {
 
 body {
   padding: 30px 60px;
-  max-width: 900px;
+  max-width: 1024px;
   outline: 1px solid hsla(0, 0%, 0%, 0.1);
 }
 
@@ -232,7 +232,7 @@ div.example a[href] img {
   transition: all 500ms ease-in-out;
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1024px) {
   #examples {
     height: 330px;
     margin: 30px 0 60px;
@@ -279,13 +279,13 @@ div.example a[href] img {
   }
 }
 
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1024px) {
   #examples {
     margin: 0;
     position: fixed;
-    top: 0; bottom: 0; right: 0; left: 900px;
+    top: 0; bottom: 0; right: 0; left: 1024px;
     margin-left: 180px;
-    padding: 15px 45px;
+    padding: 15px 0px;
     overflow: auto;
   }
   #examples p {
@@ -308,7 +308,7 @@ div.example a[href] img {
 
 /* ------------------------------------ */
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 1024px) {
   body {
     margin: 0 0 0 180px;
   }
@@ -322,7 +322,7 @@ div.example a[href] img {
 }
 
 
-@media screen and (min-height: 900px) and (min-height: 900px) {
+@media screen and (min-height: 1024px) and (min-width: 1024px) {
   body > footer {
     position:fixed;
     left: 0;
@@ -338,6 +338,7 @@ div.example a[href] img {
 body.annotated_code {
   margin: 0;
   max-width: none;
+  min-width: 1024px;
 }
 body.annotated_code section {
   margin: 10px 0 30px;

@@ -28,34 +28,6 @@
 
 tape <span class="hljs-string">"Identification"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span> test.end()
 
-tape <span class="hljs-string">"Alice’s ID is acceptable"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID), <span class="hljs-literal">true</span>
-  test.end()
-
-tape <span class="hljs-string">"Bobby’s ID is acceptable"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID), <span class="hljs-literal">true</span>
-  test.end()
-
-tape <span class="hljs-string">"Undefined ID is unacceptable"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
-  test.same miniLockLib.ID.isAcceptable(`<span class="javascript"><span class="hljs-literal">undefined</span></span>`), <span class="hljs-literal">false</span>
-  test.end()
-
-tape <span class="hljs-string">"Blank ID is unacceptable"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
-  test.same miniLockLib.ID.isAcceptable(<span class="hljs-string">""</span>), <span class="hljs-literal">false</span>
-  test.same miniLockLib.ID.isAcceptable(<span class="hljs-string">" "</span>), <span class="hljs-literal">false</span>
-  test.same miniLockLib.ID.isAcceptable(<span class="hljs-string">"  "</span>), <span class="hljs-literal">false</span>
-  test.end()
-
-tape <span class="hljs-string">"Truncated ID is unacceptable"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID.slice(<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>)), <span class="hljs-literal">false</span>
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID.slice(<span class="hljs-number">1</span>)), <span class="hljs-literal">false</span>
-  test.end()
-
-tape <span class="hljs-string">"ID with extra characters is unacceptable"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID + <span class="hljs-string">"A"</span>), <span class="hljs-literal">false</span>
-  test.same miniLockLib.ID.isAcceptable(<span class="hljs-string">"A"</span> + Alice.miniLockID), <span class="hljs-literal">false</span>
-  test.end()
-
 tape <span class="hljs-string">"Decode public key from Alice’s ID"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   publicKey = miniLockLib.ID.decode(Alice.miniLockID)
   test.same publicKey, Alice.publicKey
@@ -123,6 +95,12 @@ tape <span class="hljs-string">"Can’t make ID for key that is too long"</span>
   
   
   <br>
+  <a href="EmailAddress.html">library/EmailAddress<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
   <a href="EncryptOperation.html">library/EncryptOperation<span class="ext">.coffee</span></a>
   
   
@@ -141,7 +119,19 @@ tape <span class="hljs-string">"Can’t make ID for key that is too long"</span>
   
   
   <br>
+  <a href="MakeKeyPairOperation.html">library/MakeKeyPairOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
   <a href="NaCl.html">library/NaCl<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="SecretPhrase.html">library/SecretPhrase<span class="ext">.coffee</span></a>
   
   
   
@@ -186,7 +176,7 @@ tape <span class="hljs-string">"Can’t make ID for key that is too long"</span>
   
   
   <br>
-  <a href="Key Pair Tests.html">tests/Key Pair Tests<span class="ext">.coffee</span></a>
+  <a href="Make Key Pair Tests.html">tests/Make Key Pair Tests<span class="ext">.coffee</span></a>
   
   
   

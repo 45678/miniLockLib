@@ -71,6 +71,7 @@ body.avenir b,
 body.avenir h2 {
   font-family: "AvenirNext-Heavy";
 }
+#page_nav .version,
 body.avenir span.ext {
   font-family: "AvenirNext-UltraLight";
 }
@@ -88,10 +89,14 @@ body.consolas pre strong {
 
 /* Paint ------------------------------ */
 
+
 body {
-  background: hsl(60, 0%, 88%);
   background: hsla(60, 0%, 95%, 1);
   color: hsla(0, 0%, 33%, 1);
+}
+
+strong {
+  color: black;
 }
 
 h1 a svg rect       { fill:  white; }
@@ -153,9 +158,10 @@ a[href]:visited {
 /* Layout ----------------------------- */
 
 body {
+  position:relative;
   padding: 30px 60px;
   max-width: 1024px;
-  outline: 1px solid hsla(0, 0%, 0%, 0.1);
+
 }
 
 h1 { margin: -30px 0 0; line-height: 45px; }
@@ -213,6 +219,35 @@ body > header:first-child h1 svg {
 
 #page_nav div.public_domain a:before {
   display: none;
+}
+
+@media screen and (min-width: 1024px) {
+  body {
+    margin: 0 0 0 180px;
+  }
+  #page_nav {
+    position: fixed;
+    background: hsla(60, 0%, 95%, 1);
+    overflow: auto;
+    left: 0; top: 0; bottom: 0;
+    width: 180px;
+    padding: 15px;
+    border-right: 1px solid hsla(0, 0%, 0%, 0.1);
+  }
+  #page_nav em {
+    white-space: nowrap;
+  }
+}
+
+@media screen and (min-height: 1024px) and (min-width: 1024px) {
+  #page_nav div.public_domain {
+    position:fixed;
+    left: 0;
+    bottom: 0;
+    padding: 15px;
+    margin: 0px;
+    width: 180px;
+  }
 }
 
 /* Examples --------------------------- */
@@ -290,6 +325,7 @@ div.example a[href] img {
     margin-left: 180px;
     padding: 15px 45px;
     overflow: auto;
+    border-left: 1px solid hsla(0, 0%, 0%, 0.1);
   }
   #examples p {
     margin: 0;
@@ -311,35 +347,7 @@ div.example a[href] img {
 
 /* ------------------------------------ */
 
-@media screen and (min-width: 1024px) {
-  body {
-    margin: 0 0 0 180px;
-  }
-  #page_nav {
-    position: fixed;
-    z-index: -1;
-    overflow: auto;
-    left: 0; top: 0; bottom: 0;
-    width: 180px;
-    outline: 1px solid;
-    padding: 15px;
-  }
-  #page_nav em {
-    white-space: nowrap;
-  }
-}
 
-
-@media screen and (min-height: 1024px) and (min-width: 1024px) {
-  #page_nav div.public_domain {
-    position:fixed;
-    left: 0;
-    bottom: 0;
-    padding: 15px;
-    margin: 0px;
-    width: 180px;
-  }
-}
 
 /* ------------------------------------ */
 

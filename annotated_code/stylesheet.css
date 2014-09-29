@@ -211,6 +211,9 @@ body > header:first-child h1 svg {
 #page_nav div { margin: 0px 0px 15px; }
 #page_nav div a:before { content: "• "; position: relative; opacity: 0.5; top: 1px; }
 
+#page_nav div.public_domain a:before {
+  display: none;
+}
 
 /* Examples --------------------------- */
 
@@ -285,7 +288,7 @@ div.example a[href] img {
     position: fixed;
     top: 0; bottom: 0; right: 0; left: 1024px;
     margin-left: 180px;
-    padding: 15px 0px;
+    padding: 15px 45px;
     overflow: auto;
   }
   #examples p {
@@ -317,13 +320,18 @@ div.example a[href] img {
     z-index: -1;
     overflow: auto;
     left: 0; top: 0; bottom: 0;
+    width: 180px;
+    outline: 1px solid;
     padding: 15px;
+  }
+  #page_nav em {
+    white-space: nowrap;
   }
 }
 
 
 @media screen and (min-height: 1024px) and (min-width: 1024px) {
-  body > footer {
+  #page_nav div.public_domain {
     position:fixed;
     left: 0;
     bottom: 0;

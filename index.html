@@ -26,12 +26,12 @@
     <strong>miniLockLib</strong> is a
     little <a href="https://minilock.io">miniLock</a> library
     for <a href="https://en.wikipedia.org/wiki/ECMAScript">ECMAScript</a>.
-    It supplies a set of functions
+    It supplies functions
     to perform miniLock encryption operations
     in a web agent <code>window</code> or in <a href="http://nodejs.org">Node.js</a>.
   </p>
   <p>
-    Our <a href="http://github.com/45678/miniLockLib/">code repository</a> is hosted at GitHub
+    The <a href="http://github.com/45678/miniLockLib/">source code repository</a> is hosted at GitHub
     where you might go to <a href="https://github.com/45678/miniLockLib/issues">discuss issues</a> and <a href="https://github.com/45678/miniLockLib/pulls">propose changes</a>.
     Or you might read the <a href="annotated_code/index.html">annotated code</a>
     and run the <a href="tests.html">test suite</a> if you are particularly interested in the details.
@@ -372,45 +372,43 @@ miniLockLib.decrypt({
 </article>
 
 <article>
-<div id="specialextras">
-  <h2>Special Extras</h2>
-  <p>
-    <code>miniLockLib</code> is composed of code from several dandy projects.
-    All of these fine modules are exported so that you can easily apply their functions in your own computer programs.
-  </p>
+<a id="Extras"></a>
+<h2>Special Extras</h2>
+<p>
+  <code>miniLockLib</code> is composed of code from several dandy projects.
+  All of these fine modules are exported so that you can easily apply their functions in your own computer programs.
+</p>
 
-  <p><code>miniLockLib.Base58</code> is a copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
-  It has been modified slightly to work in a web agent <code>window</code> instead of working only in a Node.js environment.
-  <code>Base58</code> is used to encode and decode miniLock IDs.</p>
+<p><code>miniLockLib.Base58</code> is a copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
+It has been modified slightly to work in a web agent <code>window</code> instead of working only in a Node.js environment.
+<code>Base58</code> is used to encode and decode miniLock IDs.</p>
 
-  <p><code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
-  <code>miniLockLib</code> subclasses the original constructor to expose a modestly more convenient interface for its purposes.</p>
+<p><code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
+<code>miniLockLib</code> subclasses the original constructor to expose a modestly more convenient interface for its purposes.</p>
 
-  <p><code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
-  This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
-  <code>miniLockLib</code> relies on <code>NaCl</code> for a host of cryptographic and encoding functions.</p>
+<p><code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
+This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
+<code>miniLockLib</code> relies on <code>NaCl</code> for a host of cryptographic and encoding functions.</p>
 
-  <p><code>miniLockLib.scrypt</code> is a copy of <code>scrypt-async.js</code> from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a>
-    project which was also written by <a href="https://github.com/dchest">Mr. Chestnykh</a>.
-  <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.</p>
+<p><code>miniLockLib.scrypt</code> is a copy of <code>scrypt-async.js</code> from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a>
+  project which was also written by <a href="https://github.com/dchest">Mr. Chestnykh</a>.
+<code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.</p>
 
-  <p><code>miniLockLib.zxcvbn</code> is Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
-  It is used to measure the entropy in secret phrases.</p>
-</div>
+<p><code>miniLockLib.zxcvbn</code> is Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
+It is used to measure the entropy in secret phrases.</p>
 </article>
 
 <article>
-<div id="friendlygiants">
-  <h2>Friendly Giants</h2>
-  <p>
-    We send magic seahorses to <a href="https://github.com/dchest">Dmitry Chestnykh</a> &amp; <a href="https://github.com/kaepora">Nadim Kobeissi</a> everyday.
-    Their ongoing public work forms the foundation of miniLockLib.
-  </p>
-</div>
+<a id="Giants"></a>
+<h2>Friendly Giants</h2>
+<p>
+  We send magic seahorses to <a href="https://github.com/dchest">Dmitry Chestnykh</a> &amp; <a href="https://github.com/kaepora">Nadim Kobeissi</a> everyday.
+  Their ongoing work on <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> &amp; <a href="https://github.com/kaepora/miniLock">miniLock</a> form the core of this library.
+</p>
 </article>
 
 <nav id="page_nav">
-  <em><a href="index.html" class="selected"><em>miniLockLib</em></a></em><br>
+  <a href="index.html" class="selected"><em>miniLockLib</em></a><br>
   <div>
     <a href="#makeKeyPair">makeKeyPair</a><br>
     <a href="#encrypt">encrypt</a><br>
@@ -457,15 +455,25 @@ miniLockLib.decrypt({
     <a href="#KeyPair::secretKey">secretKey</a><br>
     <a href="#KeyPair::publicKey">publicKey</a><br>
   </div>
-  <br>
-  <a href="#specialextras">Special Extras</a><br>
-  <br>
-  <a href="#friendlygiants">Friendly Giants</a>
-</nav>
 
-<footer>
-  miniLockLib is in the public domain.
-</footer>
+  <a href="#Extras">Special Extras</a><br>
+  <div>
+    <a href="#Base58">Base58</a><br>
+    <a href="#BLAKE2s">BLAKE2s</a><br>
+    <a href="#NaCl">NaCl</a><br>
+    <a href="#NaCl.stream">NaCl.stream</a><br>
+    <a href="#zxcvbn">zxcvbn</a><br>
+  </div>
+
+  <a href="#Giants">Friendly Giants</a><br>
+  <div>
+    <!-- Intentionally left blank -->
+  </div>
+
+  <div class="public_domain">
+    <a href="index.html" class="selected"><em>miniLockLib</em></a> is in the <em>public domain</em>.
+  </div>
+</nav>
 
 </body>
 </html>

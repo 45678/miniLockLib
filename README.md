@@ -94,14 +94,14 @@ __Digging In__
 
 `git clone https://github.com/45678/miniLockLib.git` to get the source code.
 
-`npm test` to build and launch the test suite in Google Chrome.
-
-Run `make` to re-compile the JavaScript files in the `scripts` folder.
+`make` to re-compile JavaScript files in the `library.compiled`, `tests.compiled` and `website` folders.
 
 The CoffeeScript files in the `library` folder are compiled to the `library.compiled` folder.
-And then all files in `library.compiled` are combined and written to `scripts/miniLockLib.js`.
+And then all files in `library.compiled` are combined and written to `website/miniLockLib.js`.
 
 The CoffeeScript files in the `test` folder are compiled to the `tests.compiled` folder.
-And then all files in `tests.compiled` are combined and written to `scripts/tests.js`.
+And then all files in `tests.compiled` are combined and written to `website/tests.js`.
 
-Run `npm start` to re-compile the CoffeeScript files automatically as you make changes.
+`npm test` to compile everthing and open the test suite in Google Chrome.
+
+`make clean` to start over.

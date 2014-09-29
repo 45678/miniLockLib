@@ -36,12 +36,6 @@
     <span class="hljs-keyword">else</span>
       <span class="hljs-property">@oncomplete</span>(blob, attributes, header, sizeOfHeader)
 
-  <span class="hljs-attribute">onerror</span>: <span class="hljs-function"><span class="hljs-params">(error)</span> -&gt;</span>
-    <span class="hljs-built_in">console</span>.info(<span class="hljs-string">"onerror"</span>, error)
-
-  <span class="hljs-attribute">oncomplete</span>: <span class="hljs-function"><span class="hljs-params">(blob, attributes, header, sizeOfHeader)</span> -&gt;</span>
-    <span class="hljs-built_in">console</span>.info(<span class="hljs-string">"oncomplete"</span>, blob, attributes, header, sizeOfHeader)
-
   <span class="hljs-attribute">readSliceOfData</span>: <span class="hljs-function"><span class="hljs-params">(start, end, callback)</span> -&gt;</span>
     <span class="hljs-property">@fileReader</span> ?= <span class="hljs-keyword">new</span> FileReader
     <span class="hljs-property">@fileReader</span>.readAsArrayBuffer(<span class="hljs-property">@data</span>.slice(start, end))

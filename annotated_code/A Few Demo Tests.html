@@ -42,17 +42,8 @@ tape <span class="hljs-string">"Encrypt a version 1 file for Alice"</span>, <spa
         test.ok encrypted.data.size <span class="hljs-keyword">is</span> <span class="hljs-number">962</span>
         test.ok encrypted.data.type <span class="hljs-keyword">is</span> <span class="hljs-string">"application/minilock"</span>
         test.ok encrypted.senderID <span class="hljs-keyword">is</span> Alice.miniLockID
-        test.end()</pre></div></div>
-</section>
+        test.end()
 
-
-<section id="section-2">
-  <div class="annotation"><p>a = document.getElementById(“link_to_download”)
-a.setAttribute(“href”, window.URL.createObjectURL(encrypted.data))
-a.setAttribute(“download”, encrypted.name)
-a.innerHTML = “Download: “+encrypted.name</p>
-</div>
-  <div class="code"><div class='highlight'><pre>
 tape <span class="hljs-string">"Encrypt a version 2 file for Alice"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"basic.txt"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     miniLockLib.encrypt
@@ -67,17 +58,8 @@ tape <span class="hljs-string">"Encrypt a version 2 file for Alice"</span>, <spa
         test.same encrypted.data.size, <span class="hljs-number">962</span>+<span class="hljs-number">128</span>+<span class="hljs-number">24</span>
         test.same encrypted.data.type, <span class="hljs-string">"application/minilock"</span>
         test.same encrypted.senderID, Alice.miniLockID
-        test.end()</pre></div></div>
-</section>
+        test.end()
 
-
-<section id="section-3">
-  <div class="annotation"><p>a = document.getElementById(“link_to_download”)
-a.setAttribute(“href”, window.URL.createObjectURL(encrypted.data))
-a.setAttribute(“download”, encrypted.name)
-a.innerHTML = “Download: “+encrypted.name</p>
-</div>
-  <div class="code"><div class='highlight'><pre>
 tape <span class="hljs-string">"Alice can decrypt version 1 file that was encrypted for her"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice.txt.v1.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     miniLockLib.decrypt
@@ -129,17 +111,8 @@ tape <span class="hljs-string">"Encrypt a file for Alice &amp; Bobby"</span>, <s
         test.equal encrypted.data.size, <span class="hljs-number">1508</span>
         test.equal encrypted.data.type, <span class="hljs-string">"application/minilock"</span>
         test.equal encrypted.senderID, Alice.miniLockID
-        test.end()</pre></div></div>
-</section>
+        test.end()
 
-
-<section id="section-4">
-  <div class="annotation"><p>a = document.getElementById(“link_to_download”)
-a.setAttribute(“href”, window.URL.createObjectURL(encrypted.data))
-a.setAttribute(“download”, encrypted.name)
-a.innerHTML = “Download: “+encrypted.name</p>
-</div>
-  <div class="code"><div class='highlight'><pre>
 tape <span class="hljs-string">"Alice can decrypt file that was encrypted for Alice &amp; Bobby"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice_and_bobby.txt.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     miniLockLib.decrypt

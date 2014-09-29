@@ -28,7 +28,7 @@
 
 
 <section id="section-2">
-  <div class="annotation"><p>Make a set of Keys.</p>
+  <div class="annotation"><p>Make a set of keys.</p>
 </div>
   <div class="code"><div class='highlight'><pre>miniLockLib.m<span class="hljs-function"><span class="hljs-title">akeKeyPair</span> = <span class="hljs-params">(secretPhrase, emailAddress, callback)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.MakeKeyPairOperation {secretPhrase, emailAddress}
@@ -37,7 +37,7 @@
 
 
 <section id="section-3">
-  <div class="annotation"><p>Encrypt a File.</p>
+  <div class="annotation"><p>Encrypt a file.</p>
 </div>
   <div class="code"><div class='highlight'><pre>miniLockLib.e<span class="hljs-function"><span class="hljs-title">ncrypt</span> = <span class="hljs-params">(params, callback)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation params
@@ -46,7 +46,7 @@
 
 
 <section id="section-4">
-  <div class="annotation"><p>Decrypt a File.</p>
+  <div class="annotation"><p>Decrypt a file.</p>
 </div>
   <div class="code"><div class='highlight'><pre>miniLockLib.d<span class="hljs-function"><span class="hljs-title">ecrypt</span> = <span class="hljs-params">(params, callback)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation params
@@ -55,31 +55,37 @@
 
 
 <section id="section-5">
-  <div class="annotation"><p>Export input modules.</p>
+  <div class="annotation"><p>Acceptance tests for key pair inputs.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>miniLockLib.ID = <span class="hljs-built_in">require</span> <span class="hljs-string">"./ID"</span>
-miniLockLib.EmailAddress = <span class="hljs-built_in">require</span> <span class="hljs-string">"./EmailAddress"</span>
-miniLockLib.SecretPhrase = <span class="hljs-built_in">require</span> <span class="hljs-string">"./SecretPhrase"</span></pre></div></div>
+  <div class="code"><div class='highlight'><pre>miniLockLib.SecretPhrase = <span class="hljs-built_in">require</span> <span class="hljs-string">"./SecretPhrase"</span>
+miniLockLib.EmailAddress = <span class="hljs-built_in">require</span> <span class="hljs-string">"./EmailAddress"</span></pre></div></div>
 </section>
 
 
 <section id="section-6">
-  <div class="annotation"><p>Export miniLock crypto operation constructors.</p>
+  <div class="annotation"><p>Encode, decode and test identification.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>miniLockLib.MakeKeyPairOperation = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./MakeKeyPairOperation"</span>)
-miniLockLib.EncryptOperation = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./EncryptOperation"</span>)
-miniLockLib.DecryptOperation = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./DecryptOperation"</span>)</pre></div></div>
+  <div class="code"><div class='highlight'><pre>miniLockLib.ID = <span class="hljs-built_in">require</span> <span class="hljs-string">"./ID"</span></pre></div></div>
 </section>
 
 
 <section id="section-7">
+  <div class="annotation"><p>miniLock crypto operations.</p>
+</div>
+  <div class="code"><div class='highlight'><pre>miniLockLib.MakeKeyPairOperation = <span class="hljs-built_in">require</span> <span class="hljs-string">"./MakeKeyPairOperation"</span>
+miniLockLib.EncryptOperation = <span class="hljs-built_in">require</span> <span class="hljs-string">"./EncryptOperation"</span>
+miniLockLib.DecryptOperation = <span class="hljs-built_in">require</span> <span class="hljs-string">"./DecryptOperation"</span></pre></div></div>
+</section>
+
+
+<section id="section-8">
   <div class="annotation"><p>Export special extras.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>miniLockLib.Base58  = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./Base58"</span>)
-miniLockLib.BLAKE2s = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./BLAKE2s"</span>)
-miniLockLib.NaCl    = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./NaCl"</span>)
-miniLockLib.scrypt  = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./scrypt-async"</span>)
-miniLockLib.zxcvbn  = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./zxcvbn"</span>)</pre></div></div>
+  <div class="code"><div class='highlight'><pre>miniLockLib.Base58  = <span class="hljs-built_in">require</span> <span class="hljs-string">"./Base58"</span>
+miniLockLib.BLAKE2s = <span class="hljs-built_in">require</span> <span class="hljs-string">"./BLAKE2s"</span>
+miniLockLib.NaCl    = <span class="hljs-built_in">require</span> <span class="hljs-string">"./NaCl"</span>
+miniLockLib.scrypt  = <span class="hljs-built_in">require</span> <span class="hljs-string">"./scrypt-async"</span>
+miniLockLib.zxcvbn  = <span class="hljs-built_in">require</span> <span class="hljs-string">"./zxcvbn"</span></pre></div></div>
 </section>
 
 

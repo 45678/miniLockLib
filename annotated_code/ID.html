@@ -23,44 +23,15 @@
 
 <section id="section-1">
   <div class="annotation"></div>
-  <div class="code"><div class='highlight'><pre>Base58 = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./Base58"</span>)
-BLAKE2s = <span class="hljs-built_in">require</span>(<span class="hljs-string">"./BLAKE2s"</span>)</pre></div></div>
+  <div class="code"><div class='highlight'><pre>Base58 = <span class="hljs-built_in">require</span> <span class="hljs-string">"./Base58"</span>
+BLAKE2s = <span class="hljs-built_in">require</span> <span class="hljs-string">"./BLAKE2s"</span></pre></div></div>
 </section>
 
 
 <section id="section-2">
-  <div class="annotation"><hr>
-</div>
-  <div class="code"><div class='highlight'><pre></pre></div></div>
-</section>
-
-
-<section id="section-3">
-  <div class="annotation"><h2 id="minilock-ids">miniLock IDs</h2>
-</div>
-  <div class="code"><div class='highlight'><pre></pre></div></div>
-</section>
-
-
-<section id="section-4">
-  <div class="annotation"></div>
-  <div class="code"><div class='highlight'><pre>
-ID = <span class="hljs-built_in">module</span>.exports = {}</pre></div></div>
-</section>
-
-
-<section id="section-5">
-  <div class="annotation"><p>Returns <code>true</code> if <code>id</code> is acceptable and <code>false</code> if it is not.</p>
-</div>
-  <div class="code"><div class='highlight'><pre>ID.i<span class="hljs-function"><span class="hljs-title">sAcceptable</span> = <span class="hljs-params">(id)</span> -&gt;</span>
-  <span class="hljs-regexp">/^[1-9A-Za-z]{40,55}$/</span>.test(id) <span class="hljs-keyword">and</span> ID.decode(id)?</pre></div></div>
-</section>
-
-
-<section id="section-6">
   <div class="annotation"><p>Encode a 32-bit public key as a miniLockID.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>ID.e<span class="hljs-function"><span class="hljs-title">ncode</span> = <span class="hljs-params">(publicKey)</span> -&gt;</span>
+  <div class="code"><div class='highlight'><pre>exports.e<span class="hljs-function"><span class="hljs-title">ncode</span> = <span class="hljs-params">(publicKey)</span> -&gt;</span>
   <span class="hljs-keyword">if</span> publicKey?.length <span class="hljs-keyword">is</span> <span class="hljs-number">32</span>
     slots = <span class="hljs-keyword">new</span> Uint8Array(<span class="hljs-number">33</span>)
     slots[index] = publicKey[index] <span class="hljs-keyword">for</span> index <span class="hljs-keyword">in</span> [<span class="hljs-number">0.</span><span class="hljs-number">.32</span>]
@@ -71,10 +42,10 @@ ID = <span class="hljs-built_in">module</span>.exports = {}</pre></div></div>
 </section>
 
 
-<section id="section-7">
+<section id="section-3">
   <div class="annotation"><p>Decode a 32-bit public key from a miniLockID.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>ID.d<span class="hljs-function"><span class="hljs-title">ecode</span> = <span class="hljs-params">(id)</span> -&gt;</span>
+  <div class="code"><div class='highlight'><pre>exports.d<span class="hljs-function"><span class="hljs-title">ecode</span> = <span class="hljs-params">(id)</span> -&gt;</span>
   slots = Base58.decode(id)
   <span class="hljs-keyword">if</span> slots.length <span class="hljs-keyword">is</span> <span class="hljs-number">33</span>
     publicKey = <span class="hljs-keyword">new</span> Uint8Array(slots.subarray(<span class="hljs-number">0</span>, <span class="hljs-number">32</span>))
@@ -82,6 +53,14 @@ ID = <span class="hljs-built_in">module</span>.exports = {}</pre></div></div>
     trueChecksum = (<span class="hljs-keyword">new</span> BLAKE2s <span class="hljs-attribute">length</span>: <span class="hljs-number">1</span>).update(publicKey).digest()[<span class="hljs-number">0</span>]
     <span class="hljs-keyword">return</span> publicKey <span class="hljs-keyword">if</span> encodedChecksum <span class="hljs-keyword">is</span> trueChecksum
   <span class="hljs-literal">undefined</span></pre></div></div>
+</section>
+
+
+<section id="section-4">
+  <div class="annotation"><p>Returns <code>true</code> if <code>id</code> is acceptable and <code>false</code> if it is not.</p>
+</div>
+  <div class="code"><div class='highlight'><pre>exports.i<span class="hljs-function"><span class="hljs-title">sAcceptable</span> = <span class="hljs-params">(id)</span> -&gt;</span>
+  <span class="hljs-regexp">/^[1-9A-Za-z]{40,55}$/</span>.test(id) <span class="hljs-keyword">and</span> <span class="hljs-property">@decode</span>(id)?</pre></div></div>
 </section>
 
 

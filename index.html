@@ -426,10 +426,11 @@ decryptOperation.start(function(error, decrypted){
 <h1>Special Extras</h1>
 <p>
   miniLockLib is composed of code from several dandy projects.
-  All of these fine modules are exported so that you can easily apply their functions in your own computer programs.
+  All of these fine modules are exposed so that you can easily apply their functions in your own computer programs.
 </p>
 
 <a id="Base58"></a>
+<h2>Base58</h2>
 <p>
   <code>miniLockLib.Base58</code> is a modified copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
   It has been modified to work in a web agent <code>window</code> instead of working only in a Node.js environment.
@@ -437,12 +438,14 @@ decryptOperation.start(function(error, decrypted){
 </p>
 
 <a id="BLAKE2s"></a>
+<h2>BLAKE2s</h2>
 <p>
   <code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
   miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
 </p>
 
 <a id="NaCl"></a>
+<h2>NaCl</h2>
 <p>
   <code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
   This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
@@ -450,15 +453,17 @@ decryptOperation.start(function(error, decrypted){
 </p>
 
 <a id="scrypt"></a>
+<h2>scrypt</h2>
 <p>
   <code>miniLockLib.scrypt</code> is an unmodified copy of <code>scrypt-async.js</code>
   from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a> project
-  written by <a href="https://github.com/dchest">Mr. Chestnykh</a> once again.
+  written by Mr. Chestnykh once again.
   <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.
   miniLockLib relies on <code>scrypt</code> to make key pairs.
 </p>
 
 <a id="zxcvbn"></a>
+<h2>zxcvbn</h2>
 <p>
   <code>miniLockLib.zxcvbn</code> is a modified copy of Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
   The original script is modified so that it exports a module instead of defining itself on <code>window</code>.

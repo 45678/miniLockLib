@@ -425,20 +425,29 @@ decryptOperation.start(function(error, decrypted){
 <a id="Extras"></a>
 <h1>Special Extras</h1>
 <p>
-  <code>miniLockLib</code> is composed of code from several dandy projects.
+  miniLockLib is composed of code from several dandy projects.
   All of these fine modules are exported so that you can easily apply their functions in your own computer programs.
 </p>
 
-<p><code>miniLockLib.Base58</code> is a copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
-It has been modified slightly to work in a web agent <code>window</code> instead of working only in a Node.js environment.
-<code>Base58</code> is used to encode and decode miniLock IDs.</p>
+<a id="Base58"></a>
+<p>
+  <code>miniLockLib.Base58</code> is a modified copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
+  It has been modified to work in a web agent <code>window</code> instead of working only in a Node.js environment.
+  <code>Base58</code> is used to encode and decode miniLock IDs.
+</p>
 
-<p><code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
-<code>miniLockLib</code> subclasses the original constructor to expose a modestly more convenient interface for its purposes.</p>
+<a id="BLAKE2s"></a>
+<p>
+  <code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
+  miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
+</p>
 
-<p><code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
-This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
-<code>miniLockLib</code> relies on <code>NaCl</code> for a host of cryptographic and encoding functions.</p>
+<a id="NaCl"></a>
+<p>
+  <code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
+  This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
+  miniLockLib relies on <code>NaCl</code> for a host of cryptographic and encoding functions.
+</p>
 
 <a id="scrypt"></a>
 <p>

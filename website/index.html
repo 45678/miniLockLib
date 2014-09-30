@@ -124,22 +124,22 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
   <code>miniLockLib.encrypt({data, name, keys, miniLockIDs, callback})</code>
 </header>
 <p>
-  Make an encrypted miniLock file from a <a href="http://www.w3.org/TR/FileAPI/#blob"><code>Blob</code></a>.
+  Make a miniLock file.
   Returns an instance of <a href="#EncryptOperation"><code>EncryptOperation</code></a>.
 </p>
 <pre>
 miniLockLib.encrypt({
-  data: Blob or File,
-  name: 'Sensitive Document.txt'
+  data: new Blob(["Hello World"]),
+  name: 'Secret Greeting.txt'
   keys: {publicKey: Uint8Array, secretKey: Uint8Array},
-  miniLockIDs: [myID, aliceID, bobbyID, ...]
+  miniLockIDs: [aliceID, bobbyID, ...]
   callback: function(error, encrypted) {
     if (encrypted) {
-      encrypted.data is a Blob
-      encrypted.data.size is the Number of bytes
+      encrypted.data is a new Blob
+      encrypted.data.name is 'Secret Greeting.txt.minilock'
       encrypted.data.type is 'application/minilock'
-      encrypted.name is 'Sensitive Document.txt.minilock'
-      encrypted.senderID identifies the author of this encrypted file.
+      encrypted.data.size is the Number of bytes
+      encrypted.senderID identifies the owner of the encryption keys
     } else {
       error is a String
     }
@@ -152,17 +152,17 @@ miniLockLib.encrypt({
 </p>
 <ul>
 <li>
-  <code>data</code> is the <a href="http://www.w3.org/TR/FileAPI/#blob"><code>Blob</code></a> to be encrypted.
+  <code>data</code> is a <a href="http://www.w3.org/TR/FileAPI/#blob"><code>Blob</code></a> to be encrypted.
   An instance of <a href="http://www.w3.org/TR/FileAPI/#file"><code>File</code></a> is also acceptable.
 </li>
 <li>
-  <code>name</code> specifies the filename as a <code>String</code>. Default is <code>"untitled"</code>.
+  <code>name</code> specifies the filename as a <code>String</code>.
 </li>
 <li>
-  <code>keys</code> is the public-and-private key pair of the author of this file.
+  <code>keys</code> defines the key pair that will be used to encrypt this file.
 </li>
 <li>
-  <code>miniLockIDs</code> define who is permitted to decrypt this file.
+  <code>miniLockIDs</code> defines who is permitted to decrypt this file.
 </li>
 <li>
   <code>callback</code> should be prepared to receive <code>encrypted.data</code> or an <code>error</code>.
@@ -172,7 +172,7 @@ miniLockLib.encrypt({
   Potential <code>error</code> strings are as follows:
 </p>
 <ul class="error_strings">
-  <li><code class="hljs-string">"EncryptOperation failed to encrypt file data.""</code></li>
+  <li><code class="hljs-string">"EncryptOperation failed to encrypt file data."</code></li>
 </ul>
 
 <header class="function">

@@ -11,12 +11,9 @@ website/miniLockLib.js: library/%.coffee library.compiled/scrypt-async.js librar
 	browserify library.compiled/index.js --standalone miniLockLib > website/miniLockLib.js
 
 # Compile CoffeeScript library files to the library.compiled folder.
-library/%.coffee: library.compiled
-	coffee --compile --output library.compiled library/*.coffee
-
-# Folder for compiled Javascript files that form the library.
-library.compiled:
+library/%.coffee:
 	mkdir -p library.compiled
+	coffee --compile --output library.compiled library/*.coffee
 
 # Download scrypt-async.js and save it in the library.compiled folder.
 library.compiled/scrypt-async.js:
@@ -32,12 +29,9 @@ library.compiled/zxcvbn.js:
 # # Tests
 
 # Compile CoffeeScript tests to the tests.compiled folder.
-tests/%.coffee: tests.compiled
-	coffee --output tests.compiled --compile tests/*.coffee
-
-# Folder for compiled tests.
-tests.compiled:
+tests/%.coffee:
 	mkdir -p tests.compiled
+	coffee --output tests.compiled --compile tests/*.coffee
 
 # Make script for the test suite.
 website/tests.js: tests/%.coffee

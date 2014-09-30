@@ -1,33 +1,34 @@
 miniLockLib = module.exports = {}
 
-# Construct and start a [key pair operation](KeyPairOperation.html).
+# Start a [key pair operation](KeyPairOperation.html) to make a set of keys.
 miniLockLib.makeKeyPair = (secretPhrase, emailAddress, callback) ->
   operation = new miniLockLib.KeyPairOperation {secretPhrase, emailAddress}
   operation.start(callback)
 
-# Construct and start an [encrypt operation](EncryptOperation.html).
+# Start an [encrypt operation](EncryptOperation.html) to make a miniLock file.
 miniLockLib.encrypt = (params, callback) ->
   operation = new miniLockLib.EncryptOperation params
   operation.start(callback)
 
-# Construct and start a [decrypt operation](DecryptOperation.html).
+# Start a [decrypt operation](DecryptOperation.html) to unlock a miniLock file.
 miniLockLib.decrypt = (params, callback) ->
   operation = new miniLockLib.DecryptOperation params
   operation.start(callback)
 
-# Supply [secret phrase](SecretPhrase.html) and [email address](EmailAddress.html) acceptance tests.
+# Expose [secret phrase](SecretPhrase.html) and
+# [email address](EmailAddress.html) acceptance tests.
 miniLockLib.SecretPhrase = require "./SecretPhrase"
 miniLockLib.EmailAddress = require "./EmailAddress"
 
-# Supply [identification](ID.html) function to encode, decode and test miniLock IDs.
+# Expose [identification](ID.html) functions.
 miniLockLib.ID = require "./ID"
 
-# Supply operation constructors.
+# Expose crypto operation constructors.
 miniLockLib.KeyPairOperation = require "./KeyPairOperation"
 miniLockLib.EncryptOperation = require "./EncryptOperation"
 miniLockLib.DecryptOperation = require "./DecryptOperation"
 
-# Supply special extras.
+# Expose special extras.
 miniLockLib.Base58  = require "./Base58"
 miniLockLib.BLAKE2s = require "./BLAKE2s"
 miniLockLib.NaCl    = require "./NaCl"

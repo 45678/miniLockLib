@@ -43,17 +43,17 @@
     <em>Examples</em>
   </p>
   <div class="example">
-    <div><em>is it a miniLock ID?</em></div>
+    <div><a href="https://45678.github.io/is-it-a-miniLock/id?">is it a miniLock ID?</a></div>
     <div class="repo">Get <a href="https://github.com/45678/is-it-a-minilock-id/">source code</a></div>
     <a class="window" href="https://45678.github.io/is-it-a-miniLock/id?CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw"><img src="examples/it is a miniLock ID.png"></a>
   </div>
   <div class="example">
-    <div><em>miniLock ID inspector</em></div>
+    <div><a href="https://45678.github.io/miniLock-ID-inspector/">miniLock ID inspector</a></div>
     <div class="repo">Get <a href="https://github.com/45678/miniLock-ID-inspector/">source code</a></div>
     <a class="window" href="https://45678.github.io/miniLock-ID-inspector/"><img src="examples/inspector.png"></a>
   </div>
   <div class="example">
-    <div><em>miniLock file format</em></div>
+    <div><a href="https://45678.github.io/miniLock-file-format/2.html">miniLock file format</a></div>
     <div class="repo">Get <a href="https://github.com/45678/miniLock-file-format/">source code</a></div>
     <a class="window" href="https://45678.github.io/miniLock-file-format/2.html"><img src="examples/file format version 2.png"></a>
   </div>
@@ -425,27 +425,45 @@ decryptOperation.start(function(error, decrypted){
 <a id="Extras"></a>
 <h1>Special Extras</h1>
 <p>
-  <code>miniLockLib</code> is composed of code from several dandy projects.
+  miniLockLib is composed of code from several dandy projects.
   All of these fine modules are exported so that you can easily apply their functions in your own computer programs.
 </p>
 
-<p><code>miniLockLib.Base58</code> is a copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
-It has been modified slightly to work in a web agent <code>window</code> instead of working only in a Node.js environment.
-<code>Base58</code> is used to encode and decode miniLock IDs.</p>
+<a id="Base58"></a>
+<p>
+  <code>miniLockLib.Base58</code> is a modified copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
+  It has been modified to work in a web agent <code>window</code> instead of working only in a Node.js environment.
+  <code>Base58</code> is used to encode and decode miniLock IDs.
+</p>
 
-<p><code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
-<code>miniLockLib</code> subclasses the original constructor to expose a modestly more convenient interface for its purposes.</p>
+<a id="BLAKE2s"></a>
+<p>
+  <code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
+  miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
+</p>
 
-<p><code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
-This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
-<code>miniLockLib</code> relies on <code>NaCl</code> for a host of cryptographic and encoding functions.</p>
+<a id="NaCl"></a>
+<p>
+  <code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
+  This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
+  miniLockLib relies on <code>NaCl</code> for a host of cryptographic and encoding functions.
+</p>
 
-<p><code>miniLockLib.scrypt</code> is a copy of <code>scrypt-async.js</code> from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a>
-  project which was also written by <a href="https://github.com/dchest">Mr. Chestnykh</a>.
-<code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.</p>
+<a id="scrypt"></a>
+<p>
+  <code>miniLockLib.scrypt</code> is an unmodified copy of <code>scrypt-async.js</code>
+  from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a> project
+  written by <a href="https://github.com/dchest">Mr. Chestnykh</a> once again.
+  <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.
+  miniLockLib relies on <code>scrypt</code> to make key pairs.
+</p>
 
-<p><code>miniLockLib.zxcvbn</code> is Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
-It is used to measure the entropy in secret phrases.</p>
+<a id="zxcvbn"></a>
+<p>
+  <code>miniLockLib.zxcvbn</code> is a modified copy of Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
+  The original script is modified so that it exports a module instead of defining itself on <code>window</code>.
+  miniLockLib relies on <code>zxcvbn</code> to measure entropy in secret phrases.
+</p>
 </article>
 
 <article>

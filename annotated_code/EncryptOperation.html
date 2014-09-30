@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>miniLockLib/EncryptOperation.coffee</title>
+  <link rel="stylesheet" href="../stylesheet.css">
+  <script src="../annotated_code.js"></script>
+</head>
+<body class="avenir calibri consolas annotated_code">
+
+<header>
+  <h1>
+    <a href="../"><svg viewBox="0 0 525 702" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="60" y="320" width="420" height="320"></rect>
+        <path fill="#000000" d="M347.8125,478.934579 C369.558712,478.934579 387.1875,461.310499 387.1875,439.570093 C387.1875,417.829688 369.558712,400.205607 347.8125,400.205607 C326.066288,400.205607 308.4375,417.829688 308.4375,439.570093 C308.4375,461.310499 326.066288,478.934579 347.8125,478.934579 Z M177.1875,478.934579 C198.933712,478.934579 216.5625,461.310499 216.5625,439.570093 C216.5625,417.829688 198.933712,400.205607 177.1875,400.205607 C155.441288,400.205607 137.8125,417.829688 137.8125,439.570093 C137.8125,461.310499 155.441288,478.934579 177.1875,478.934579 Z M177.1875,255.869159 L177.1875,223.065421 L177.228748,223.065421 C177.201304,221.975295 177.1875,220.881783 177.1875,219.785047 C177.1875,149.12873 234.481061,91.8504673 305.15625,91.8504673 C375.831439,91.8504673 433.125,149.12873 433.125,219.785047 C433.125,220.881783 433.111196,221.975295 433.083752,223.065421 L433.125,223.065421 L433.125,255.869159 L523.525694,255.869159 L525,255.869159 L525,219.785047 C525,98.4011172 426.5726,0 305.15625,0 C183.7399,0 85.3125,98.4011172 85.3125,219.785047 L85.3125,255.869159 L86.7868059,255.869159 L177.1875,255.869159 L177.1875,255.869159 Z M131.25,616.71028 C105.879419,616.71028 85.3125,596.148853 85.3125,570.785047 L85.3125,347.719626 L439.6875,347.719626 L439.6875,570.785047 C439.6875,596.148853 419.120581,616.71028 393.75,616.71028 L131.25,616.71028 L131.25,616.71028 Z M131.25,702 C58.7626266,702 0,643.253064 0,570.785047 L0,255.869159 L525,255.869159 L525,570.785047 C525,643.253064 466.237373,702 393.75,702 L131.25,702 L131.25,702 Z"></path>
+      </g>
+    </svg><b>mini</b><b>Lock</b><b>Lib</b></a>/<b>EncryptOperation<span class="ext">.coffee</span></b>
+  </h1>
+</header>
+
+
+
+<section id="section-1">
+  <div class="annotation"></div>
+  <div class="code"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EncryptOperation</span></span>
+  NaCl = <span class="hljs-built_in">require</span> <span class="hljs-string">"./NaCl"</span>
+  BLAKE2s = <span class="hljs-built_in">require</span> <span class="hljs-string">"./BLAKE2s"</span>
+  {numberToByteArray} = <span class="hljs-built_in">require</span> <span class="hljs-string">"./util"</span>
+
+  <span class="hljs-attribute">chunkSize</span>: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>
+  <span class="hljs-attribute">readSliceOfData</span>: <span class="hljs-built_in">require</span> <span class="hljs-string">"./readSliceOfData"</span>
+
+  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(params={})</span>-&gt;</span>
+    {<span class="hljs-property">@data</span>, <span class="hljs-property">@keys</span>, <span class="hljs-property">@name</span>, <span class="hljs-property">@type</span>, <span class="hljs-property">@time</span>, <span class="hljs-property">@miniLockIDs</span>, <span class="hljs-property">@version</span>, <span class="hljs-property">@callback</span>} = params
+    <span class="hljs-property">@version</span> = <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@version</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+    <span class="hljs-property">@ephemeral</span> = NaCl.box.keyPair()
+    <span class="hljs-property">@fileKey</span> = NaCl.randomBytes(<span class="hljs-number">32</span>)
+    <span class="hljs-property">@fileNonce</span> = NaCl.randomBytes(<span class="hljs-number">24</span>).subarray(<span class="hljs-number">0</span>, <span class="hljs-number">16</span>)
+    <span class="hljs-property">@hash</span> = <span class="hljs-keyword">new</span> BLAKE2s(<span class="hljs-number">32</span>)
+    <span class="hljs-property">@ciphertextBytes</span> = []
+    <span class="hljs-property">@start</span>() <span class="hljs-keyword">if</span> params.start?
+
+  <span class="hljs-attribute">start</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> =&gt;</span>
+    <span class="hljs-property">@callback</span> = callback <span class="hljs-keyword">if</span> callback?
+    <span class="hljs-keyword">if</span> (<span class="hljs-property">@keys</span>?.publicKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">or</span> (<span class="hljs-property">@keys</span>?.secretKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>)
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without keys."</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@miniLockIDs</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without miniLockIDs."</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-property">@data</span> <span class="hljs-keyword">instanceof</span> Blob) <span class="hljs-keyword">is</span> <span class="hljs-literal">false</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without data."</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> <span class="hljs-property">@callback</span> <span class="hljs-keyword">isnt</span> <span class="hljs-string">"function"</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without a callback."</span>
+    <span class="hljs-property">@startedAt</span> = Date.now()
+    <span class="hljs-property">@time</span> = <span class="hljs-property">@startedAt</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@time</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+    <span class="hljs-property">@run</span>()
+
+  <span class="hljs-attribute">run</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@encryptAttributes</span>(<span class="hljs-property">@version</span>)
+    <span class="hljs-property">@encryptData</span> <span class="hljs-number">0</span>, <span class="hljs-function"><span class="hljs-params">(error, dataWasEncrypted)</span> =&gt;</span>
+      <span class="hljs-keyword">if</span> dataWasEncrypted?
+        <span class="hljs-property">@constructHeader</span>()
+        fileFormat = [
+          <span class="hljs-string">"miniLock"</span>
+          <span class="hljs-property">@sizeOfHeaderIn4Bytes</span>
+          <span class="hljs-property">@headerJSONBytes</span>
+          <span class="hljs-property">@ciphertextBytes</span>...
+        ]
+        <span class="hljs-property">@end</span>(error, <span class="hljs-keyword">new</span> Blob fileFormat, <span class="hljs-attribute">type</span>: <span class="hljs-string">"application/minilock"</span>)
+      <span class="hljs-keyword">else</span>
+        <span class="hljs-property">@end</span>(error)
+
+  <span class="hljs-attribute">end</span>: <span class="hljs-function"><span class="hljs-params">(error, blob)</span> =&gt;</span>
+    <span class="hljs-property">@streamEncryptor</span>.clean() <span class="hljs-keyword">if</span> <span class="hljs-property">@streamEncryptor</span>?
+    <span class="hljs-property">@endedAt</span> = Date.now()
+    <span class="hljs-property">@duration</span> = <span class="hljs-property">@endedAt</span> - <span class="hljs-property">@startedAt</span>
+    <span class="hljs-keyword">if</span> error
+      <span class="hljs-property">@onerror</span>(error)
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-property">@oncomplete</span>(blob)
+
+  <span class="hljs-attribute">oncomplete</span>: <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
+    <span class="hljs-property">@callback</span>(<span class="hljs-literal">undefined</span>, {
+      <span class="hljs-attribute">data</span>: blob
+      <span class="hljs-attribute">name</span>: <span class="hljs-property">@name</span> + <span class="hljs-string">".minilock"</span>
+      <span class="hljs-attribute">type</span>: <span class="hljs-property">@type</span>
+      <span class="hljs-attribute">time</span>: <span class="hljs-property">@time</span>
+      <span class="hljs-attribute">senderID</span>: miniLockLib.ID.encode(<span class="hljs-property">@keys</span>.publicKey)
+      <span class="hljs-attribute">duration</span>: <span class="hljs-property">@duration</span>
+      <span class="hljs-attribute">startedAt</span>: <span class="hljs-property">@startedAt</span>
+      <span class="hljs-attribute">endedAt</span>: <span class="hljs-property">@endedAt</span>
+    })
+
+  <span class="hljs-attribute">onerror</span>: <span class="hljs-function"><span class="hljs-params">(error)</span> -&gt;</span>
+    <span class="hljs-property">@callback</span>(error)
+
+  <span class="hljs-attribute">encryptAttributes</span>: <span class="hljs-function"><span class="hljs-params">(version)</span> -&gt;</span>
+    <span class="hljs-property">@constructStreamEncryptor</span>()
+    bytes = <span class="hljs-keyword">switch</span> version
+      <span class="hljs-keyword">when</span> <span class="hljs-number">1</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">new</span> Uint8Array <span class="hljs-number">256</span>
+      <span class="hljs-keyword">when</span> <span class="hljs-number">2</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">new</span> Uint8Array <span class="hljs-number">256</span>+<span class="hljs-number">128</span>+<span class="hljs-number">24</span>
+      <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-string">"EncryptOperation does not support version <span class="hljs-subst">#{version}</span>. Version 1 or 2 please."</span>
+    bytes.set <span class="hljs-property">@fixedSizeDecodedName</span>(), <span class="hljs-number">0</span>
+    bytes.set <span class="hljs-property">@fixedSizeDecodedType</span>(), <span class="hljs-number">256</span> <span class="hljs-keyword">if</span> version <span class="hljs-keyword">is</span> <span class="hljs-number">2</span>
+    bytes.set <span class="hljs-property">@fixedSizeDecodedTime</span>(), <span class="hljs-number">256</span>+<span class="hljs-number">128</span> <span class="hljs-keyword">if</span> version <span class="hljs-keyword">is</span> <span class="hljs-number">2</span>
+    <span class="hljs-keyword">if</span> encryptedBytes = <span class="hljs-property">@streamEncryptor</span>.encryptChunk(bytes, <span class="hljs-literal">no</span>)
+      <span class="hljs-property">@hash</span>.update(encryptedBytes)
+      <span class="hljs-property">@ciphertextBytes</span>.push(encryptedBytes)
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">"EncryptOperation failed to record file attributes."</span>
+
+  <span class="hljs-attribute">encryptData</span>: <span class="hljs-function"><span class="hljs-params">(position, callback)</span> -&gt;</span>
+    <span class="hljs-property">@constructStreamEncryptor</span>()
+    <span class="hljs-property">@readSliceOfData</span> position, position+<span class="hljs-property">@chunkSize</span>, <span class="hljs-function"><span class="hljs-params">(error, sliceOfBytes)</span> =&gt;</span>
+      <span class="hljs-keyword">if</span> error <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> callback(error)
+      isLastSlice = position+sliceOfBytes.length <span class="hljs-keyword">is</span> <span class="hljs-property">@data</span>.size
+      <span class="hljs-keyword">if</span> encryptedBytes = <span class="hljs-property">@streamEncryptor</span>.encryptChunk(sliceOfBytes, isLastSlice)
+        <span class="hljs-property">@hash</span>.update(encryptedBytes)
+        <span class="hljs-property">@ciphertextBytes</span>.push(encryptedBytes)
+        <span class="hljs-keyword">if</span> isLastSlice
+          <span class="hljs-property">@hash</span>.digest()
+          callback(<span class="hljs-literal">undefined</span>, <span class="hljs-property">@hash</span>.isFinished)
+        <span class="hljs-keyword">else</span>
+          <span class="hljs-property">@encryptData</span>(position+<span class="hljs-property">@chunkSize</span>, callback)
+      <span class="hljs-keyword">else</span>
+        callback <span class="hljs-string">"EncryptOperation failed to encrypt file data."</span>
+
+  <span class="hljs-attribute">constructHeader</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@header</span> =
+      <span class="hljs-attribute">version</span>: <span class="hljs-property">@version</span>
+      <span class="hljs-attribute">ephemeral</span>: NaCl.util.encodeBase64(<span class="hljs-property">@ephemeral</span>.publicKey)
+      <span class="hljs-attribute">decryptInfo</span>: <span class="hljs-property">@encodedEncryptedPermits</span>()
+    headerJSON = JSON.stringify(<span class="hljs-property">@header</span>)
+    <span class="hljs-property">@sizeOfHeaderIn4Bytes</span> = numberToByteArray(headerJSON.length)
+    <span class="hljs-property">@headerJSONBytes</span> = NaCl.util.decodeUTF8(headerJSON)
+    <span class="hljs-keyword">return</span> <span class="hljs-property">@header</span>
+
+  <span class="hljs-attribute">constructStreamEncryptor</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-property">@streamEncryptor</span> ?= NaCl.stream.createEncryptor(<span class="hljs-property">@fileKey</span>, <span class="hljs-property">@fileNonce</span>, <span class="hljs-property">@chunkSize</span>)
+
+  <span class="hljs-attribute">fixedSizeDecodedName</span>:<span class="hljs-function"> -&gt;</span>
+    fixedSize = <span class="hljs-keyword">new</span> Uint8Array(<span class="hljs-number">256</span>)
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@name</span>
+      decodedName = NaCl.util.decodeUTF8(<span class="hljs-property">@name</span>)
+      <span class="hljs-keyword">if</span> decodedName.length &gt; fixedSize.length
+        <span class="hljs-keyword">throw</span> <span class="hljs-string">"EncryptOperation file name is too long. 256-characters max please."</span>
+      fixedSize.set(decodedName)
+    <span class="hljs-keyword">return</span> fixedSize
+
+  <span class="hljs-attribute">fixedSizeDecodedType</span>:<span class="hljs-function"> -&gt;</span>
+    fixedSize = <span class="hljs-keyword">new</span> Uint8Array(<span class="hljs-number">128</span>)
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@type</span>
+      decodedType = NaCl.util.decodeUTF8(<span class="hljs-property">@type</span>)
+      <span class="hljs-keyword">if</span> decodedType.length &gt; fixedSize.length
+        <span class="hljs-keyword">throw</span> <span class="hljs-string">"EncryptOperation media type is too long. 128-characters max please."</span>
+      fixedSize.set(decodedType)
+    <span class="hljs-keyword">return</span> fixedSize
+
+  <span class="hljs-attribute">fixedSizeDecodedTime</span>:<span class="hljs-function"> -&gt;</span>
+    fixedSize = <span class="hljs-keyword">new</span> Uint8Array(<span class="hljs-number">24</span>)
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@time</span>
+      timestamp = (<span class="hljs-keyword">new</span> Date(<span class="hljs-property">@time</span>)).toJSON()
+      fixedSize.set(NaCl.util.decodeUTF8(timestamp))
+    <span class="hljs-keyword">return</span> fixedSize
+
+  <span class="hljs-attribute">encodedEncryptedPermits</span>:<span class="hljs-function"> -&gt;</span>
+    permits = {}
+    <span class="hljs-keyword">for</span> miniLockID <span class="hljs-keyword">in</span> <span class="hljs-property">@miniLockIDs</span>
+      [uniqueNonce, encryptedPermit] = <span class="hljs-property">@encryptedPermit</span>(miniLockID)
+      encodedUniqueNonce = NaCl.util.encodeBase64(uniqueNonce)
+      encodedEncryptedPermit = NaCl.util.encodeBase64(encryptedPermit)
+      permits[encodedUniqueNonce] = encodedEncryptedPermit
+    <span class="hljs-keyword">return</span> permits
+
+  <span class="hljs-attribute">encryptedPermit</span>: <span class="hljs-function"><span class="hljs-params">(miniLockID)</span> -&gt;</span>
+    [uniqueNonce, permit] = <span class="hljs-property">@permit</span>(miniLockID)
+    decodedPermitJSON = NaCl.util.decodeUTF8(JSON.stringify(permit))
+    recipientPublicKey = miniLockLib.ID.decode(miniLockID)
+    encryptedPermit = NaCl.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, <span class="hljs-property">@ephemeral</span>.secretKey)
+    [uniqueNonce, encryptedPermit]
+
+  <span class="hljs-attribute">permit</span>: <span class="hljs-function"><span class="hljs-params">(miniLockID)</span> -&gt;</span>
+    uniqueNonce = NaCl.randomBytes(<span class="hljs-number">24</span>)
+    [uniqueNonce, {
+      <span class="hljs-attribute">senderID</span>: miniLockLib.ID.encode(<span class="hljs-property">@keys</span>.publicKey)
+      <span class="hljs-attribute">recipientID</span>: miniLockID
+      <span class="hljs-attribute">fileInfo</span>: NaCl.util.encodeBase64(<span class="hljs-property">@encryptedFileInfo</span>(miniLockID, uniqueNonce))
+    }]
+
+  <span class="hljs-attribute">encryptedFileInfo</span>: <span class="hljs-function"><span class="hljs-params">(miniLockID, uniqueNonce)</span> -&gt;</span>
+    decodedFileInfoJSON = NaCl.util.decodeUTF8(JSON.stringify(<span class="hljs-property">@permitFileInfo</span>()))
+    recipientPublicKey = miniLockLib.ID.decode(miniLockID)
+    NaCl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, <span class="hljs-property">@keys</span>.secretKey)
+
+  <span class="hljs-attribute">permitFileInfo</span>:<span class="hljs-function"> -&gt;</span>
+    <span class="hljs-attribute">fileKey</span>:   NaCl.util.encodeBase64(<span class="hljs-property">@fileKey</span>)
+    <span class="hljs-attribute">fileNonce</span>: NaCl.util.encodeBase64(<span class="hljs-property">@fileNonce</span>)
+    <span class="hljs-attribute">fileHash</span>:  NaCl.util.encodeBase64(<span class="hljs-property">@hash</span>.digest())</pre></div></div>
+</section>
+
+
+<nav class="files">
+  <a  href="index.html"  >library/index<span class="ext">.coffee</span></a>
+  
+  
+  
+  <br>
+  <a href="BLAKE2s.html">library/BLAKE2s<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Base58.html">library/Base58<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="DecryptOperation.html">library/DecryptOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="EmailAddress.html">library/EmailAddress<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a >library/EncryptOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="ID.html">library/ID<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="KeyPairOperation.html">library/KeyPairOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="NaCl.html">library/NaCl<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="SecretPhrase.html">library/SecretPhrase<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  
+  
+  
+  <br>
+  <a href="readSliceOfData.html">library/readSliceOfData<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="util.html">library/util<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="A Few Demo Tests.html">tests/A Few Demo Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Acceptability Tests.html">tests/Acceptability Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Decrypt Operation Tests.html">tests/Decrypt Operation Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Encrypt Operation Tests.html">tests/Encrypt Operation Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Identification Tests.html">tests/Identification Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Make Key Pair Tests.html">tests/Make Key Pair Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Slow Operation Tests.html">tests/Slow Operation Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="fixtures.html">tests/fixtures<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="tape_test_harness.html">tests/tape_test_harness<span class="ext">.coffee</span></a>
+  
+  
+</nav>
+</body>
+</html>

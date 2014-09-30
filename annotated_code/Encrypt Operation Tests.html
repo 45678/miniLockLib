@@ -1,0 +1,369 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>miniLockLib/Encrypt Operation Tests.coffee</title>
+  <link rel="stylesheet" href="../stylesheet.css">
+  <script src="../annotated_code.js"></script>
+</head>
+<body class="avenir calibri consolas annotated_code">
+
+<header>
+  <h1>
+    <a href="../"><svg viewBox="0 0 525 702" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+      <g fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="60" y="320" width="420" height="320"></rect>
+        <path fill="#000000" d="M347.8125,478.934579 C369.558712,478.934579 387.1875,461.310499 387.1875,439.570093 C387.1875,417.829688 369.558712,400.205607 347.8125,400.205607 C326.066288,400.205607 308.4375,417.829688 308.4375,439.570093 C308.4375,461.310499 326.066288,478.934579 347.8125,478.934579 Z M177.1875,478.934579 C198.933712,478.934579 216.5625,461.310499 216.5625,439.570093 C216.5625,417.829688 198.933712,400.205607 177.1875,400.205607 C155.441288,400.205607 137.8125,417.829688 137.8125,439.570093 C137.8125,461.310499 155.441288,478.934579 177.1875,478.934579 Z M177.1875,255.869159 L177.1875,223.065421 L177.228748,223.065421 C177.201304,221.975295 177.1875,220.881783 177.1875,219.785047 C177.1875,149.12873 234.481061,91.8504673 305.15625,91.8504673 C375.831439,91.8504673 433.125,149.12873 433.125,219.785047 C433.125,220.881783 433.111196,221.975295 433.083752,223.065421 L433.125,223.065421 L433.125,255.869159 L523.525694,255.869159 L525,255.869159 L525,219.785047 C525,98.4011172 426.5726,0 305.15625,0 C183.7399,0 85.3125,98.4011172 85.3125,219.785047 L85.3125,255.869159 L86.7868059,255.869159 L177.1875,255.869159 L177.1875,255.869159 Z M131.25,616.71028 C105.879419,616.71028 85.3125,596.148853 85.3125,570.785047 L85.3125,347.719626 L439.6875,347.719626 L439.6875,570.785047 C439.6875,596.148853 419.120581,616.71028 393.75,616.71028 L131.25,616.71028 L131.25,616.71028 Z M131.25,702 C58.7626266,702 0,643.253064 0,570.785047 L0,255.869159 L525,255.869159 L525,570.785047 C525,643.253064 466.237373,702 393.75,702 L131.25,702 L131.25,702 Z"></path>
+      </g>
+    </svg><b>mini</b><b>Lock</b><b>Lib</b></a>/<b>Encrypt Operation Tests<span class="ext">.coffee</span></b>
+  </h1>
+</header>
+
+
+
+<section id="section-1">
+  <div class="annotation"></div>
+  <div class="code"><div class='highlight'><pre>tape = <span class="hljs-built_in">require</span> <span class="hljs-string">"./tape_test_harness"</span>
+{Alice, Bobby, read, readFromNetwork} = <span class="hljs-built_in">require</span> <span class="hljs-string">"./fixtures"</span>
+
+tape <span class="hljs-string">"EncryptOperation"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span> test.end()
+
+tape <span class="hljs-string">"construct a blank encrypt operation"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+  test.ok operation
+  test.end()
+
+tape <span class="hljs-string">"make miniLock version 1 files by default"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+  test.same operation.version, <span class="hljs-number">1</span>
+  test.end()
+
+tape <span class="hljs-string">"define version, data, name, type, time, miniLockIDs, keys and callback when you construct an encrypt operation"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">version</span>: <span class="hljs-number">2</span>
+    <span class="hljs-attribute">data</span>: data = <span class="hljs-keyword">new</span> Blob
+    <span class="hljs-attribute">name</span>: <span class="hljs-string">"secret.minilock"</span>
+    <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
+    <span class="hljs-attribute">time</span>: time = Date.now()
+    <span class="hljs-attribute">miniLockIDs</span>: miniLockIDs = []
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">callback</span>: c<span class="hljs-function"><span class="hljs-title">allback</span> = <span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+  test.same operation.version, <span class="hljs-number">2</span>
+  test.same operation.data, data
+  test.same operation.name, <span class="hljs-string">"secret.minilock"</span>
+  test.same operation.type, <span class="hljs-string">"text/plain"</span>
+  test.same operation.time, time
+  test.same operation.keys, Alice.keys
+  test.same operation.miniLockIDs, miniLockIDs
+  test.same operation.callback, callback
+  test.end()
+
+tape <span class="hljs-string">"can’t start an encrypt operation without data"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">miniLockIDs</span>: []
+    <span class="hljs-attribute">callback</span>:<span class="hljs-function"> -&gt;</span>
+  test.throws operation.start, <span class="hljs-string">'Can’t start miniLockLib.EncryptOperation without data.'</span>
+  test.end()
+
+tape <span class="hljs-string">"can’t start an encrypt operation without keys"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
+    <span class="hljs-attribute">miniLockIDs</span>: []
+    <span class="hljs-attribute">callback</span>:<span class="hljs-function"> -&gt;</span>
+  test.throws operation.start, <span class="hljs-string">'Can’t start miniLockLib.EncryptOperation without keys.'</span>
+  test.end()
+
+tape <span class="hljs-string">"can’t start an encrypt operation without miniLockIDs"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">callback</span>:<span class="hljs-function"> -&gt;</span>
+  test.throws operation.start, <span class="hljs-string">'Can’t start miniLockLib.EncryptOperation without miniLockIDs.'</span>
+  test.end()
+
+tape <span class="hljs-string">"empty array of ciphertext bytes is ready after operation is constructed"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+  test.ok operation.ciphertextBytes.length <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
+  test.end()
+
+tape <span class="hljs-string">"ephemeral key pair is ready after operation is constructed"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+  test.ok operation.ephemeral.publicKey?
+  test.ok operation.ephemeral.secretKey?
+  test.end()
+
+tape <span class="hljs-string">"file key is ready after operation is constructed"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+  test.ok operation.fileKey.constructor <span class="hljs-keyword">is</span> Uint8Array
+  test.ok operation.fileKey.length <span class="hljs-keyword">is</span> <span class="hljs-number">32</span>
+  test.end()
+
+tape <span class="hljs-string">"file nonce is ready after operation is constructed"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+  test.ok operation.fileNonce.constructor <span class="hljs-keyword">is</span> Uint8Array
+  test.ok operation.fileNonce.length <span class="hljs-keyword">is</span> <span class="hljs-number">16</span>
+  test.end()
+
+tape <span class="hljs-string">"hash for ciphertext bytes is ready after operation is constructed"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+  test.ok operation.hash.digestLength <span class="hljs-keyword">is</span> <span class="hljs-number">32</span> <span class="hljs-comment"># bytes</span>
+  test.ok operation.hash.isFinished <span class="hljs-keyword">is</span> <span class="hljs-literal">false</span>
+  test.ok operation.hash.update?
+  test.ok operation.hash.digest?
+  test.end()
+
+tape <span class="hljs-string">"name has a fixed size of 256 bytes"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation <span class="hljs-attribute">name</span>: <span class="hljs-string">"untitled.txt"</span>
+  decodedName = operation.fixedSizeDecodedName()
+  test.equal decodedName.length, <span class="hljs-number">256</span>
+  test.end()
+
+tape <span class="hljs-string">"undefined name has a fixed size of 256 bytes"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation <span class="hljs-attribute">name</span>: <span class="hljs-literal">undefined</span>
+  decodedName = operation.fixedSizeDecodedName()
+  test.equal decodedName.length, <span class="hljs-number">256</span>
+  filteredBytes = (byte <span class="hljs-keyword">for</span> byte <span class="hljs-keyword">in</span> decodedName <span class="hljs-keyword">when</span> byte <span class="hljs-keyword">isnt</span> <span class="hljs-number">0</span>)
+  test.same filteredBytes.length, <span class="hljs-number">0</span>
+  test.end()
+
+tape <span class="hljs-string">"decoded type has a fixed size of 128 bytes"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
+  decodedType = operation.fixedSizeDecodedType()
+  test.equal decodedType.length, <span class="hljs-number">128</span>
+  test.end()
+
+tape <span class="hljs-string">"decoded time has a fixed size of 24 bytes"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation <span class="hljs-attribute">time</span>: Date.now()
+  decodedTime = operation.fixedSizeDecodedTime()
+  test.equal decodedTime.length, <span class="hljs-number">24</span>
+  test.end()
+
+tape <span class="hljs-string">"encrypt version 1 attributes"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">version</span>: <span class="hljs-number">1</span>
+    <span class="hljs-attribute">name</span>: <span class="hljs-string">"untitled.txt"</span>
+  operation.encryptAttributes(<span class="hljs-number">1</span>)
+  test.same operation.ciphertextBytes.length, <span class="hljs-number">1</span>
+  decryptor = miniLockLib.NaCl.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+<span class="hljs-number">4</span>+<span class="hljs-number">16</span>)
+  decryptedBytes = decryptor.decryptChunk(operation.ciphertextBytes[<span class="hljs-number">0</span>], <span class="hljs-literal">no</span>)
+  test.equal decryptedBytes.length, <span class="hljs-number">256</span>
+  filteredBytes = (byte <span class="hljs-keyword">for</span> byte <span class="hljs-keyword">in</span> decryptedBytes <span class="hljs-keyword">when</span> byte <span class="hljs-keyword">isnt</span> <span class="hljs-number">0</span>)
+  decryptedName = miniLockLib.NaCl.util.encodeUTF8(filteredBytes)
+  test.equal decryptedName, <span class="hljs-string">"untitled.txt"</span>
+  test.end()
+
+tape <span class="hljs-string">"encrypt version 2 attributes"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">version</span>: <span class="hljs-number">2</span>
+    <span class="hljs-attribute">name</span>: <span class="hljs-string">"untitled.txt"</span>
+    <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
+    <span class="hljs-attribute">time</span>: (<span class="hljs-keyword">new</span> Date <span class="hljs-string">"2014-08-17T07:06:50.095Z"</span>).getTime()
+  operation.encryptAttributes(<span class="hljs-number">2</span>)
+  test.same operation.ciphertextBytes.length, <span class="hljs-number">1</span>
+  decryptor = miniLockLib.NaCl.stream.createDecryptor(operation.fileKey, operation.fileNonce, operation.chunkSize+<span class="hljs-number">4</span>+<span class="hljs-number">16</span>)
+  decryptedBytes = decryptor.decryptChunk(operation.ciphertextBytes[<span class="hljs-number">0</span>], <span class="hljs-literal">no</span>)
+  test.equal decryptedBytes.length, <span class="hljs-number">256</span>+<span class="hljs-number">128</span>+<span class="hljs-number">24</span>
+
+  decryptedNameBytes = decryptedBytes.subarray(<span class="hljs-number">0</span>, <span class="hljs-number">256</span>)
+  filteredNameBytes = (byte <span class="hljs-keyword">for</span> byte <span class="hljs-keyword">in</span> decryptedNameBytes <span class="hljs-keyword">when</span> byte <span class="hljs-keyword">isnt</span> <span class="hljs-number">0</span>)
+  decryptedName = miniLockLib.NaCl.util.encodeUTF8(filteredNameBytes)
+  test.equal decryptedName, <span class="hljs-string">"untitled.txt"</span>
+
+  decryptedTypeBytes = decryptedBytes.subarray(<span class="hljs-number">256</span>, <span class="hljs-number">256</span>+<span class="hljs-number">128</span>)
+  filteredTypeBytes = (byte <span class="hljs-keyword">for</span> byte <span class="hljs-keyword">in</span> decryptedTypeBytes <span class="hljs-keyword">when</span> byte <span class="hljs-keyword">isnt</span> <span class="hljs-number">0</span>)
+  decryptedType = miniLockLib.NaCl.util.encodeUTF8(filteredTypeBytes)
+  test.equal decryptedType, <span class="hljs-string">"text/plain"</span>
+
+  decryptedTimeBytes = decryptedBytes.subarray(<span class="hljs-number">256</span>+<span class="hljs-number">128</span>, <span class="hljs-number">256</span>+<span class="hljs-number">128</span>+<span class="hljs-number">24</span>)
+  filteredTimeBytes = (byte <span class="hljs-keyword">for</span> byte <span class="hljs-keyword">in</span> decryptedTimeBytes <span class="hljs-keyword">when</span> byte <span class="hljs-keyword">isnt</span> <span class="hljs-number">0</span>)
+  decryptedTime = miniLockLib.NaCl.util.encodeUTF8(filteredTimeBytes)
+  test.equal decryptedTime, <span class="hljs-string">"2014-08-17T07:06:50.095Z"</span>
+  test.end()
+
+tape <span class="hljs-string">"construct a permit to decrypt for a recipient"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation <span class="hljs-attribute">keys</span>: Alice.keys
+  [uniqueNonce, permit] = operation.permit(Bobby.miniLockID)
+  test.ok uniqueNonce.constructor <span class="hljs-keyword">is</span> Uint8Array
+  test.ok uniqueNonce.length <span class="hljs-keyword">is</span> <span class="hljs-number">24</span>
+  test.ok permit.senderID <span class="hljs-keyword">is</span> Alice.miniLockID
+  test.ok permit.recipientID <span class="hljs-keyword">is</span> Bobby.miniLockID
+  test.ok permit.fileInfo.constructor <span class="hljs-keyword">is</span> String
+  test.ok permit.fileInfo <span class="hljs-keyword">isnt</span> <span class="hljs-string">""</span>
+  test.end()
+
+tape <span class="hljs-string">"recipient can decrypt the key, nonce and hash of the file encoded in their permit"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation <span class="hljs-attribute">keys</span>: Alice.keys
+  [uniqueNonce, permit] = operation.permit(Bobby.miniLockID)
+  decodedFileInfo = miniLockLib.NaCl.util.decodeBase64(permit.fileInfo)
+  decryptedFileInfo = miniLockLib.NaCl.box.open(decodedFileInfo, uniqueNonce, Alice.publicKey, Bobby.secretKey)
+  test.ok decryptedFileInfo
+  fileInfo = JSON.parse(miniLockLib.NaCl.util.encodeUTF8(decryptedFileInfo))
+  test.ok fileInfo.fileKey?
+  test.ok fileInfo.fileNonce?
+  test.ok fileInfo.fileHash <span class="hljs-keyword">is</span> <span class="hljs-string">"aSF6MHmQgJThESHQQjVKfB9VtkgsoaUeGyUN/R7Q7vk="</span>
+  test.end()
+
+tape <span class="hljs-string">"header specifies version 1 of the miniLock file format"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID]
+  operation.constructHeader()
+  test.ok operation.header.version <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
+  test.end()
+
+tape <span class="hljs-string">"header has a Base64 encoded 32-byte ephemeral key"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID]
+  operation.constructHeader()
+  test.ok miniLockLib.NaCl.util.decodeBase64(operation.header.ephemeral).length <span class="hljs-keyword">is</span> <span class="hljs-number">32</span>
+  test.end()
+
+tape <span class="hljs-string">"header for one recipient has one permit"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID]
+  operation.constructHeader()
+  test.ok Object.keys(operation.header.decryptInfo).length <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
+  test.end()
+
+tape <span class="hljs-string">"header for two recipients has two permits"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID, Bobby.miniLockID]
+  operation.constructHeader()
+  test.ok Object.keys(operation.header.decryptInfo).length <span class="hljs-keyword">is</span> <span class="hljs-number">2</span>
+  test.end()</pre></div></div>
+</section>
+
+
+<nav class="files">
+  <a  href="index.html"  >library/index<span class="ext">.coffee</span></a>
+  
+  
+  
+  <br>
+  <a href="BLAKE2s.html">library/BLAKE2s<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Base58.html">library/Base58<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="DecryptOperation.html">library/DecryptOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="EmailAddress.html">library/EmailAddress<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="EncryptOperation.html">library/EncryptOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="ID.html">library/ID<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="KeyPairOperation.html">library/KeyPairOperation<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="NaCl.html">library/NaCl<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="SecretPhrase.html">library/SecretPhrase<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  
+  
+  
+  <br>
+  <a href="readSliceOfData.html">library/readSliceOfData<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="util.html">library/util<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="A Few Demo Tests.html">tests/A Few Demo Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Acceptability Tests.html">tests/Acceptability Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Decrypt Operation Tests.html">tests/Decrypt Operation Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a >tests/Encrypt Operation Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Identification Tests.html">tests/Identification Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Make Key Pair Tests.html">tests/Make Key Pair Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Slow Operation Tests.html">tests/Slow Operation Tests<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="fixtures.html">tests/fixtures<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="tape_test_harness.html">tests/tape_test_harness<span class="ext">.coffee</span></a>
+  
+  
+</nav>
+</body>
+</html>

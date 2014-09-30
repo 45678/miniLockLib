@@ -1,6 +1,4 @@
-.DS_Store
 node_modules
 library.compiled
 tests.compiled
-website
 gh-pages

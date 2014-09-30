@@ -87,4 +87,5 @@ gh-pages: website/miniLockLib.js website/tests.js website/index.js website/annot
 	git add --all
 	git commit --message "Commited with make gh-pages"
 	git push origin gh-pages
+	rm -rf gh-pages
 	git checkout master

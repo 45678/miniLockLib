@@ -168,7 +168,7 @@ a[href]:visited {
 body {
   position:relative;
   padding: 30px 60px;
-  max-width: 900px;
+  max-width: 960px;
   /*min-width: 800px;*/
   outline: 1px solid hsla(0, 0%, 0%, 0.1);
 }
@@ -238,7 +238,7 @@ body > header:first-child h1 svg {
   display: none;
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 960px) {
   body {
     margin: 0 0 0 180px;
   }
@@ -255,7 +255,7 @@ body > header:first-child h1 svg {
   }
 }
 
-@media screen and (min-height: 1024px) and (min-width: 900px) {
+@media screen and (min-height: 1024px) and (min-width: 960px) {
   #page_nav div.public_domain {
     position:fixed;
     left: 0;
@@ -337,7 +337,7 @@ div.example a[href] img {
   #examples {
     margin: 0;
     position: fixed;
-    top: 0; bottom: 0; right: 0; left: 900px;
+    top: 0; bottom: 0; right: 0; left: 960px;
     margin-left: 180px;
     padding: 15px 45px;
     overflow: auto;

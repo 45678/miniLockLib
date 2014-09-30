@@ -72,15 +72,19 @@ pow:
 unlink_pow:
 	rm -rf ~/.pow/minilocklib
 
-gh-pages:
+gh-pages: website/miniLockLib.js website/tests.js website/index.js website/annotated_code.js website/annotated_code
 	git checkout master
-	mkdir -p gh-pages
-	cp -r website/* gh-pages
+	rm -rf gh-pages
+	mkdir gh-pages
+	cp website/*.css gh-pages
+	cp website/*.js gh-pages
+	cp website/*.html gh-pages
+	cp website/*.png gh-pages
+	cp -r website/annotated_code gh-pages
 	git checkout gh-pages
-	rm -f *.html *.js *.css
+	rm -f *.html *.js *.css *.png
 	cp -r gh-pages/* ./
 	git add --all
-	git commit -m "Updated pages."
+	git commit --message "Commited with make gh-pages"
 	git push origin gh-pages
-	rm -rf gh-pages
 	git checkout master

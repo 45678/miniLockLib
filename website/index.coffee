@@ -8,7 +8,7 @@ $(document).ready (event) ->
   renderID location.hash.replace("#", "") if location.hash
 
 $(document).on "click", "a[href^='#']", (event) ->
-  renderID event.target.href.toString().split("#")[1]
+  renderID event.currentTarget.href.toString().split("#")[1]
 
 renderID = (id) ->
   el = document.getElementById(id)

@@ -286,7 +286,7 @@ div.example a[href] img {
   transition: all 500ms ease-in-out;
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1400px) {
   #examples {
     height: 330px;
     margin: 30px 0 60px;
@@ -333,7 +333,7 @@ div.example a[href] img {
   }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 1400px) {
   #examples {
     margin: 0;
     position: fixed;
@@ -341,7 +341,6 @@ div.example a[href] img {
     margin-left: 180px;
     padding: 15px 45px;
     overflow: auto;
-    /*outline: 1px solid hsla(0, 0%, 0%, 0.1);*/
   }
   #examples p {
     margin: 0;

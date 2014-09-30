@@ -35,7 +35,8 @@ article header.function code {
 
 nav,
 #examples,
-footer {
+footer,
+div.annotation {
   font-size: 15px;
   line-height: 20px;
 }
@@ -363,13 +364,26 @@ div.example a[href] img {
 /* ------------------------------------ */
 
 body.annotated_code {
-  margin: 0;
+  /*margin: 0 0 0 180px;*/
   max-width: none;
-  min-width: 1200px;
+  /*min-width: 1200px;*/
 }
 body.annotated_code section {
-  margin: 10px 0 30px;
+  margin: 30px -25px;
+  padding: 0px 25px;
+  border-left: 1px solid hsla(0, 0%, 0%, 0.25);
 }
+
+body.annotated_code div.annotation {
+  position: absolute;
+  top: 0;
+  left: -215px;
+  width: 215px;
+  padding: 0px 15px 0px 15px;
+  /*outline: 1px solid red;*/
+  text-align:right;
+}
+
 body.annotated_code div.annotation p {
   padding: 0;
   margin: 0;
@@ -378,15 +392,17 @@ body.annotated_code div.annotation a[href] {
   color: inherit;
   text-decoration: underline;
   font-family: inherit;
+  white-space: nowrap;
 }
 body.annotated_code div.code pre {
   background: transparent;
   box-shadow: none;
-  padding: 10px;
-  margin: 0 -10px 0 -10px;
-  border: 1px dotted transparent;
-  color: black;
+  padding: 0;
+  margin: 0;
+  /*border-left: 1px solid black;*/
+  /*border: 1px dotted transparent;*/
+  /*color: black;*/
 }
-body.annotated_code nav.files {
+/*body.annotated_code nav.files {
   margin-bottom: 30px;
-}
+}*/

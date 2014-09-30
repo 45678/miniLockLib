@@ -1,16 +1,18 @@
-# Base58 encoding and decoding.
+# [Base58 encoding](http://cryptocoinjs.com/modules/misc/bs58/) from [CryptoCoinJS](http://cryptocoinjs.com/).
 #
-# Originally written by Mike Hearn for BitcoinJ.
+# Originally written by [Mike Hearn](https://github.com/mikehearn) for BitcoinJ.
 #
 # © 2011 Google Inc.
 #
-# Ported to [ECMAScript](http://ecmascript.org/) by Stefan Thomas.
+# Ported to [ECMAScript](http://ecmascript.org/) by [Stefan Thomas](https://github.com/justmoon).
 #
-# Merged `Uint8Array` refactorings from `base58-native` by Stephen Pair.
+# Merged `Uint8Array` refactorings from `base58-native` by [Stephen Pair](https://github.com/gasteve).
 #
 # © 2013 BitPay Inc.
 #
-# Converted to [CoffeeScript](http://coffeescript.org/) with [Js2coffee](http://js2coffee.org/) in 2014 if I recall correctly.
+# Copied from the [cryptocoinjs bs58](https://github.com/cryptocoinjs/bs58) repository and
+# converted to [CoffeeScript](http://coffeescript.org/) with [Js2coffee](http://js2coffee.org/)
+# in 2014 if I recall correctly.
 
 Base58 = module.exports = {}
 Base58.ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"

@@ -23,14 +23,13 @@
 
 <section id="section-1">
   <div class="annotation"></div>
-  <div class="code"><div class='highlight'><pre>ReadOperation = <span class="hljs-built_in">require</span> <span class="hljs-string">"./ReadOperation"</span>
-
-<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EncryptOperation</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">ReadOperation</span></span>
-  <span class="hljs-built_in">module</span>.exports = <span class="hljs-keyword">this</span>
-
+  <div class="code"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EncryptOperation</span></span>
   NaCl = <span class="hljs-built_in">require</span> <span class="hljs-string">"./NaCl"</span>
   BLAKE2s = <span class="hljs-built_in">require</span> <span class="hljs-string">"./BLAKE2s"</span>
   {numberToByteArray} = <span class="hljs-built_in">require</span> <span class="hljs-string">"./util"</span>
+
+  <span class="hljs-attribute">chunkSize</span>: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>
+  <span class="hljs-attribute">readSliceOfData</span>: <span class="hljs-built_in">require</span> <span class="hljs-string">"./readSliceOfData"</span>
 
   <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(params={})</span>-&gt;</span>
     {<span class="hljs-property">@data</span>, <span class="hljs-property">@keys</span>, <span class="hljs-property">@name</span>, <span class="hljs-property">@type</span>, <span class="hljs-property">@time</span>, <span class="hljs-property">@miniLockIDs</span>, <span class="hljs-property">@version</span>, <span class="hljs-property">@callback</span>} = params
@@ -73,7 +72,12 @@
 
   <span class="hljs-attribute">end</span>: <span class="hljs-function"><span class="hljs-params">(error, blob)</span> =&gt;</span>
     <span class="hljs-property">@streamEncryptor</span>.clean() <span class="hljs-keyword">if</span> <span class="hljs-property">@streamEncryptor</span>?
-    <span class="hljs-attribute">ReadOperation</span>::end.call(<span class="hljs-keyword">this</span>, error, blob)
+    <span class="hljs-property">@endedAt</span> = Date.now()
+    <span class="hljs-property">@duration</span> = <span class="hljs-property">@endedAt</span> - <span class="hljs-property">@startedAt</span>
+    <span class="hljs-keyword">if</span> error
+      <span class="hljs-property">@onerror</span>(error)
+    <span class="hljs-keyword">else</span>
+      <span class="hljs-property">@oncomplete</span>(blob)
 
   <span class="hljs-attribute">oncomplete</span>: <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     <span class="hljs-property">@callback</span>(<span class="hljs-literal">undefined</span>, {
@@ -249,16 +253,16 @@
   
   
   <br>
-  <a href="ReadOperation.html">library/ReadOperation<span class="ext">.coffee</span></a>
+  <a href="SecretPhrase.html">library/SecretPhrase<span class="ext">.coffee</span></a>
+  
+  
+  
   
   
   
   
   <br>
-  <a href="SecretPhrase.html">library/SecretPhrase<span class="ext">.coffee</span></a>
-  
-  
-  
+  <a href="readSliceOfData.html">library/readSliceOfData<span class="ext">.coffee</span></a>
   
   
   

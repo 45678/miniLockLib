@@ -841,9 +841,9 @@
     }
   };
 
-  exports.decode = function(id) {
+  exports.decode = function(miniLockID) {
     var encodedChecksum, publicKey, slots, trueChecksum;
-    slots = Base58.decode(id);
+    slots = Base58.decode(miniLockID);
     if (slots.length === 33) {
       publicKey = new Uint8Array(slots.subarray(0, 32));
       encodedChecksum = slots[32];
@@ -857,8 +857,8 @@
     return void 0;
   };
 
-  exports.isAcceptable = function(id) {
-    return /^[1-9A-Za-z]{40,55}$/.test(id) && (this.decode(id) != null);
+  exports.isAcceptable = function(miniLockID) {
+    return /^[1-9A-Za-z]{40,55}$/.test(miniLockID) && (this.decode(miniLockID) != null);
   };
 
 }).call(this);

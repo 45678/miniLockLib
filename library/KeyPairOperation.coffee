@@ -17,7 +17,7 @@ module.exports = class KeyPairOperation
   salt: ->
     NaCl.util.decodeUTF8(@emailAddress)
 
-  # Hash digest of the `secret()` to increase its potential complexity (hand wave?).
+  # Hash digest of the `secret()` to increase its potential complexity.
   hashDigestOfSecret: ->
     (new BLAKE2s length: 32).update(@secret()).digest()
 

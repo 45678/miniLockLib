@@ -1,4 +1,4 @@
-default: miniLockLib.js website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js
+default: miniLockLib.js website/miniLockLib.js website/tests.js website/index.js website/annotated_code.js website/annotated_code
 
 # # Library
 

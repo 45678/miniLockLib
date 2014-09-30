@@ -181,19 +181,19 @@ miniLockLib.encrypt({
   <code>miniLockLib.decrypt({data, keys, callback})</code>
 </header>
 <p>
-  Decrypt a miniLock file.
+  Unlock a miniLock file.
   Returns an instance of <a href="#DecryptOperation"><code>DecryptOperation</code></a>.
 </p>
 <pre>
 miniLockLib.decrypt({
-  data: Blob or File,
+  data: encrypted.data,
   keys: {publicKey: Uint8Array, secretKey: Uint8Array},
   callback: function(error, decrypted) {
     if (decrypted) {
       decrypted.data is a Blob
       decrypted.data.size is the Number of bytes
       decrypted.name is the filename as a String
-      decrypted.senderID identifies the author of the encrypted file.
+      decrypted.senderID identifies the author of the encrypted file
     } else {
       error is a String
     }
@@ -201,14 +201,15 @@ miniLockLib.decrypt({
 })
 </pre>
 <p>
-  Accepts the following parameters:
+  <code>miniLockLib.decrypt</code> accepts the following parameters:
 </p>
 <ul>
 <li>
-  <code>data</code> is a <code>Blob</code> of encrypted data.
+  <code>data</code> is a <a href="http://www.w3.org/TR/FileAPI/#blob"><code>Blob</code></a> to be decrypted.
+  An instance of <a href="http://www.w3.org/TR/FileAPI/#file"><code>File</code></a> is also acceptable.
 </li>
 <li>
-  <code>keys</code> is the public-and-private key pair that will be used to unlock the file.
+  <code>keys</code> defines key pair that will be used to unlock the file.
 </li>
 <li>
   <code>callback</code> is a function that will receive <code>decrypted</code> data or an <code>error</code>.

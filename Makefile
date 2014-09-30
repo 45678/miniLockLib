@@ -47,19 +47,20 @@ tests/%.coffee: tests.compiled
 tests.compiled:
 	mkdir -p tests.compiled
 
+# Remove all compiled Javascript code and annotated code pages.
 clean:
 	rm -f library.compiled/*.js
 	rm -f tests.compiled/*.js
 	rm -f website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js
 	rm -rf website/annotated_code
 
+# Setup POW to serve http://minilocklib.dev/
 install:
-	# Setup POW to serve http://minilocklib.dev/tests.html
 	mkdir ~/.pow/minilocklib
 	ln -s $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/website ~/.pow/minilocklib/public
 
+# Remove POW file.
 uninstall:
-	# Remove POW config.
 	rm -rf ~/.pow/minilocklib
 
 gh-pages:

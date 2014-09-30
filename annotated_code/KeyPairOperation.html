@@ -53,7 +53,7 @@
 
 
 <section id="section-4">
-  <div class="annotation"><p>Hash digest of the <code>secret()</code> to increase its potential complexity (hand wave?).</p>
+  <div class="annotation"><p>Hash digest of the <code>secret()</code> to increase its potential complexity.</p>
 </div>
   <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">hashDigestOfSecret</span>:<span class="hljs-function"> -&gt;</span>
     (<span class="hljs-keyword">new</span> BLAKE2s <span class="hljs-attribute">length</span>: <span class="hljs-number">32</span>).update(<span class="hljs-property">@secret</span>()).digest()</pre></div></div>

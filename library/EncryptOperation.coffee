@@ -7,6 +7,8 @@ class EncryptOperation extends ReadOperation
   BLAKE2s = require "./BLAKE2s"
   {numberToByteArray} = require "./util"
 
+  chunkSize: 1024 * 1024
+
   constructor: (params={})->
     {@data, @keys, @name, @type, @time, @miniLockIDs, @version, @callback} = params
     @version = 1 if @version is undefined
@@ -48,7 +50,12 @@ class EncryptOperation extends ReadOperation
 
   end: (error, blob) =>
     @streamEncryptor.clean() if @streamEncryptor?
-    ReadOperation::end.call(this, error, blob)
+    @endedAt = Date.now()
+    @duration = @endedAt - @startedAt
+    if error
+      @onerror(error)
+    else
+      @oncomplete(blob)
 
   oncomplete: (blob) ->
     @callback(undefined, {

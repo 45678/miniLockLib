@@ -564,6 +564,8 @@
 
     numberToByteArray = require("./util").numberToByteArray;
 
+    EncryptOperation.prototype.chunkSize = 1024 * 1024;
+
     function EncryptOperation(params) {
       if (params == null) {
         params = {};
@@ -630,7 +632,13 @@
       if (this.streamEncryptor != null) {
         this.streamEncryptor.clean();
       }
-      return ReadOperation.prototype.end.call(this, error, blob);
+      this.endedAt = Date.now();
+      this.duration = this.endedAt - this.startedAt;
+      if (error) {
+        return this.onerror(error);
+      } else {
+        return this.oncomplete(blob);
+      }
     };
 
     EncryptOperation.prototype.oncomplete = function(blob) {

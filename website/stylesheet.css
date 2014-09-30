@@ -168,8 +168,9 @@ a[href]:visited {
 body {
   position:relative;
   padding: 30px 60px;
-  max-width: 1024px;
-
+  max-width: 900px;
+  /*min-width: 800px;*/
+  outline: 1px solid hsla(0, 0%, 0%, 0.1);
 }
 
 h1 { margin: -30px 0 0; line-height: 45px; }
@@ -237,25 +238,24 @@ body > header:first-child h1 svg {
   display: none;
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 900px) {
   body {
     margin: 0 0 0 180px;
   }
   #page_nav {
     position: fixed;
-    background: hsla(60, 0%, 95%, 1);
+    /*outline: 1px solid hsla(0, 0%, 0%, 0.1);*/
     overflow: auto;
     left: 0; top: 0; bottom: 0;
     width: 180px;
     padding: 15px;
-    border-right: 1px solid hsla(0, 0%, 0%, 0.1);
   }
   #page_nav em {
     white-space: nowrap;
   }
 }
 
-@media screen and (min-height: 1024px) and (min-width: 1024px) {
+@media screen and (min-height: 1024px) and (min-width: 900px) {
   #page_nav div.public_domain {
     position:fixed;
     left: 0;
@@ -337,11 +337,11 @@ div.example a[href] img {
   #examples {
     margin: 0;
     position: fixed;
-    top: 0; bottom: 0; right: 0; left: 1024px;
+    top: 0; bottom: 0; right: 0; left: 900px;
     margin-left: 180px;
     padding: 15px 45px;
     overflow: auto;
-    border-left: 1px solid hsla(0, 0%, 0%, 0.1);
+    /*outline: 1px solid hsla(0, 0%, 0%, 0.1);*/
   }
   #examples p {
     margin: 0;
@@ -367,6 +367,7 @@ body.annotated_code {
   /*margin: 0 0 0 180px;*/
   max-width: none;
   /*min-width: 1200px;*/
+  outline: none;
 }
 body.annotated_code section {
   margin: 30px -25px;
@@ -379,9 +380,8 @@ body.annotated_code div.annotation {
   top: 0;
   left: -215px;
   width: 215px;
-  padding: 0px 15px 0px 15px;
-  /*outline: 1px solid red;*/
-  text-align:right;
+  padding: 0px 15px;
+  text-align: right;
 }
 
 body.annotated_code div.annotation p {
@@ -399,10 +399,8 @@ body.annotated_code div.code pre {
   box-shadow: none;
   padding: 0;
   margin: 0;
-  /*border-left: 1px solid black;*/
-  /*border: 1px dotted transparent;*/
-  /*color: black;*/
 }
-/*body.annotated_code nav.files {
-  margin-bottom: 30px;
-}*/
+
+.error_strings {
+  margin-right: -50px;
+}

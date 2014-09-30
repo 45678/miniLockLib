@@ -54,13 +54,13 @@ clean:
 	rm -f website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js
 	rm -rf website/annotated_code
 
-# Setup POW to serve http://minilocklib.dev/
-install:
-	mkdir ~/.pow/minilocklib
-	ln -s $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/website ~/.pow/minilocklib/public
+# Establish a link with [Pow](http://pow.cx/) to serve the `website` folder at `http://minilocklib.dev/`.
+pow:
+	mkdir -p ~/.pow/minilocklib
+	ln -s $(PWD)/website ~/.pow/minilocklib/public
 
-# Remove POW file.
-uninstall:
+# Removes files added to your `~/.pow` folder by `make pow`.
+unlink_pow:
 	rm -rf ~/.pow/minilocklib
 
 gh-pages:

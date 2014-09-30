@@ -868,10 +868,8 @@
 (function() {
   var KeyPairOperation;
 
-  KeyPairOperation = (function() {
+  module.exports = KeyPairOperation = (function() {
     var BLAKE2s, EmailAddress, NaCl, SecretPhrase, calculateCurve25519KeyPair, scrypt;
-
-    module.exports = KeyPairOperation;
 
     BLAKE2s = require("./BLAKE2s");
 

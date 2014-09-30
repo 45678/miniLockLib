@@ -1,6 +1,4 @@
-class KeyPairOperation
-  module.exports = this
-
+module.exports = class KeyPairOperation
   BLAKE2s = require "./BLAKE2s"
   EmailAddress = require "./EmailAddress"
   NaCl = require "./NaCl"

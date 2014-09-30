@@ -1,6 +1,6 @@
 default: miniLockLib.js website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js
 
-# Create a standalone copy of miniLockLib.js in the website folder.
+# Create a standalone copy of miniLockLib.js at project root.
 miniLockLib.js: website/miniLockLib.js
 	cp website/miniLockLib.js miniLockLib.js
 

@@ -444,8 +444,12 @@ This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://
   project which was also written by <a href="https://github.com/dchest">Mr. Chestnykh</a>.
 <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.</p>
 
-<p><code>miniLockLib.zxcvbn</code> is Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
-It is used to measure the entropy in secret phrases.</p>
+<a id="zxcvbn"></a>
+<p>
+  <code>miniLockLib.zxcvbn</code> is a modified copy of Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
+  The original script is modified so that it exports a module instead of defining itself on <code>window</code>.
+  miniLockLib relies on <code>zxcvbn</code> to measure entropy in secret phrases.
+</p>
 </article>
 
 <article>

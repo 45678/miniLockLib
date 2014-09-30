@@ -20,7 +20,7 @@ library.compiled/scrypt-async.js:
 	curl -s https://raw.githubusercontent.com/dchest/scrypt-async-js/master/scrypt-async.js \
 		> library.compiled/scrypt-async.js
 
-# Make a copy of zxcvbn.js that exports itself as a module.
+# Make a copy of zxcvbn.js that exports a module instead of defining itself on `window`.
 library.compiled/zxcvbn.js:
 	cat node_modules/zxcvbn/zxcvbn.js \
 		| sed "s/window.zxcvbn=o/module.exports=o/" \

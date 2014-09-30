@@ -1,9 +1,17 @@
-# Base58 encoding/decoding
-# Originally written by Mike Hearn for BitcoinJ
-# Copyright (c) 2011 Google Inc
-# Ported to JavaScript by Stefan Thomas
-# Merged Uint8Array refactorings from base58-native by Stephen Pair
-# Copyright (c) 2013 BitPay Inc
+# Base58 encoding and decoding.
+#
+# Originally written by Mike Hearn for BitcoinJ.
+#
+# © 2011 Google Inc.
+#
+# Ported to [ECMAScript](http://ecmascript.org/) by Stefan Thomas.
+#
+# Merged `Uint8Array` refactorings from `base58-native` by Stephen Pair.
+#
+# © 2013 BitPay Inc.
+#
+# Converted to [CoffeeScript](http://coffeescript.org/) with [Js2coffee](http://js2coffee.org/) in 2014 if I recall correctly.
+
 Base58 = module.exports = {}
 Base58.ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 Base58.ALPHABET_MAP = {}
@@ -37,7 +45,6 @@ Base58.encode = (buffer) ->
       carry = (carry / Base58.BASE) | 0
     i++
 
-  # deal with leading zeros
   i = 0
   while i < buffer.length - 1 and buffer[i] is 0
     digits.push 0
@@ -74,7 +81,6 @@ Base58.decode = (string) ->
       carry >>= 8
     i++
 
-  # deal with leading zeros
   i = 0
   while i < input.length - 1 and input[i] is 0
     bytes.push 0

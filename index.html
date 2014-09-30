@@ -33,7 +33,7 @@
   <p>
     The <a href="http://github.com/45678/miniLockLib/">source code repository</a> is hosted at GitHub
     where you might go to <a href="https://github.com/45678/miniLockLib/issues">discuss issues</a> and <a href="https://github.com/45678/miniLockLib/pulls">propose changes</a>.
-    Or you might read the <a href="annotated_code/index.html">annotated code</a>
+    Or you might read the <a href="annotated_code/">annotated code</a>
     and run the <a href="tests.html">test suite</a> if you are particularly interested in the details.
   </p>
 </div>
@@ -83,10 +83,14 @@
   <code>miniLockLib.makeKeyPair(secretPhrase, emailAddress, callback)</code>
 </header>
 <p>
-  Generate a public-and-private key pair from a secret phrase and an email address.
+  Generates a public–secret key pair from a <code>secretPhrase</code> and <code>emailAddress</code>.
   Returns an instance of <a href="#KeyPairOperation"><code>KeyPairOperation</code></a>.
+  Your <code>callback</code> should be prepared to receive a set of <code>keys</code> or an <code>error</code>.
 </p>
 <pre>
+secretPhrase = document.getElementById("secret_phrase_input").value
+emailAddress = document.getElementById("email_address_input").value
+
 miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
   if (keys) {
     keys.publicKey is a Uint8Array
@@ -97,11 +101,9 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
 })
 </pre>
 <p>
-  The <code>secretPhrase</code> and <code>emailAddress</code> arguments are both tested to ensure they comply with <a href="https://github.com/kaepora/miniLock/blob/master/README.md#2-key-derivation">miniLock’s input requirements</a>.
+  <code>secretPhrase</code> and <code>emailAddress</code> are both tested to ensure they meet <a href="https://github.com/kaepora/miniLock/blob/master/README.md#2-key-derivation">miniLock’s input requirements</a>.
   The phrase must be at least 32 characters long and it must contain at least 100 bits of entropy.
   The address musn’t be invalid.
-</p>
-<p>
   If either input is unacceptable your <code>callback</code> will receive one of the following <code>error</code> strings:
 </p>
 <ul class="error_strings">
@@ -112,7 +114,7 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
 </ul>
 <p>
   If all the input is OK your <code>callback</code> will receive a set of <code>keys</code> when the operation is complete.
-  It typically takes about two seconds to complete a key pair.
+  It typically takes two-to-three seconds to complete a key pair operation.
 </p>
 
 <header class="function">
@@ -356,23 +358,54 @@ miniLockLib.decrypt({
 <p>
   Potential <code>error</code> strings are as follows:
 </p>
-<ul class="error_strings">
-  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 1 attributes."</code></li>
-  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 2 attributes."</code></li>
-  <li><code class="hljs-string">"DecryptOperation failed to decrypt file data."</code></li>
-  <li><code class="hljs-string">"File is not encrypted for this recipient."</code></li>
-</ul>
 </article>
 
 <article>
 <header class="constructor function">
   <a id="DecryptOperation"></a>
   <h2>DecryptOperation</h2>
-  <!-- <code>decryptOperation = new miniLockLib.DecryptOperation(params)</code> -->
+  <code>decryptOperation = new miniLockLib.DecryptOperation(params)</code>
 </header>
-<pre>
-decryptOperation = new miniLockLib.DecryptOperation(params)
+<p>
+  Decrypt operations read and unlock miniLock files.
+  The constructor accepts <code>data</code> and <code>keys</code> parameters or
+  you can define them on the operation before you call <code>start</code>.
+</p>
 
+<pre>
+decryptOperation = new miniLockLib.DecryptOperation({
+  data: new Blob
+  keys: {publicKey:, secretKey:}
+})
+</pre>
+
+<header class="function">
+  <a id="DecryptOperation::data"></a>
+  <h2>DecryptOperation::data</h2>
+  <code>decryptOperation.data = blob</code>
+</header>
+<p>
+  Defines the data that should be decrypted.
+</p>
+
+<header class="function">
+  <a id="DecryptOperation::keys"></a>
+  <h2>DecryptOperation::keys</h2>
+  <code>decryptOperation.keys = keys</code>
+</header>
+<p>
+  Defines the public–secret key pair that should be used to unlock this file.
+</p>
+
+<header class="function">
+  <a id="DecryptOperation::start"></a>
+  <h2>DecryptOperation::start</h2>
+  <code>decryptOperation.start(callback)</code>
+</header>
+<p>
+  Start the operation and define a <code>callback</code> that will receive <code>decrypted.data</code> when the operation is complete or an <code>error</code> when there is a failure.
+</p>
+<pre>
 decryptOperation.start(function(error, decrypted){
   if (decrypted) {
     decrypted.data is a Blob
@@ -385,41 +418,15 @@ decryptOperation.start(function(error, decrypted){
 })
 </pre>
 <p>
-  Decrypt operations read and unlock encrypted miniLock files.
+  If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
 </p>
-<p>
-  All <code>params</code> are optional durring construction.
-  You may define <code>data</code>, <code>name</code>, <code>keys</code> and <code>miniLockIDs</code>.
-</p>
-<p>
-</p>
+<ul class="error_strings">
+  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 1 attributes."</code></li>
+  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 2 attributes."</code></li>
+  <li><code class="hljs-string">"DecryptOperation failed to decrypt file data."</code></li>
+  <li><code class="hljs-string">"File is not encrypted for this recipient."</code></li>
+</ul>
 
-<header class="function">
-  <a id="DecryptOperation::data"></a>
-  <h2>DecryptOperation::data</h2>
-  <code>decryptOperation.data = blob</code>
-</header>
-<p>
-  Define the encrypted data that will be decrypted.
-</p>
-
-<header class="function">
-  <a id="DecryptOperation::keys"></a>
-  <h2>DecryptOperation::keys</h2>
-  <code>decryptOperation.keys = keys</code>
-</header>
-<p>
-  Defines the public–secret key pair that will be used to unlock this file.
-</p>
-
-<header class="function">
-  <a id="DecryptOperation::start"></a>
-  <h2>DecryptOperation::start</h2>
-  <code>decryptOperation.start(callback)</code>
-</header>
-<p>
-  Start the operation and optionally define the callback function.
-</p>
 </article>
 
 <article>

@@ -231,7 +231,7 @@ miniLockLib.decrypt({
 
 <article>
   <a id="SecretPhrase"></a>
-  <h1>SecretPhrase</h1>
+  <h2>SecretPhrase</h2>
   <p>
     The secret phrase module supplies an acceptance test to validate secret phrase input.
   </p>
@@ -250,7 +250,7 @@ miniLockLib.decrypt({
 
 <article>
   <a id="EmailAddress"></a>
-  <h1>EmailAddress</h1>
+  <h2>EmailAddress</h2>
   <p>
     The email address module supplies an acceptance test to validate email address input.
   </p>
@@ -269,7 +269,7 @@ miniLockLib.decrypt({
 
 <article>
   <a id="ID"></a>
-  <h1>ID</h1>
+  <h2>ID</h2>
   <p>
     The identification module provides functions for encoding (and decoding) miniLock IDs
     and it also includes an acceptance test to validate miniLock ID input.
@@ -307,22 +307,16 @@ miniLockLib.decrypt({
 </article>
 
 <article>
-<header class="constructor function">
-  <a id="EncryptOperation"></a>
-  <h2>EncryptOperation</h2>
-  <code>new miniLockLib.EncryptOperation(params)</code>
-</header>
-<p>
-  Instances of <code>EncryptOperation</code> make miniLock files.
-</p>
-<p>
-  Constructs an instance of <code>DecryptOperation</code>.
-</p>
-<p>
-  <code>params</code> are optional.
-  You may define <code>data</code>, <code>name</code>, <code>keys</code> and <code>miniLockIDs</code>.
-</p>
-
+  <header class="constructor function">
+    <a id="EncryptOperation"></a>
+    <h2>EncryptOperation</h2>
+    <code>new miniLockLib.EncryptOperation(params)</code>
+  </header>
+  <p>
+    Instances of <code>EncryptOperation</code> make miniLock files.
+    The constructor accepts <code>data</code>, <code>name</code>, <code>keys</code> and <code>miniLockIDs</code> parameters
+    or you can define them on the operation before you call <code>start</code>.
+  </p>
 <div class="member">
   <header class="function">
     <a id="EncryptOperation::data"></a>
@@ -542,12 +536,12 @@ keyPairOperation.start(function(error, keys){
 </article>
 
 <article>
-<a id="Extras"></a>
-<h1>Special Extras</h1>
-<p>
-  miniLockLib is composed of code from several dandy projects.
-  All of these fine modules are exposed so that you can easily apply their functions in your own computer programs.
-</p>
+  <a id="Extras"></a>
+  <h2>Special Extras</h2>
+  <p>
+    miniLockLib is composed of code from several dandy projects.
+    All of these fine modules are exposed so that you can easily apply their functions in your own computer programs.
+  </p>
 <div>
   <a id="Base58"></a>
   <h2>Base58</h2>
@@ -593,12 +587,12 @@ keyPairOperation.start(function(error, keys){
 </article>
 
 <article>
-<a id="Giants"></a>
-<h1>Friendly Giants</h1>
-<p>
-  We send magic seahorses to <a href="https://github.com/dchest">Dmitry Chestnykh</a> &amp; <a href="https://github.com/kaepora">Nadim Kobeissi</a> everyday.
-  Their ongoing work on <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> &amp; <a href="https://github.com/kaepora/miniLock">miniLock</a> form the core of this library.
-</p>
+  <a id="Giants"></a>
+  <h2>Friendly Giants</h2>
+  <p>
+    We send magic seahorses to <a href="https://github.com/dchest">Dmitry Chestnykh</a> &amp; <a href="https://github.com/kaepora">Nadim Kobeissi</a> everyday.
+    Their ongoing work on <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> &amp; <a href="https://github.com/kaepora/miniLock">miniLock</a> form the core of this library.
+  </p>
 </article>
 
 <nav id="page_nav">

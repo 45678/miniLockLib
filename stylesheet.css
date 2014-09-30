@@ -181,14 +181,15 @@ ul { margin: 20px 0; }
 
 code, tt { padding: 1px 5px; }
 
-article { margin: 60px 0px; }
+article { padding: 15px 0px; }
+article > div { padding: 15px 0px; }
 article > h1 { margin: 0; }
 article > a[id],
 article header.function a[id] {
   position: absolute; top: -55px;
 }
 
-article header.function { margin: 60px 0px 0px; }
+article header.function { margin: 0px 0px 0px; }
 article header.function h2 { margin: 0 0 5px; }
 article header.function code { background:transparent; padding: 0; margin: 0; box-shadow: none;}
 

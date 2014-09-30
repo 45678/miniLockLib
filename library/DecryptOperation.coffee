@@ -1,13 +1,10 @@
-ReadOperation = require "./ReadOperation"
-
-class DecryptOperation extends ReadOperation
-  module.exports = this
-
+module.exports = class DecryptOperation
   NaCl = require "./NaCl"
   {encodeUTF8, decodeBase64} = NaCl.util
   {byteArrayToNumber} = require "./util"
 
   chunkSize: 1024 * 1024
+  readSliceOfData: require "./readSliceOfData"
 
   constructor: (params={}) ->
     {@data, @keys, @callback} = params

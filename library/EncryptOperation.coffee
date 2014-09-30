@@ -1,13 +1,10 @@
-ReadOperation = require "./ReadOperation"
-
-class EncryptOperation extends ReadOperation
-  module.exports = this
-
+module.exports = class EncryptOperation
   NaCl = require "./NaCl"
   BLAKE2s = require "./BLAKE2s"
   {numberToByteArray} = require "./util"
 
   chunkSize: 1024 * 1024
+  readSliceOfData: require "./readSliceOfData"
 
   constructor: (params={})->
     {@data, @keys, @name, @type, @time, @miniLockIDs, @version, @callback} = params

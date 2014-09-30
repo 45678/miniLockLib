@@ -1,5 +1,7 @@
 default: miniLockLib.js website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js
 
+# # Library
+
 # Create a standalone copy of miniLockLib.js at project root.
 miniLockLib.js: website/miniLockLib.js
 	cp website/miniLockLib.js miniLockLib.js
@@ -27,17 +29,7 @@ library.compiled/zxcvbn.js:
 		| sed "s/window.zxcvbn=o/module.exports=o/" \
 		> library.compiled/zxcvbn.js
 
-# Create annotated_code.js in the website folder.
-website/annotated_code.js: website/annotated_code.coffee
-	coffee --compile website/annotated_code.coffee
-
-# Create index.js in the website folder.
-website/index.js: website/index.coffee
-	coffee --compile website/index.coffee
-
-# Create tests.js in the website folder.
-website/tests.js: tests/%.coffee
-	browserify --debug tests.compiled/*.js > website/tests.js
+# # Tests
 
 # Compile CoffeeScript tests to the tests.compiled folder.
 tests/%.coffee: tests.compiled
@@ -46,6 +38,29 @@ tests/%.coffee: tests.compiled
 # Folder for compiled tests.
 tests.compiled:
 	mkdir -p tests.compiled
+
+# Make script for the test suite.
+website/tests.js: tests/%.coffee
+	browserify --debug tests.compiled/*.js > website/tests.js
+
+# # Website
+
+# Make script for website index.
+website/index.js: website/index.coffee
+	coffee --compile website/index.coffee
+
+# Make script for annotated code pages.
+website/annotated_code.js: website/annotated_code.coffee
+	coffee --compile website/annotated_code.coffee
+
+# Make annotated code HTML files.
+website/annotated_code: library/%.coffee tests/%.coffee website/annotated_code.html.jst
+	mkdir -p website/annotated_code
+	docco --output website/annotated_code --template website/annotated_code.html.jst --css website/stylesheet.css library/*.coffee tests/*.coffee
+
+
+
+# # Misc
 
 # Remove all compiled Javascript code and annotated code pages.
 clean:

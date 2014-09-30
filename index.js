@@ -24,7 +24,7 @@
   });
 
   $(document).on("click", "a[href^='#']", function(event) {
-    return renderID(event.target.href.toString().split("#")[1]);
+    return renderID(event.currentTarget.href.toString().split("#")[1]);
   });
 
   renderID = function(id) {

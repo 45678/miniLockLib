@@ -353,11 +353,26 @@ miniLockLib.decrypt({
   <code>encryptOperation.start(callback)</code>
 </header>
 <p>
-  Start the operation and optionally define the callback function.
+  Start the operation and define a <code>callback</code> that will receive <code>encrypted.data</code> when the operation is complete or an <code>error</code> when there is a failure.
 </p>
+<pre>
+encryptOperation.start(function(error, decrypted){
+  if (decrypted) {
+    encrypted.data is a Blob
+    encrypted.data.size is the Number of bytes
+    encrypted.name is the filename as a String
+    encrypted.senderID identifies the author of the encrypted file.
+  } else {
+    console.error(error)
+  }
+})
+</pre>
 <p>
-  Potential <code>error</code> strings are as follows:
+  If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
 </p>
+<ul class="error_strings">
+  <li><code class="hljs-string">"EncryptOperation failed to encrypt file data.""</code></li>
+</ul>
 </article>
 
 <article>

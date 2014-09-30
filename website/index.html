@@ -440,9 +440,14 @@ It has been modified slightly to work in a web agent <code>window</code> instead
 This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
 <code>miniLockLib</code> relies on <code>NaCl</code> for a host of cryptographic and encoding functions.</p>
 
-<p><code>miniLockLib.scrypt</code> is a copy of <code>scrypt-async.js</code> from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a>
-  project which was also written by <a href="https://github.com/dchest">Mr. Chestnykh</a>.
-<code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.</p>
+<a id="scrypt"></a>
+<p>
+  <code>miniLockLib.scrypt</code> is an unmodified copy of <code>scrypt-async.js</code>
+  from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a> project
+  written by <a href="https://github.com/dchest">Mr. Chestnykh</a> once again.
+  <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.
+  miniLockLib relies on <code>scrypt</code> to make key pairs.
+</p>
 
 <a id="zxcvbn"></a>
 <p>

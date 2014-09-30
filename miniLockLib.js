@@ -534,11 +534,11 @@
 (function() {
   var EmailAddressPattern;
 
-  EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i;
-
   exports.isAcceptable = function(emailAddress) {
     return EmailAddressPattern.test(emailAddress);
   };
+
+  EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i;
 
 }).call(this);
 
@@ -962,11 +962,11 @@
 (function() {
   var zxcvbn;
 
-  zxcvbn = require("./zxcvbn");
-
   exports.isAcceptable = function(secretPhrase) {
     return (secretPhrase != null ? secretPhrase.length : void 0) >= 32 && zxcvbn(secretPhrase).entropy >= 100;
   };
+
+  zxcvbn = require("./zxcvbn");
 
 }).call(this);
 

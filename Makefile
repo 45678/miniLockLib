@@ -80,8 +80,7 @@ gh-pages:
 	rm -f *.html *.js *.css
 	cp -r gh-pages/* ./
 	git add --all
-	git status
 	git commit -m "Updated pages."
-	git status
+	git push origin gh-pages
 	rm -rf gh-pages
 	git checkout master

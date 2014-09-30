@@ -51,6 +51,7 @@ website/annotated_code.js: website/annotated_code.coffee
 website/annotated_code: library/%.coffee tests/%.coffee website/annotated_code.html.jst
 	mkdir -p website/annotated_code
 	docco --output website/annotated_code --template website/annotated_code.html.jst --css website/stylesheet.css library/*.coffee tests/*.coffee
+	rm website/annotated_code/stylesheet.css
 
 
 

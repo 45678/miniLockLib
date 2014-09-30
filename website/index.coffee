@@ -5,16 +5,27 @@ $(document).ready (event) ->
   hljs.highlightBlock(pre) for pre in document.querySelectorAll("pre")
 
 $(document).ready (event) ->
-  renderID location.hash.replace("#", "") if location.hash
+  if location.hash
+    id = location.hash.replace("#", "")
+    render({id})
 
 $(document).on "click", "a[href^='#']", (event) ->
-  renderID event.currentTarget.href.toString().split("#")[1]
+  id = event.currentTarget.href.toString().split("#")[1]
+  render({id})
+
+$(document).on "mouseover", "body > header, #introduction, #setup, #examples", (event) ->
+  baseURL = location.toString().split("#")[0]
+  history.replaceState({}, "", baseURL) if location.hash
+  render()
 
 $(document).on "mouseover", "body > article, article > div", (event) ->
-  renderID event.currentTarget.querySelector("a[id]").id
+  id = event.currentTarget.querySelector("a[id]").id
+  baseURL = location.toString().split("#")[0]
+  history.replaceState({}, "", "#{baseURL}##{id}") unless location.hash is "##{id}"
+  render({id})
 
-renderID = (id) ->
-  el = document.getElementById(id)
+render = (options={}) ->
   $("*.selected").removeClass("selected")
-  $("a[href='##{id}']").addClass("selected")
-  $(el).next("h1, h2").addClass("selected")
+  if options.id
+    $("a[href='##{options.id}']").addClass("selected")
+    $(document.getElementById(options.id)).next("h1, h2").addClass("selected")

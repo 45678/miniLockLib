@@ -28,7 +28,7 @@
 <% } %>
 
 <nav class="files">
-  <a <% if (/index/.test(title)) { %> href="index.html" <% } %> >library/index<span class="ext">.coffee</span></a>
+  <a <% if (!/index/.test(title)) { %> href="index.html" <% } %> >library/index<span class="ext">.coffee</span></a>
   <% for (var i=0, l=sources.length; i<l; i++) { %>
   <% var source = sources[i]; %>
   <% if (!source.match("index")) { %>

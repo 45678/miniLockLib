@@ -22,14 +22,16 @@
 
 
 <section id="section-1">
-  <div class="annotation"><p>Base58 encoding/decoding
-Originally written by Mike Hearn for BitcoinJ
-Copyright (c) 2011 Google Inc
-Ported to JavaScript by Stefan Thomas
-Merged Uint8Array refactorings from base58-native by Stephen Pair
-Copyright (c) 2013 BitPay Inc</p>
+  <div class="annotation"><p>Base58 encoding and decoding.</p>
+<p>Originally written by Mike Hearn for BitcoinJ.</p>
+<p>© 2011 Google Inc.</p>
+<p>Ported to <a href="http://ecmascript.org/">ECMAScript</a> by Stefan Thomas.</p>
+<p>Merged <code>Uint8Array</code> refactorings from <code>base58-native</code> by Stephen Pair.</p>
+<p>© 2013 BitPay Inc.</p>
+<p>Converted to <a href="http://coffeescript.org/">CoffeeScript</a> with <a href="http://js2coffee.org/">Js2coffee</a> in 2014 if I recall correctly.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>Base58 = <span class="hljs-built_in">module</span>.exports = {}
+  <div class="code"><div class='highlight'><pre>
+Base58 = <span class="hljs-built_in">module</span>.exports = {}
 Base58.ALPHABET = <span class="hljs-string">"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"</span>
 Base58.ALPHABET_MAP = {}
 i = <span class="hljs-number">0</span>
@@ -60,14 +62,9 @@ Base58.e<span class="hljs-function"><span class="hljs-title">ncode</span> = <spa
     <span class="hljs-keyword">while</span> carry
       digits.push carry % Base58.BASE
       carry = (carry / Base58.BASE) | <span class="hljs-number">0</span>
-    i++</pre></div></div>
-</section>
+    i++
 
-
-<section id="section-2">
-  <div class="annotation"><p>deal with leading zeros</p>
-</div>
-  <div class="code"><div class='highlight'><pre>  i = <span class="hljs-number">0</span>
+  i = <span class="hljs-number">0</span>
   <span class="hljs-keyword">while</span> i &lt; buffer.length - <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> buffer[i] <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
     digits.push <span class="hljs-number">0</span>
     i++
@@ -101,14 +98,9 @@ Base58.d<span class="hljs-function"><span class="hljs-title">ecode</span> = <spa
     <span class="hljs-keyword">while</span> carry
       bytes.push carry &amp; <span class="hljs-number">0xff</span>
       carry &gt;&gt;= <span class="hljs-number">8</span>
-    i++</pre></div></div>
-</section>
+    i++
 
-
-<section id="section-3">
-  <div class="annotation"><p>deal with leading zeros</p>
-</div>
-  <div class="code"><div class='highlight'><pre>  i = <span class="hljs-number">0</span>
+  i = <span class="hljs-number">0</span>
   <span class="hljs-keyword">while</span> i &lt; input.length - <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> input[i] <span class="hljs-keyword">is</span> <span class="hljs-number">0</span>
     bytes.push <span class="hljs-number">0</span>
     i++

@@ -534,11 +534,11 @@
 (function() {
   var EmailAddressPattern;
 
-  EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i;
-
   exports.isAcceptable = function(emailAddress) {
     return EmailAddressPattern.test(emailAddress);
   };
+
+  EmailAddressPattern = /[-0-9A-Z.+_]+@[-0-9A-Z.+_]+\.[A-Z]{2,20}/i;
 
 }).call(this);
 
@@ -841,9 +841,9 @@
     }
   };
 
-  exports.decode = function(id) {
+  exports.decode = function(miniLockID) {
     var encodedChecksum, publicKey, slots, trueChecksum;
-    slots = Base58.decode(id);
+    slots = Base58.decode(miniLockID);
     if (slots.length === 33) {
       publicKey = new Uint8Array(slots.subarray(0, 32));
       encodedChecksum = slots[32];
@@ -857,8 +857,8 @@
     return void 0;
   };
 
-  exports.isAcceptable = function(id) {
-    return /^[1-9A-Za-z]{40,55}$/.test(id) && (this.decode(id) != null);
+  exports.isAcceptable = function(miniLockID) {
+    return /^[1-9A-Za-z]{40,55}$/.test(miniLockID) && (this.decode(miniLockID) != null);
   };
 
 }).call(this);
@@ -868,18 +868,16 @@
 (function() {
   var KeyPairOperation;
 
-  KeyPairOperation = (function() {
+  module.exports = KeyPairOperation = (function() {
     var BLAKE2s, EmailAddress, NaCl, SecretPhrase, calculateCurve25519KeyPair, scrypt;
 
-    module.exports = KeyPairOperation;
-
     BLAKE2s = require("./BLAKE2s");
-
-    EmailAddress = require("./EmailAddress");
 
     NaCl = require("./NaCl");
 
     scrypt = require("./scrypt-async");
+
+    EmailAddress = require("./EmailAddress");
 
     SecretPhrase = require("./SecretPhrase");
 
@@ -962,11 +960,11 @@
 (function() {
   var zxcvbn;
 
-  zxcvbn = require("./zxcvbn");
-
   exports.isAcceptable = function(secretPhrase) {
     return (secretPhrase != null ? secretPhrase.length : void 0) >= 32 && zxcvbn(secretPhrase).entropy >= 100;
   };
+
+  zxcvbn = require("./zxcvbn");
 
 }).call(this);
 

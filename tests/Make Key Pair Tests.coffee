@@ -1,7 +1,7 @@
 tape = require "./tape_test_harness"
 {Alice, Bobby} = require "./fixtures"
 
-tape "Make A Pair Of Keys", (test) -> test.end()
+tape "Make Keys", (test) -> test.end()
 
 tape "make a pair of keys for Alice", (test) ->
   miniLockLib.makeKeyPair Alice.secretPhrase, Alice.emailAddress, (error, keys) ->

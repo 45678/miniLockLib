@@ -45,17 +45,17 @@
   <div class="example">
     <div><a href="https://45678.github.io/is-it-a-miniLock/id?">is it a miniLock ID?</a></div>
     <div class="repo">Get <a href="https://github.com/45678/is-it-a-minilock-id/">source code</a></div>
-    <a class="window" href="https://45678.github.io/is-it-a-miniLock/id?CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw"><img src="examples/it is a miniLock ID.png"></a>
+    <a class="window" href="https://45678.github.io/is-it-a-miniLock/id?CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw"><img alt="It is a miniLock ID" src="examples/it%20is%20a%20miniLock%20ID.png"></a>
   </div>
   <div class="example">
     <div><a href="https://45678.github.io/miniLock-ID-inspector/">miniLock ID inspector</a></div>
     <div class="repo">Get <a href="https://github.com/45678/miniLock-ID-inspector/">source code</a></div>
-    <a class="window" href="https://45678.github.io/miniLock-ID-inspector/"><img src="examples/inspector.png"></a>
+    <a class="window" href="https://45678.github.io/miniLock-ID-inspector/"><img alt="Inspector with demonstration input" src="examples/inspector.png"></a>
   </div>
   <div class="example">
     <div><a href="https://45678.github.io/miniLock-file-format/2.html">miniLock file format</a></div>
     <div class="repo">Get <a href="https://github.com/45678/miniLock-file-format/">source code</a></div>
-    <a class="window" href="https://45678.github.io/miniLock-file-format/2.html"><img src="examples/file format version 2.png"></a>
+    <a class="window" href="https://45678.github.io/miniLock-file-format/2.html"><img alt="miniLock file format version 2" src="examples/file%20format%20version%202.png"></a>
   </div>
 </div>
 
@@ -228,7 +228,7 @@ miniLockLib.decrypt({
 <a id="SecretPhrase"></a>
 <h1>SecretPhrase</h1>
 <p>
-  <code>miniLockLib.SecretPhrase</code> supplies an acceptance test for secret phrase input.
+  The secret phrase module supplies an acceptance test to validate secret phrase input.
 </p>
 <header class="function">
   <a id="SecretPhrase.isAcceptable"></a>
@@ -245,7 +245,7 @@ miniLockLib.decrypt({
 <a id="EmailAddress"></a>
 <h1>EmailAddress</h1>
 <p>
-  <code>miniLockLib.EmailAddress</code> supplies an acceptance test for email address input.
+  The email address module supplies an acceptance test to validate email address input.
 </p>
 <header class="function">
   <a id="EmailAddress.isAcceptable"></a>
@@ -262,8 +262,8 @@ miniLockLib.decrypt({
 <a id="ID"></a>
 <h1>ID</h1>
 <p>
-  <code>miniLockLib.ID</code> provides functions for encoding and decoding miniLock IDs.
-  And it also includes an acceptance test for miniLock ID input.
+  The identification module provides functions for encoding (and decoding) miniLock IDs
+  and it also includes an acceptance test to validate miniLock ID input.
 </p>
 
 <header class="function">
@@ -353,11 +353,26 @@ miniLockLib.decrypt({
   <code>encryptOperation.start(callback)</code>
 </header>
 <p>
-  Start the operation and optionally define the callback function.
+  Start the operation and define a <code>callback</code> that will receive <code>encrypted.data</code> when the operation is complete or an <code>error</code> when there is a failure.
 </p>
+<pre>
+encryptOperation.start(function(error, decrypted){
+  if (decrypted) {
+    encrypted.data is a Blob
+    encrypted.data.size is the Number of bytes
+    encrypted.name is the filename as a String
+    encrypted.senderID identifies the author of the encrypted file.
+  } else {
+    console.error(error)
+  }
+})
+</pre>
 <p>
-  Potential <code>error</code> strings are as follows:
+  If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
 </p>
+<ul class="error_strings">
+  <li><code class="hljs-string">"EncryptOperation failed to encrypt file data.""</code></li>
+</ul>
 </article>
 
 <article>

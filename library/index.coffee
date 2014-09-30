@@ -1,8 +1,8 @@
 miniLockLib = module.exports = {}
 
-# Construct and start a [key pair operation](MakeKeyPairOperation.html).
+# Construct and start a [key pair operation](KeyPairOperation.html).
 miniLockLib.makeKeyPair = (secretPhrase, emailAddress, callback) ->
-  operation = new miniLockLib.MakeKeyPairOperation {secretPhrase, emailAddress}
+  operation = new miniLockLib.KeyPairOperation {secretPhrase, emailAddress}
   operation.start(callback)
 
 # Construct and start an [encrypt operation](EncryptOperation.html).
@@ -23,7 +23,7 @@ miniLockLib.EmailAddress = require "./EmailAddress"
 miniLockLib.ID = require "./ID"
 
 # Supply operation constructors.
-miniLockLib.MakeKeyPairOperation = require "./MakeKeyPairOperation"
+miniLockLib.KeyPairOperation = require "./KeyPairOperation"
 miniLockLib.EncryptOperation = require "./EncryptOperation"
 miniLockLib.DecryptOperation = require "./DecryptOperation"
 

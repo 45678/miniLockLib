@@ -1,4 +1,4 @@
-class MakeKeyPairOperation
+class KeyPairOperation
   module.exports = this
 
   BLAKE2s = require "./BLAKE2s"

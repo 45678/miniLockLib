@@ -117,7 +117,9 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
   If all the input is OK your <code>callback</code> will receive a set of <code>keys</code> when the operation is complete.
   It typically takes two-to-three seconds to complete a key pair operation.
 </p>
+</article>
 
+<article>
 <header class="function">
   <a id="encrypt"></a>
   <h2>encrypt</h2>
@@ -146,7 +148,6 @@ miniLockLib.encrypt({
   }
 })
 </pre>
-
 <p>
   <code>miniLockLib.encrypt</code> accepts the following parameters:
 </p>
@@ -174,7 +175,9 @@ miniLockLib.encrypt({
 <ul class="error_strings">
   <li><code class="hljs-string">"EncryptOperation failed to encrypt file data."</code></li>
 </ul>
+</article>
 
+<article>
 <header class="function">
   <a id="decrypt"></a>
   <h2>decrypt</h2>
@@ -227,73 +230,80 @@ miniLockLib.decrypt({
 </article>
 
 <article>
-<a id="SecretPhrase"></a>
-<h1>SecretPhrase</h1>
-<p>
-  The secret phrase module supplies an acceptance test to validate secret phrase input.
-</p>
-<header class="function">
-  <a id="SecretPhrase.isAcceptable"></a>
-  <h2>SecretPhrase.isAcceptable</h2>
-  <code>miniLockLib.SecretPhrase.isAcceptable(secretPhrase)</code>
-</header>
-<p>
-  Validates a secret phrase input <code>String</code>.
-  Returns <code>true</code> or <code>false</code>.
-</p>
+  <a id="SecretPhrase"></a>
+  <h1>SecretPhrase</h1>
+  <p>
+    The secret phrase module supplies an acceptance test to validate secret phrase input.
+  </p>
+<div class="member">
+  <header class="function">
+    <a id="SecretPhrase.isAcceptable"></a>
+    <h2>SecretPhrase.isAcceptable</h2>
+    <code>miniLockLib.SecretPhrase.isAcceptable(secretPhrase)</code>
+  </header>
+  <p>
+    Validates a secret phrase input <code>String</code>.
+    Returns <code>true</code> or <code>false</code>.
+  </p>
+</div>
 </article>
 
 <article>
-<a id="EmailAddress"></a>
-<h1>EmailAddress</h1>
-<p>
-  The email address module supplies an acceptance test to validate email address input.
-</p>
-<header class="function">
-  <a id="EmailAddress.isAcceptable"></a>
-  <h2>EmailAddress.isAcceptable</h2>
-  <code>miniLockLib.EmailAddress.isAcceptable(emailAddress)</code>
-</header>
-<p>
-  Validates an email address input <code>String</code>.
-  Returns <code>true</code> or <code>false</code>.
-</p>
+  <a id="EmailAddress"></a>
+  <h1>EmailAddress</h1>
+  <p>
+    The email address module supplies an acceptance test to validate email address input.
+  </p>
+<div class="member">
+  <header class="function">
+    <a id="EmailAddress.isAcceptable"></a>
+    <h2>EmailAddress.isAcceptable</h2>
+    <code>miniLockLib.EmailAddress.isAcceptable(emailAddress)</code>
+  </header>
+  <p>
+    Validates an email address input <code>String</code>.
+    Returns <code>true</code> or <code>false</code>.
+  </p>
+</div>
 </article>
 
 <article>
-<a id="ID"></a>
-<h1>ID</h1>
-<p>
-  The identification module provides functions for encoding (and decoding) miniLock IDs
-  and it also includes an acceptance test to validate miniLock ID input.
-</p>
-
-<header class="function">
-  <a id="ID.encode"></a>
-  <h2>ID.encode</h2>
-  <code>miniLockLib.ID.encode(publicKey)</code>
-</header>
-<p>
-  Encode a 32-bit public key to a miniLock ID.
-</p>
-
-<header class="function">
-  <a id="ID.decode"></a>
-  <h2>ID.decode</h2>
-  <code>miniLockLib.ID.decode(miniLockID)</code>
-</header>
-<p>
-  Decode a miniLock ID to a 32-bit public key.
-</p>
-
-<header class="function">
-  <a id="ID.isAcceptable"></a>
-  <h2>ID.isAcceptable</h2>
-  <code>miniLockLib.ID.isAcceptable(miniLockID)</code>
-</header>
-<p>
-  Validate a miniLock ID string, returns <code>true</code> or <code>false</code>.
-</p>
+  <a id="ID"></a>
+  <h1>ID</h1>
+  <p>
+    The identification module provides functions for encoding (and decoding) miniLock IDs
+    and it also includes an acceptance test to validate miniLock ID input.
+  </p>
+<div class="member">
+  <header class="function">
+    <a id="ID.encode"></a>
+    <h2>ID.encode</h2>
+    <code>miniLockLib.ID.encode(publicKey)</code>
+  </header>
+  <p>
+    Encode a 32-bit public key to a miniLock ID.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="ID.decode"></a>
+    <h2>ID.decode</h2>
+    <code>miniLockLib.ID.decode(miniLockID)</code>
+  </header>
+  <p>
+    Decode a miniLock ID to a 32-bit public key.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="ID.isAcceptable"></a>
+    <h2>ID.isAcceptable</h2>
+    <code>miniLockLib.ID.isAcceptable(miniLockID)</code>
+  </header>
+  <p>
+    Validate a miniLock ID string, returns <code>true</code> or <code>false</code>.
+  </p>
+</div>
 </article>
 
 <article>
@@ -313,51 +323,56 @@ miniLockLib.decrypt({
   You may define <code>data</code>, <code>name</code>, <code>keys</code> and <code>miniLockIDs</code>.
 </p>
 
-<header class="function">
-  <a id="EncryptOperation::data"></a>
-  <h2>EncryptOperation::data</h2>
-  <code>encryptOperation.data = blob</code>
-</header>
-<p>
-  <code>data</code> is a <code>Blob</code> or <code>File</code> instance.
-</p>
-
-<header class="function">
-  <a id="EncryptOperation::name"></a>
-  <h2>EncryptOperation::name</h2>
-  <code>encryptOperation.name = "secret_filename.txt"</code>
-</header>
-<p>
-  Defines the filename.
-</p>
-
-<header class="function">
-  <a id="EncryptOperation::keys"></a>
-  <h2>EncryptOperation::keys</h2>
-  <code>encryptOperation.keys = keys</code>
-</header>
-<p>
-  Defines the public–secret key pair that will be used to lock this file.
-</p>
-
-<header class="function">
-  <a id="EncryptOperation::miniLockIDs"></a>
-  <h2>EncryptOperation::miniLockIDs</h2>
-  <code>encryptOperation.miniLockIDs = [aliceID, bobbyID, ...]</code>
-</header>
-<p>
-  Defines who is permitted to unlock this file.
-</p>
-
-<header class="function">
-  <a id="EncryptOperation::start"></a>
-  <h2>EncryptOperation::start</h2>
-  <code>encryptOperation.start(callback)</code>
-</header>
-<p>
-  Start the operation and define a <code>callback</code> that will receive <code>encrypted.data</code> when the operation is complete or an <code>error</code> when there is a failure.
-</p>
-<pre>
+<div class="member">
+  <header class="function">
+    <a id="EncryptOperation::data"></a>
+    <h2>EncryptOperation::data</h2>
+    <code>encryptOperation.data = blob</code>
+  </header>
+  <p>
+    <code>data</code> is a <code>Blob</code> or <code>File</code> instance.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="EncryptOperation::name"></a>
+    <h2>EncryptOperation::name</h2>
+    <code>encryptOperation.name = "secret_filename.txt"</code>
+  </header>
+  <p>
+    Defines the filename.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="EncryptOperation::keys"></a>
+    <h2>EncryptOperation::keys</h2>
+    <code>encryptOperation.keys = keys</code>
+  </header>
+  <p>
+    Defines the public–secret key pair that will be used to lock this file.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="EncryptOperation::miniLockIDs"></a>
+    <h2>EncryptOperation::miniLockIDs</h2>
+    <code>encryptOperation.miniLockIDs = [aliceID, bobbyID, ...]</code>
+  </header>
+  <p>
+    Defines who is permitted to unlock this file.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="EncryptOperation::start"></a>
+    <h2>EncryptOperation::start</h2>
+    <code>encryptOperation.start(callback)</code>
+  </header>
+  <p>
+    Start the operation and define a <code>callback</code> that will receive <code>encrypted.data</code> when the operation is complete or an <code>error</code> when there is a failure.
+  </p>
+  <pre>
 encryptOperation.start(function(error, decrypted){
   if (decrypted) {
     encrypted.data is a Blob
@@ -368,61 +383,65 @@ encryptOperation.start(function(error, decrypted){
     console.error(error)
   }
 })
-</pre>
-<p>
-  If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
-</p>
-<ul class="error_strings">
-  <li><code class="hljs-string">"EncryptOperation failed to encrypt file data.""</code></li>
-</ul>
+  </pre>
+  <p>
+    If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
+  </p>
+  <ul class="error_strings">
+    <li><code class="hljs-string">"EncryptOperation failed to encrypt file data."</code></li>
+  </ul>
+</div>
 </article>
 
 <article>
-<header class="constructor function">
-  <a id="DecryptOperation"></a>
-  <h2>DecryptOperation</h2>
-  <code>new miniLockLib.DecryptOperation(params)</code>
-</header>
-<p>
-  Decrypt operations read and unlock miniLock files.
-  The constructor accepts <code>data</code> and <code>keys</code> parameters or
-  you can define them on the operation before you call <code>start</code>.
-</p>
-
-<pre>
+<div class="constructor">
+  <header class="constructor function">
+    <a id="DecryptOperation"></a>
+    <h2>DecryptOperation</h2>
+    <code>new miniLockLib.DecryptOperation(params)</code>
+  </header>
+  <p>
+    Decrypt operations read and unlock miniLock files.
+    The constructor accepts <code>data</code> and <code>keys</code> parameters or
+    you can define them on the operation before you call <code>start</code>.
+  </p>
+  <pre>
 decryptOperation = new miniLockLib.DecryptOperation({
   data: new Blob
   keys: {publicKey:, secretKey:}
-})
-</pre>
-
-<header class="function">
-  <a id="DecryptOperation::data"></a>
-  <h2>DecryptOperation::data</h2>
-  <code>decryptOperation.data = blob</code>
-</header>
-<p>
-  Defines the data that should be decrypted.
-</p>
-
-<header class="function">
-  <a id="DecryptOperation::keys"></a>
-  <h2>DecryptOperation::keys</h2>
-  <code>decryptOperation.keys = keys</code>
-</header>
-<p>
-  Defines the public–secret key pair that should be used to unlock this file.
-</p>
-
-<header class="function">
-  <a id="DecryptOperation::start"></a>
-  <h2>DecryptOperation::start</h2>
-  <code>decryptOperation.start(callback)</code>
-</header>
-<p>
-  Start the operation and define a <code>callback</code> that will receive <code>decrypted.data</code> when the operation is complete or an <code>error</code> when there is a failure.
-</p>
-<pre>
+})</pre>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="DecryptOperation::data"></a>
+    <h2>DecryptOperation::data</h2>
+    <code>decryptOperation.data = blob</code>
+  </header>
+  <p>
+    Defines the data that should be decrypted.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="DecryptOperation::keys"></a>
+    <h2>DecryptOperation::keys</h2>
+    <code>decryptOperation.keys = keys</code>
+  </header>
+  <p>
+    Defines the public–secret key pair that should be used to unlock this file.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="DecryptOperation::start"></a>
+    <h2>DecryptOperation::start</h2>
+    <code>decryptOperation.start(callback)</code>
+  </header>
+  <p>
+    Start the operation and define a <code>callback</code> that will receive <code>decrypted.data</code>
+    when the operation is complete or an <code>error</code> when there is a failure.
+  </p>
+  <pre>
 decryptOperation.start(function(error, decrypted){
   if (decrypted) {
     decrypted.data is a Blob
@@ -432,67 +451,69 @@ decryptOperation.start(function(error, decrypted){
   } else {
     console.error(error)
   }
-})
-</pre>
-<p>
-  If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
-</p>
-<ul class="error_strings">
-  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 1 attributes."</code></li>
-  <li><code class="hljs-string">"DecryptOperation failed to decrypt version 2 attributes."</code></li>
-  <li><code class="hljs-string">"DecryptOperation failed to decrypt file data."</code></li>
-  <li><code class="hljs-string">"File is not encrypted for this recipient."</code></li>
-</ul>
-
+})</pre>
+  <p>
+    If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
+  </p>
+  <ul class="error_strings">
+    <li><code class="hljs-string">"DecryptOperation failed to decrypt version 1 attributes."</code></li>
+    <li><code class="hljs-string">"DecryptOperation failed to decrypt version 2 attributes."</code></li>
+    <li><code class="hljs-string">"DecryptOperation failed to decrypt file data."</code></li>
+    <li><code class="hljs-string">"File is not encrypted for this recipient."</code></li>
+  </ul>
+</div>
 </article>
 
 <article>
-<header class="constructor function">
-  <a id="KeyPairOperation"></a>
-  <h2>KeyPairOperation</h2>
-  <code>new miniLockLib.KeyPairOperation(params)</code>
-</header>
-<p>
-  Generates a public–secret key pair from a <code>secretPhrase</code> and <code>emailAddress</code>.
-  The constructor accepts <code>secretPhrase</code> and <code>emailAddress</code> parameters
-  or you may define them yourself on the instance before calling <code>start</code>.
-</p>
-<pre>
+<div class="constructor">
+  <header class="constructor function">
+    <a id="KeyPairOperation"></a>
+    <h2>KeyPairOperation</h2>
+    <code>new miniLockLib.KeyPairOperation(params)</code>
+  </header>
+  <p>
+    Generates a public–secret key pair from a <code>secretPhrase</code> and <code>emailAddress</code>.
+    The constructor accepts <code>secretPhrase</code> and <code>emailAddress</code> parameters
+    or you may define them yourself on the instance before calling <code>start</code>.
+  </p>
+  <pre>
 keyPairOperation = new miniLockLib.KeyPairOperation({
   secretPhrase: "lions and tigers are not the only ones i am worried about"
   emailAddress: "alice@example.com"
-})
-</pre>
-
-<header class="function">
-  <a id="KeyPairOperation::secretPhrase"></a>
-  <h2>KeyPairOperation::secretPhrase</h2>
-  <code>keyPairOperation.secretPhrase = secretPhrase</code>
-</header>
-<p>
-  Should be a <code>String</code>.
-  Becomes the secret that is used to derive a set of keys.
-</p>
-
-<header class="function">
-  <a id="KeyPairOperation::emailAddress"></a>
-  <h2>KeyPairOperation::emailAddress</h2>
-  <code>keyPairOperation.emailAddress = emailAddress</code>
-</header>
-<p>
-  Should be a <code>String</code>.
-  Becomes the salt that is used to derive a set of keys.
-</p>
-
-<header class="function">
-  <a id="KeyPairOperation::start"></a>
-  <h2>KeyPairOperation::start</h2>
-  <code>keyPairOperation.start(callback)</code>
-</header>
-<p>
-  Start the operation and define a <code>callback</code> that will receive a set of <code>keys</code> when the operation is complete or an <code>error</code> when there is a failure.
-</p>
-<pre>
+})</pre>
+<div>
+<div class="member">
+  <header class="function">
+    <a id="KeyPairOperation::secretPhrase"></a>
+    <h2>KeyPairOperation::secretPhrase</h2>
+    <code>keyPairOperation.secretPhrase = secretPhrase</code>
+  </header>
+  <p>
+    Should be a <code>String</code>.
+    Becomes the secret that is used to derive a set of keys.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="KeyPairOperation::emailAddress"></a>
+    <h2>KeyPairOperation::emailAddress</h2>
+    <code>keyPairOperation.emailAddress = emailAddress</code>
+  </header>
+  <p>
+    Should be a <code>String</code>.
+    Becomes the salt that is used to derive a set of keys.
+  </p>
+</div>
+<div class="member">
+  <header class="function">
+    <a id="KeyPairOperation::start"></a>
+    <h2>KeyPairOperation::start</h2>
+    <code>keyPairOperation.start(callback)</code>
+  </header>
+  <p>
+    Start the operation and define a <code>callback</code> that will receive a set of <code>keys</code> when the operation is complete or an <code>error</code> when there is a failure.
+  </p>
+  <pre>
 keyPairOperation.start(function(error, keys){
   if (keys) {
     keys.publicKey is a Uint8Array
@@ -500,24 +521,24 @@ keyPairOperation.start(function(error, keys){
   } else {
     error is a String
   }
-})
-</pre>
-<p>
-  The <code>secretPhrase</code> and <code>emailAddress</code> inputs are both tested at startup to ensure they meet <a href="https://github.com/kaepora/miniLock/blob/master/README.md#2-key-derivation">miniLock’s requirements</a>.
-  The phrase must be at least 32 characters long and it must contain at least 100 bits of entropy.
-  The address musn’t be invalid.
-  If either input is unacceptable your <code>callback</code> will receive one of the following <code>error</code> strings:
-</p>
-<ul class="error_strings">
-  <li><code class="hljs-string">"Can’t make keys without a secret phrase."</code></li>
-  <li><code class="hljs-string">"Can’t make keys because <code>secretPhrase</code> is not an acceptable secret phrase."</code></li>
-  <li><code class="hljs-string">"Can’t make keys without an email address."</code></li>
-  <li><code class="hljs-string">"Can’t make keys because <code>emailAddress</code> is not an acceptable email address."</code></li>
-</ul>
-<p>
-  If boths inputs are OK your <code>callback</code> will receive a set of <code>keys</code> when the operation is complete.
-  It typically takes two-to-three seconds to complete a key pair operation.
-</p>
+})</pre>
+  <p>
+    The <code>secretPhrase</code> and <code>emailAddress</code> inputs are both tested at startup to ensure they meet <a href="https://github.com/kaepora/miniLock/blob/master/README.md#2-key-derivation">miniLock’s requirements</a>.
+    The phrase must be at least 32 characters long and it must contain at least 100 bits of entropy.
+    The address musn’t be invalid.
+    If either input is unacceptable your <code>callback</code> will receive one of the following <code>error</code> strings:
+  </p>
+  <ul class="error_strings">
+    <li><code class="hljs-string">"Can’t make keys without a secret phrase."</code></li>
+    <li><code class="hljs-string">"Can’t make keys because <code>secretPhrase</code> is not an acceptable secret phrase."</code></li>
+    <li><code class="hljs-string">"Can’t make keys without an email address."</code></li>
+    <li><code class="hljs-string">"Can’t make keys because <code>emailAddress</code> is not an acceptable email address."</code></li>
+  </ul>
+  <p>
+    If boths inputs are OK your <code>callback</code> will receive a set of <code>keys</code> when the operation is complete.
+    It typically takes two-to-three seconds to complete a key pair operation.
+  </p>
+</div>
 </article>
 
 <article>
@@ -527,47 +548,48 @@ keyPairOperation.start(function(error, keys){
   miniLockLib is composed of code from several dandy projects.
   All of these fine modules are exposed so that you can easily apply their functions in your own computer programs.
 </p>
-
-<a id="Base58"></a>
-<h2>Base58</h2>
-<p>
-  <code>miniLockLib.Base58</code> is a modified copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
-  It has been modified to work in a web agent <code>window</code> instead of working only in a Node.js environment.
-  <code>Base58</code> is used to encode and decode miniLock IDs.
-</p>
-
-<a id="BLAKE2s"></a>
-<h2>BLAKE2s</h2>
-<p>
-  <code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
-  miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
-</p>
-
-<a id="NaCl"></a>
-<h2>NaCl</h2>
-<p>
-  <code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
-  This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
-  miniLockLib relies on <code>NaCl</code> for a host of cryptographic and encoding functions.
-</p>
-
-<a id="scrypt"></a>
-<h2>scrypt</h2>
-<p>
-  <code>miniLockLib.scrypt</code> is an unmodified copy of <code>scrypt-async.js</code>
-  from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a> project
-  written by Mr. Chestnykh once again.
-  <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.
-  miniLockLib relies on <code>scrypt</code> to make key pairs.
-</p>
-
-<a id="zxcvbn"></a>
-<h2>zxcvbn</h2>
-<p>
-  <code>miniLockLib.zxcvbn</code> is a modified copy of Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
-  The original script is modified so that it exports a module instead of defining itself on <code>window</code>.
-  miniLockLib relies on <code>zxcvbn</code> to measure entropy in secret phrases.
-</p>
+<div>
+  <a id="Base58"></a>
+  <h2>Base58</h2>
+  <p>
+    <code>miniLockLib.Base58</code> is a modified copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
+    It has been modified to work in a web agent <code>window</code> instead of working only in a Node.js environment.
+    <code>Base58</code> is used to encode and decode miniLock IDs.
+  </p>
+</div><div>
+  <a id="BLAKE2s"></a>
+  <h2>BLAKE2s</h2>
+  <p>
+    <code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
+    miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
+  </p>
+</div><div>
+  <a id="NaCl"></a>
+  <h2>NaCl</h2>
+  <p>
+    <code>miniLockLib.NaCl</code> is the <a href="https://github.com/dchest/tweetnacl-js">tweetnacl-js</a> crypto library written by Dmitry Chestnykh &amp; Devi Mandiri.
+    This instance of <code>NaCl</code> is extended with Dmitry’s <a href="https://github.com/dchest/nacl-stream-js">streaming encryption library</a> which is defined at <code>NaCl.stream</code>.
+    miniLockLib relies on <code>NaCl</code> for a host of cryptographic and encoding functions.
+  </p>
+</div><div>
+  <a id="scrypt"></a>
+  <h2>scrypt</h2>
+  <p>
+    <code>miniLockLib.scrypt</code> is an unmodified copy of <code>scrypt-async.js</code>
+    from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a> project
+    written by Mr. Chestnykh once again.
+    <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.
+    miniLockLib relies on <code>scrypt</code> to make key pairs.
+  </p>
+</div><div>
+  <a id="zxcvbn"></a>
+  <h2>zxcvbn</h2>
+  <p>
+    <code>miniLockLib.zxcvbn</code> is a modified copy of Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
+    The original script is modified so that it exports a module instead of defining itself on <code>window</code>.
+    miniLockLib relies on <code>zxcvbn</code> to measure entropy in secret phrases.
+  </p>
+</div>
 </article>
 
 <article>

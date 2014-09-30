@@ -27,6 +27,10 @@
     return renderID(event.currentTarget.href.toString().split("#")[1]);
   });
 
+  $(document).on("mouseover", "body > article, article > div", function(event) {
+    return renderID(event.currentTarget.querySelector("a[id]").id);
+  });
+
   renderID = function(id) {
     var el;
     el = document.getElementById(id);

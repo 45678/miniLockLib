@@ -10,6 +10,9 @@ $(document).ready (event) ->
 $(document).on "click", "a[href^='#']", (event) ->
   renderID event.currentTarget.href.toString().split("#")[1]
 
+$(document).on "mouseover", "body > article, article > div", (event) ->
+  renderID event.currentTarget.querySelector("a[id]").id
+
 renderID = (id) ->
   el = document.getElementById(id)
   $("*.selected").removeClass("selected")

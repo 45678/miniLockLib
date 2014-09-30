@@ -28,10 +28,10 @@
 
 
 <section id="section-2">
-  <div class="annotation"><p>Construct and start a <a href="MakeKeyPairOperation.html">key pair operation</a>.</p>
+  <div class="annotation"><p>Construct and start a <a href="KeyPairOperation.html">key pair operation</a>.</p>
 </div>
   <div class="code"><div class='highlight'><pre>miniLockLib.m<span class="hljs-function"><span class="hljs-title">akeKeyPair</span> = <span class="hljs-params">(secretPhrase, emailAddress, callback)</span> -&gt;</span>
-  operation = <span class="hljs-keyword">new</span> miniLockLib.MakeKeyPairOperation {secretPhrase, emailAddress}
+  operation = <span class="hljs-keyword">new</span> miniLockLib.KeyPairOperation {secretPhrase, emailAddress}
   operation.start(callback)</pre></div></div>
 </section>
 
@@ -72,7 +72,7 @@ miniLockLib.EmailAddress = <span class="hljs-built_in">require</span> <span clas
 <section id="section-7">
   <div class="annotation"><p>Supply operation constructors.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>miniLockLib.MakeKeyPairOperation = <span class="hljs-built_in">require</span> <span class="hljs-string">"./MakeKeyPairOperation"</span>
+  <div class="code"><div class='highlight'><pre>miniLockLib.KeyPairOperation = <span class="hljs-built_in">require</span> <span class="hljs-string">"./KeyPairOperation"</span>
 miniLockLib.EncryptOperation = <span class="hljs-built_in">require</span> <span class="hljs-string">"./EncryptOperation"</span>
 miniLockLib.DecryptOperation = <span class="hljs-built_in">require</span> <span class="hljs-string">"./DecryptOperation"</span></pre></div></div>
 </section>
@@ -131,7 +131,7 @@ miniLockLib.zxcvbn  = <span class="hljs-built_in">require</span> <span class="hl
   
   
   <br>
-  <a href="MakeKeyPairOperation.html">library/MakeKeyPairOperation<span class="ext">.coffee</span></a>
+  <a href="KeyPairOperation.html">library/KeyPairOperation<span class="ext">.coffee</span></a>
   
   
   

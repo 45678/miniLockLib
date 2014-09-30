@@ -1,8 +1,9 @@
 module.exports = class KeyPairOperation
   BLAKE2s = require "./BLAKE2s"
-  EmailAddress = require "./EmailAddress"
   NaCl = require "./NaCl"
   scrypt = require "./scrypt-async"
+
+  EmailAddress = require "./EmailAddress"
   SecretPhrase = require "./SecretPhrase"
 
   constructor: (params) ->

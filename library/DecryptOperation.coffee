@@ -7,6 +7,8 @@ class DecryptOperation extends ReadOperation
   {encodeUTF8, decodeBase64} = NaCl.util
   {byteArrayToNumber} = require "./util"
 
+  chunkSize: 1024 * 1024
+
   constructor: (params={}) ->
     {@data, @keys, @callback} = params
     @decryptedBytes = []
@@ -34,7 +36,12 @@ class DecryptOperation extends ReadOperation
 
   end: (error, blob, attributes, header, sizeOfHeader) ->
     @streamDecryptor.clean() if @streamDecryptor?
-    ReadOperation::end.call(this, error, blob, attributes, header, sizeOfHeader)
+    @endedAt = Date.now()
+    @duration = @endedAt - @startedAt
+    if error
+      @onerror(error, header, sizeOfHeader)
+    else
+      @oncomplete(blob, attributes, header, sizeOfHeader)
 
   oncomplete: (blob, attributes, header, sizeOfHeader) ->
     @callback(undefined, {

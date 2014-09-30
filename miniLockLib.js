@@ -154,6 +154,8 @@
 
     byteArrayToNumber = require("./util").byteArrayToNumber;
 
+    DecryptOperation.prototype.chunkSize = 1024 * 1024;
+
     function DecryptOperation(params) {
       if (params == null) {
         params = {};
@@ -204,7 +206,13 @@
       if (this.streamDecryptor != null) {
         this.streamDecryptor.clean();
       }
-      return ReadOperation.prototype.end.call(this, error, blob, attributes, header, sizeOfHeader);
+      this.endedAt = Date.now();
+      this.duration = this.endedAt - this.startedAt;
+      if (error) {
+        return this.onerror(error, header, sizeOfHeader);
+      } else {
+        return this.oncomplete(blob, attributes, header, sizeOfHeader);
+      }
     };
 
     DecryptOperation.prototype.oncomplete = function(blob, attributes, header, sizeOfHeader) {

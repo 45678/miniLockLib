@@ -395,3 +395,7 @@ body.annotated_code div.code pre {
 .error_strings {
   margin-right: -50px;
 }
+.error_strings li:before {
+  content: "✖︎ ";
+  opacity: 0.5;
+}

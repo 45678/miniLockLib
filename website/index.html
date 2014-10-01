@@ -85,7 +85,7 @@
 </header>
 <p>
   Generates a key pair from a <code>secretPhrase</code> and <code>emailAddress</code>.
-  Returns an instance of <a href="#KeyPairOperation"><code>KeyPairOperation</code></a>.
+  Returns a <a href="#KeyPairOperation"><code>KeyPairOperation</code></a>.
   Your <code>callback</code> should be prepared to receive a set of <code>keys</code> or an <code>error</code>.
 </p>
 <pre class="ecmascript">
@@ -126,7 +126,7 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
 </header>
 <p>
   Make a miniLock file.
-  Returns an instance of <a href="#EncryptOperation"><code>EncryptOperation</code></a>.
+  Returns a <a href="#EncryptOperation"><code>EncryptOperation</code></a>.
 </p>
 <pre class="ecmascript">
 miniLockLib.encrypt({
@@ -189,7 +189,7 @@ miniLockLib.encrypt({
 </header>
 <p>
   Unlock a miniLock file.
-  Returns an instance of <a href="#DecryptOperation"><code>DecryptOperation</code></a>.
+  Returns a <a href="#DecryptOperation"><code>DecryptOperation</code></a>.
 </p>
 <pre class="ecmascript">
 miniLockLib.decrypt({

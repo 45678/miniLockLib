@@ -38,29 +38,75 @@ tape "can’t start encrypt operation without callback function", (test) ->
   test.throws operation.start, 'Can’t start encrypt operation without callback function.'
   test.end()
 
-tape "can’t start an encrypt operation without data", (test) ->
+tape "can’t start encrypt operation without data", (test) ->
   operation = new miniLockLib.EncryptOperation
     keys: Alice.keys
     miniLockIDs: []
-    callback: ->
-  test.throws operation.start, 'Can’t start miniLockLib.EncryptOperation without data.'
-  test.end()
+  operation.start (error, encrypted) ->
+    test.same error, "Can’t encrypt without a Blob of data."
+    test.same encrypted, undefined
+    test.end()
 
-tape "can’t start an encrypt operation without keys", (test) ->
+tape "can’t start encrypt operation with data that is not a Blob", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    data: "Not a blob"
+    keys: Alice.keys
+    miniLockIDs: []
+  operation.start (error, encrypted) ->
+    test.same error, "Can’t encrypt without a Blob of data."
+    test.same encrypted, undefined
+    test.end()
+
+tape "can’t start encrypt operation without a set of keys", (test) ->
   operation = new miniLockLib.EncryptOperation
     data: new Blob
     miniLockIDs: []
-    callback: ->
-  test.throws operation.start, 'Can’t start miniLockLib.EncryptOperation without keys.'
-  test.end()
+  operation.start (error, encrypted) ->
+    test.same error, "Can’t encrypt without a set of keys."
+    test.same encrypted, undefined
+    test.end()
 
-tape "can’t start an encrypt operation without miniLockIDs", (test) ->
+tape "can’t start encrypt operation without miniLock IDs", (test) ->
   operation = new miniLockLib.EncryptOperation
     data: new Blob
     keys: Alice.keys
-    callback: ->
-  test.throws operation.start, 'Can’t start miniLockLib.EncryptOperation without miniLockIDs.'
-  test.end()
+  operation.start (error, encrypted) ->
+    test.same error, 'Can’t encrypt without an Array of miniLock IDs.'
+    test.same encrypted, undefined
+    test.end()
+
+tape "can’t start encrypt operation with unacceptable file name", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    data: new Blob
+    keys: Alice.keys
+    miniLockIDs: []
+    name: ("X" for i in [0...257]).join("") # Make a string that is 257 characters long.
+  operation.start (error, encrypted) ->
+    test.same error, "Can’t encrypt because file name is too long. 256-characters max please."
+    test.same encrypted, undefined
+    test.end()
+
+tape "can’t start encrypt operation with unacceptable media type", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    data: new Blob
+    keys: Alice.keys
+    miniLockIDs: []
+    type: ("X" for i in [0...129]).join("") # Make a string that is 129 characters long.
+  operation.start (error, encrypted) ->
+    test.same error, "Can’t encrypt because media type is too long. 128-characters max please."
+    test.same encrypted, undefined
+    test.end()
+
+tape "can’t start encrypt operation with unacceptable file format version", (test) ->
+  operation = new miniLockLib.EncryptOperation
+    data: new Blob
+    keys: Alice.keys
+    miniLockIDs: []
+    version: 0
+  operation.start (error, encrypted) ->
+    test.same error, "Can’t encrypt because version 0 is not supported. Version 1 or 2 please."
+    test.same encrypted, undefined
+    test.end()
 
 tape "empty array of ciphertext bytes is ready after operation is constructed", (test) ->
   operation = new miniLockLib.EncryptOperation

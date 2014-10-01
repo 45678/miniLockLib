@@ -20,15 +20,24 @@ module.exports = class EncryptOperation
     @callback = callback if callback?
     if @callback?.constructor isnt Function
       throw "Can’t start encrypt operation without callback function."
-    if (@keys?.publicKey is undefined) or (@keys?.secretKey is undefined)
-      throw "Can’t start miniLockLib.#{@constructor.name} without keys."
-    if @miniLockIDs is undefined
-      throw "Can’t start miniLockLib.#{@constructor.name} without miniLockIDs."
-    if (@data instanceof Blob) is false
-      throw "Can’t start miniLockLib.#{@constructor.name} without data."
-    @startedAt = Date.now()
-    @time = @startedAt if @time is undefined
-    @run()
+    switch
+      when (@data instanceof Blob) is no
+        @callback "Can’t encrypt without a Blob of data."
+      when (@keys?.publicKey is undefined) or (@keys?.secretKey is undefined)
+        @callback "Can’t encrypt without a set of keys."
+      when (@miniLockIDs instanceof Array) is no
+        @callback "Can’t encrypt without an Array of miniLock IDs."
+      when @name and @name.length > 256
+        @callback "Can’t encrypt because file name is too long. 256-characters max please."
+      when @type and @type.length > 128
+        @callback "Can’t encrypt because media type is too long. 128-characters max please."
+      when (@version in [1, 2]) is no
+        @callback "Can’t encrypt because version #{@version} is not supported. Version 1 or 2 please."
+      else
+        @startedAt = Date.now()
+        @time = @startedAt if @time is undefined
+        @run()
+    return this
 
   run: ->
     @encryptAttributes(@version)
@@ -98,7 +107,7 @@ module.exports = class EncryptOperation
         else
           @encryptData(position+@chunkSize, callback)
       else
-        callback "EncryptOperation failed to encrypt file data."
+        callback "Failed to encrypt slice of data at [#{position}..#{position+@chunkSize}]"
 
   constructHeader: ->
     @header =
@@ -118,7 +127,7 @@ module.exports = class EncryptOperation
     if @name
       decodedName = NaCl.util.decodeUTF8(@name)
       if decodedName.length > fixedSize.length
-        throw "EncryptOperation file name is too long. 256-characters max please."
+        throw "Can’t set fixed size decoded name because input is too long."
       fixedSize.set(decodedName)
     return fixedSize
 
@@ -127,7 +136,7 @@ module.exports = class EncryptOperation
     if @type
       decodedType = NaCl.util.decodeUTF8(@type)
       if decodedType.length > fixedSize.length
-        throw "EncryptOperation media type is too long. 128-characters max please."
+        throw "Can’t set fixed size decoded type because input is too long."
       fixedSize.set(decodedType)
     return fixedSize
 

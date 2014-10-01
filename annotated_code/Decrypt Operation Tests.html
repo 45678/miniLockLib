@@ -59,26 +59,26 @@ tape <span class="hljs-string">"or define the callback when start is called if y
     test.end()
   operation.start(callbackSpecifiedOnStart)
 
+tape <span class="hljs-string">"can’t start a decrypt operation without a callback function"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
+  test.throws operation.start, <span class="hljs-string">"Can’t start decrypt operation without a callback function."</span>
+  test.end()
+
 tape <span class="hljs-string">"can’t start a decrypt operation without data"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
     <span class="hljs-attribute">keys</span>: Alice.keys
-    <span class="hljs-attribute">callback</span>: <span class="hljs-literal">yes</span>
-  test.throws operation.start, <span class="hljs-string">'Can’t start miniLockLib.DecryptOperation without data.'</span>
-  test.end()
+  operation.start <span class="hljs-function"><span class="hljs-params">(error, decrypted)</span> -&gt;</span>
+    test.same error, <span class="hljs-string">"Can’t decrypt without a Blob of data."</span>
+    test.same decrypted, <span class="hljs-literal">undefined</span>
+    test.end()
 
 tape <span class="hljs-string">"can’t start a decrypt operation without keys"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-    <span class="hljs-attribute">data</span>: <span class="hljs-literal">yes</span>
-    <span class="hljs-attribute">callback</span>: <span class="hljs-literal">yes</span>
-  test.throws operation.start, <span class="hljs-string">'Can’t start miniLockLib.DecryptOperation without keys.'</span>
-  test.end()
-
-tape <span class="hljs-string">"can’t start a decrypt operation without a callback"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
-  operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-    <span class="hljs-attribute">data</span>: <span class="hljs-literal">yes</span>
-    <span class="hljs-attribute">keys</span>: Alice.keys
-  test.throws operation.start, <span class="hljs-string">'Can’t start miniLockLib.DecryptOperation without a callback.'</span>
-  test.end()
+    <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
+  operation.start <span class="hljs-function"><span class="hljs-params">(error, decrypted)</span> -&gt;</span>
+    test.same error, <span class="hljs-string">"Can’t decrypt without a set of keys."</span>
+    test.same decrypted, <span class="hljs-literal">undefined</span>
+    test.end()
 
 tape <span class="hljs-string">"construct map of byte addresses in a file"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice.txt.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>

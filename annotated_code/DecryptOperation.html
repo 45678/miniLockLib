@@ -38,14 +38,17 @@
 
   <span class="hljs-attribute">start</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> =&gt;</span>
     <span class="hljs-property">@callback</span> = callback <span class="hljs-keyword">if</span> callback?
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@data</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without data."</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@keys</span>?.secretKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without keys."</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> <span class="hljs-property">@callback</span> <span class="hljs-keyword">isnt</span> <span class="hljs-string">"function"</span>
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without a callback."</span>
-    <span class="hljs-property">@startedAt</span> = Date.now()
-    <span class="hljs-property">@run</span>()
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@callback</span>?.constructor <span class="hljs-keyword">isnt</span> Function
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start decrypt operation without a callback function."</span>
+    <span class="hljs-keyword">switch</span>
+      <span class="hljs-keyword">when</span> <span class="hljs-property">@data</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t decrypt without a Blob of data."</span>
+      <span class="hljs-keyword">when</span> <span class="hljs-property">@keys</span>?.secretKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t decrypt without a set of keys."</span>
+      <span class="hljs-keyword">else</span>
+        <span class="hljs-property">@startedAt</span> = Date.now()
+        <span class="hljs-property">@run</span>()
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
 
   <span class="hljs-attribute">run</span>:<span class="hljs-function"> -&gt;</span>
     <span class="hljs-property">@readHeader</span> <span class="hljs-function"><span class="hljs-params">(error, header, sizeOfHeader)</span> =&gt;</span>
@@ -98,9 +101,9 @@
             nameAsBytes = (byte <span class="hljs-keyword">for</span> byte <span class="hljs-keyword">in</span> decryptedBytes <span class="hljs-keyword">when</span> byte <span class="hljs-keyword">isnt</span> <span class="hljs-number">0</span>)
             attributes =
               <span class="hljs-attribute">name</span>: encodeUTF8(nameAsBytes)
-            callback(<span class="hljs-literal">undefined</span>, attributes, end)
+            callback <span class="hljs-literal">undefined</span>, attributes, end
           <span class="hljs-keyword">else</span>
-            callback(<span class="hljs-string">"DecryptOperation failed to decrypt version 1 attributes."</span>)
+            callback <span class="hljs-string">"Failed to decrypt version 1 file attributes."</span>
 
   <span class="hljs-attribute">decryptVersion2Attributes</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     <span class="hljs-property">@constructMap</span> <span class="hljs-function"><span class="hljs-params">(error, map)</span> =&gt;</span>
@@ -123,9 +126,9 @@
               <span class="hljs-attribute">name</span>: encodeUTF8(nameAsBytes)
               <span class="hljs-attribute">type</span>: encodeUTF8(typeAsBytes)
               <span class="hljs-attribute">time</span>: encodeUTF8(timeAsBytes)
-            callback(<span class="hljs-literal">undefined</span>, attributes, end)
+            callback <span class="hljs-literal">undefined</span>, attributes, end
           <span class="hljs-keyword">else</span>
-            callback(<span class="hljs-string">"DecryptOperation failed to decrypt version 2 attributes."</span>)
+            callback <span class="hljs-string">"Failed to decrypt version 2 file attributes."</span>
 
   <span class="hljs-attribute">decryptData</span>: <span class="hljs-function"><span class="hljs-params">(position, callback)</span> -&gt;</span>
     <span class="hljs-property">@constructStreamDecryptor</span> <span class="hljs-function"><span class="hljs-params">(error)</span> =&gt;</span>
@@ -142,7 +145,7 @@
           <span class="hljs-keyword">else</span>
             <span class="hljs-property">@decryptData</span>(endPosition, callback)
         <span class="hljs-keyword">else</span>
-          callback(<span class="hljs-string">"DecryptOperation failed to decrypt file data."</span>)
+          callback <span class="hljs-string">"Failed to decrypt slice of data at [<span class="hljs-subst">#{startPosition}</span>..<span class="hljs-subst">#{endPosition}</span>]"</span>
 
   <span class="hljs-attribute">constructMap</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     <span class="hljs-property">@readHeader</span> <span class="hljs-function"><span class="hljs-params">(error, header, sizeOfHeader)</span> =&gt;</span>
@@ -174,9 +177,9 @@
         returned = <span class="hljs-property">@findUniqueNonceAndPermit</span>(header)
         <span class="hljs-keyword">if</span> returned
           [uniqueNonce, permit] = returned
-          callback(<span class="hljs-literal">undefined</span>, uniqueNonce, permit)
+          callback <span class="hljs-literal">undefined</span>, uniqueNonce, permit
         <span class="hljs-keyword">else</span>
-          callback(<span class="hljs-string">"File is not encrypted for this recipient"</span>)
+          callback <span class="hljs-string">"Can’t decrypt this file with this set of keys."</span>
 
   <span class="hljs-attribute">findUniqueNonceAndPermit</span>: <span class="hljs-function"><span class="hljs-params">(header)</span> -&gt;</span>
     ephemeral = decodeBase64(header.ephemeral)

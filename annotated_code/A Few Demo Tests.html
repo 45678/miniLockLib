@@ -94,8 +94,8 @@ tape <span class="hljs-string">"Bobby can’t decrypt file that was only encrypt
       <span class="hljs-attribute">data</span>: blob
       <span class="hljs-attribute">keys</span>: Bobby.keys
       <span class="hljs-attribute">callback</span>: <span class="hljs-function"><span class="hljs-params">(error, decrypted)</span> -&gt;</span>
-        test.equal <span class="hljs-string">"File is not encrypted for this recipient"</span>, error
-        test.equal <span class="hljs-literal">undefined</span>, decrypted
+        test.same error, <span class="hljs-string">"Can’t decrypt this file with this set of keys."</span>
+        test.same decrypted, <span class="hljs-literal">undefined</span>
         test.end()
 
 tape <span class="hljs-string">"Encrypt a file for Alice &amp; Bobby"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>

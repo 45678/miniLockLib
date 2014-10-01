@@ -66,11 +66,11 @@
     and add it to your web page with a script tag:
   </p>
   <pre class="html">
-  &lt;head&gt;
-    &lt;title&gt;Untitled&lt;/title&gt;
-    <strong>&lt;script src="miniLockLib.js" charset="utf-8"&gt;&lt;/script&gt;</strong>
-    &lt;link rel="stylesheet" href="stylesheet.css"&gt;
-  &lt;/head&gt;</pre>
+&lt;head&gt;
+  &lt;title&gt;Untitled&lt;/title&gt;
+  <strong>&lt;script src="miniLockLib.js" charset="utf-8"&gt;&lt;/script&gt;</strong>
+  &lt;link rel="stylesheet" href="stylesheet.css"&gt;
+&lt;/head&gt;</pre>
   <p>
     When the script loads <code>miniLockLib</code> is defined in your <code>window</code>.
     And then you can do encryption operations on your web page!
@@ -109,9 +109,9 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
 </p>
 <ul class="error_strings">
   <li><code class="hljs-string">"Can’t make keys without a secret phrase."</code></li>
-  <li><code class="hljs-string">"Can’t make keys because <code>secretPhrase</code> is not an acceptable secret phrase."</code></li>
+  <li><code class="hljs-string">"Can’t make keys because <var>secretPhrase</var> is not an acceptable secret phrase."</code></li>
   <li><code class="hljs-string">"Can’t make keys without an email address."</code></li>
-  <li><code class="hljs-string">"Can’t make keys because <code>emailAddress</code> is not an acceptable email address."</code></li>
+  <li><code class="hljs-string">"Can’t make keys because <var>emailAddress</var> is not an acceptable email address."</code></li>
 </ul>
 <p>
   If all the input is OK your <code>callback</code> will receive a set of <code>keys</code> when the operation is complete.
@@ -233,7 +233,7 @@ miniLockLib.decrypt({
   <a id="SecretPhrase"></a>
   <h2>SecretPhrase</h2>
   <p>
-    The secret phrase module supplies an acceptance test to validate secret phrase input.
+    The <a href="annotated_code/ID.html">secret phrase module</a> supplies an acceptance test to validate secret phrase input.
   </p>
 <div class="member">
   <header class="function">
@@ -252,7 +252,7 @@ miniLockLib.decrypt({
   <a id="EmailAddress"></a>
   <h2>EmailAddress</h2>
   <p>
-    The email address module supplies an acceptance test to validate email address input.
+    The <a href="annotated_code/EmailAddress.html">email address module</a> supplies an acceptance test to validate email address input.
   </p>
 <div class="member">
   <header class="function">
@@ -271,7 +271,7 @@ miniLockLib.decrypt({
   <a id="ID"></a>
   <h2>ID</h2>
   <p>
-    The identification module provides functions for encoding (and decoding) miniLock IDs
+    The <a href="annotated_code/ID.html">identification module</a> provides functions for encoding (and decoding) miniLock IDs
     and it also includes an acceptance test to validate miniLock ID input.
   </p>
 <div class="member">
@@ -313,7 +313,9 @@ miniLockLib.decrypt({
     <code>new miniLockLib.EncryptOperation(params)</code>
   </header>
   <p>
-    Instances of <code>EncryptOperation</code> make miniLock files.
+    Encrypt operations make miniLock files.
+  </p>
+  <p>
     The constructor accepts <code>data</code>, <code>name</code>, <code>keys</code> and <code>miniLockIDs</code> parameters
     or you can define them on the operation before you call <code>start</code>.
   </p>
@@ -344,7 +346,7 @@ miniLockLib.decrypt({
     <code>encryptOperation.keys = keys</code>
   </header>
   <p>
-    Defines the public–secret key pair that will be used to lock this file.
+    Defines the key pair that will be used to lock this file.
   </p>
 </div>
 <div class="member">
@@ -376,13 +378,18 @@ encryptOperation.start(function(error, decrypted){
   } else {
     console.error(error)
   }
-})
-  </pre>
+})</pre>
   <p>
     If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
   </p>
   <ul class="error_strings">
-    <li><code class="hljs-string">"EncryptOperation failed to encrypt file data."</code></li>
+    <li><code class="hljs-string">"Can’t encrypt without a Blob of data."</code></li>
+    <li><code class="hljs-string">"Can’t encrypt without a set of keys."</code></li>
+    <li><code class="hljs-string">"Can’t encrypt without an Array of miniLock IDs."</code></li>
+    <li><code class="hljs-string">"Can’t encrypt because file name is too long. 256-characters max please."</code></li>
+    <li><code class="hljs-string">"Can’t encrypt because media type is too long. 128-characters max please."</code></li>
+    <li><code class="hljs-string">"Can’t encrypt because version <var>X</var> is not supported. Version 1 or 2 please."</code></li>
+    <li><code class="hljs-string">"Failed to encrypt slice of data at [<var>startOfSlice</var>..<var>endOfSlice</var>]"</code></li>
   </ul>
 </div>
 </article>
@@ -395,7 +402,9 @@ encryptOperation.start(function(error, decrypted){
     <code>new miniLockLib.DecryptOperation(params)</code>
   </header>
   <p>
-    Decrypt operations read and unlock miniLock files.
+    Decrypt operations unlock miniLock files.
+  </p>
+  <p>
     The constructor accepts <code>data</code> and <code>keys</code> parameters or
     you can define them on the operation before you call <code>start</code>.
   </p>
@@ -450,10 +459,12 @@ decryptOperation.start(function(error, decrypted){
     If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
   </p>
   <ul class="error_strings">
-    <li><code class="hljs-string">"DecryptOperation failed to decrypt version 1 attributes."</code></li>
-    <li><code class="hljs-string">"DecryptOperation failed to decrypt version 2 attributes."</code></li>
-    <li><code class="hljs-string">"DecryptOperation failed to decrypt file data."</code></li>
-    <li><code class="hljs-string">"File is not encrypted for this recipient."</code></li>
+    <li><code class="hljs-string">"Can’t decrypt without a Blob of data."</code></li>
+    <li><code class="hljs-string">"Can’t decrypt without a set of keys."</code></li>
+    <li><code class="hljs-string">"Can’t decrypt this file with this set of keys."</code></li>
+    <li><code class="hljs-string">"Failed to decrypt version 1 file attributes."</code></li>
+    <li><code class="hljs-string">"Failed to decrypt version 2 file attributes."</code></li>
+    <li><code class="hljs-string">"Failed to decrypt slice of data at [<var>startOfSlice</var>..<var>endOfSlice</var>]"</code></li>
   </ul>
 </div>
 </article>
@@ -466,9 +477,11 @@ decryptOperation.start(function(error, decrypted){
     <code>new miniLockLib.KeyPairOperation(params)</code>
   </header>
   <p>
-    Generates a public–secret key pair from a <code>secretPhrase</code> and <code>emailAddress</code>.
+    Key pair operations generate a set of keys from a secret phrase and email address.
+  </p>
+  <p>
     The constructor accepts <code>secretPhrase</code> and <code>emailAddress</code> parameters
-    or you may define them yourself on the instance before calling <code>start</code>.
+    or you may define on the instance before calling <code>start</code>.
   </p>
   <pre>
 keyPairOperation = new miniLockLib.KeyPairOperation({
@@ -524,9 +537,9 @@ keyPairOperation.start(function(error, keys){
   </p>
   <ul class="error_strings">
     <li><code class="hljs-string">"Can’t make keys without a secret phrase."</code></li>
-    <li><code class="hljs-string">"Can’t make keys because <code>secretPhrase</code> is not an acceptable secret phrase."</code></li>
+    <li><code class="hljs-string">"Can’t make keys because <var>secretPhrase</var> is not an acceptable secret phrase."</code></li>
     <li><code class="hljs-string">"Can’t make keys without an email address."</code></li>
-    <li><code class="hljs-string">"Can’t make keys because <code>emailAddress</code> is not an acceptable email address."</code></li>
+    <li><code class="hljs-string">"Can’t make keys because <var>emailAddress</var> is not an acceptable email address."</code></li>
   </ul>
   <p>
     If boths inputs are OK your <code>callback</code> will receive a set of <code>keys</code> when the operation is complete.

@@ -58,29 +58,80 @@ tape <span class="hljs-string">"define version, data, name, type, time, miniLock
   test.same operation.callback, callback
   test.end()
 
-tape <span class="hljs-string">"can’t start an encrypt operation without data"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+tape <span class="hljs-string">"can’t start encrypt operation without callback function"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+  test.throws operation.start, <span class="hljs-string">'Can’t start encrypt operation without callback function.'</span>
+  test.end()
+
+tape <span class="hljs-string">"can’t start encrypt operation without data"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
     <span class="hljs-attribute">keys</span>: Alice.keys
     <span class="hljs-attribute">miniLockIDs</span>: []
-    <span class="hljs-attribute">callback</span>:<span class="hljs-function"> -&gt;</span>
-  test.throws operation.start, <span class="hljs-string">'Can’t start miniLockLib.EncryptOperation without data.'</span>
-  test.end()
+  operation.start <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+    test.same error, <span class="hljs-string">"Can’t encrypt without a Blob of data."</span>
+    test.same encrypted, <span class="hljs-literal">undefined</span>
+    test.end()
 
-tape <span class="hljs-string">"can’t start an encrypt operation without keys"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+tape <span class="hljs-string">"can’t start encrypt operation with data that is not a Blob"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">data</span>: <span class="hljs-string">"Not a blob"</span>
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">miniLockIDs</span>: []
+  operation.start <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+    test.same error, <span class="hljs-string">"Can’t encrypt without a Blob of data."</span>
+    test.same encrypted, <span class="hljs-literal">undefined</span>
+    test.end()
+
+tape <span class="hljs-string">"can’t start encrypt operation without a set of keys"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
     <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
     <span class="hljs-attribute">miniLockIDs</span>: []
-    <span class="hljs-attribute">callback</span>:<span class="hljs-function"> -&gt;</span>
-  test.throws operation.start, <span class="hljs-string">'Can’t start miniLockLib.EncryptOperation without keys.'</span>
-  test.end()
+  operation.start <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+    test.same error, <span class="hljs-string">"Can’t encrypt without a set of keys."</span>
+    test.same encrypted, <span class="hljs-literal">undefined</span>
+    test.end()
 
-tape <span class="hljs-string">"can’t start an encrypt operation without miniLockIDs"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+tape <span class="hljs-string">"can’t start encrypt operation without miniLock IDs"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
     <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
     <span class="hljs-attribute">keys</span>: Alice.keys
-    <span class="hljs-attribute">callback</span>:<span class="hljs-function"> -&gt;</span>
-  test.throws operation.start, <span class="hljs-string">'Can’t start miniLockLib.EncryptOperation without miniLockIDs.'</span>
-  test.end()
+  operation.start <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+    test.same error, <span class="hljs-string">'Can’t encrypt without an Array of miniLock IDs.'</span>
+    test.same encrypted, <span class="hljs-literal">undefined</span>
+    test.end()
+
+tape <span class="hljs-string">"can’t start encrypt operation with unacceptable file name"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">miniLockIDs</span>: []
+    <span class="hljs-attribute">name</span>: (<span class="hljs-string">"X"</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> [<span class="hljs-number">0.</span>.<span class="hljs-number">.257</span>]).join(<span class="hljs-string">""</span>) <span class="hljs-comment"># Make a string that is 257 characters long.</span>
+  operation.start <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+    test.same error, <span class="hljs-string">"Can’t encrypt because file name is too long. 256-characters max please."</span>
+    test.same encrypted, <span class="hljs-literal">undefined</span>
+    test.end()
+
+tape <span class="hljs-string">"can’t start encrypt operation with unacceptable media type"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">miniLockIDs</span>: []
+    <span class="hljs-attribute">type</span>: (<span class="hljs-string">"X"</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> [<span class="hljs-number">0.</span>.<span class="hljs-number">.129</span>]).join(<span class="hljs-string">""</span>) <span class="hljs-comment"># Make a string that is 129 characters long.</span>
+  operation.start <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+    test.same error, <span class="hljs-string">"Can’t encrypt because media type is too long. 128-characters max please."</span>
+    test.same encrypted, <span class="hljs-literal">undefined</span>
+    test.end()
+
+tape <span class="hljs-string">"can’t start encrypt operation with unacceptable file format version"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
+    <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
+    <span class="hljs-attribute">keys</span>: Alice.keys
+    <span class="hljs-attribute">miniLockIDs</span>: []
+    <span class="hljs-attribute">version</span>: <span class="hljs-number">0</span>
+  operation.start <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+    test.same error, <span class="hljs-string">"Can’t encrypt because version 0 is not supported. Version 1 or 2 please."</span>
+    test.same encrypted, <span class="hljs-literal">undefined</span>
+    test.end()
 
 tape <span class="hljs-string">"empty array of ciphertext bytes is ready after operation is constructed"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation

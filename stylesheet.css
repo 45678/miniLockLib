@@ -1,4 +1,4 @@
-a, b, i, em, strong { text-decoration: none; font-style: inherit; font-weight: inherit; }
+a, b, i, em, strong, code, var, tt { text-decoration: none; font-style: inherit; font-weight: inherit; }
 h1, h2, h3, h4, h5, h6 { font: inherit; }
 pre { overflow: hidden; white-space: pre-wrap; }
 body, section, article, header, footer, nav, div, pre, ol, ul, li, h1, h2, h3, h4, h5, h6 {
@@ -95,10 +95,13 @@ body.consolas pre strong {
 
 /* Paint ------------------------------ */
 
-
-body {
+html {
   background: hsla(60, 0%, 95%, 1);
   color: hsla(0, 0%, 33%, 1);
+}
+
+body {
+  background: radial-gradient(1200px at 100px 100px, hsla(0, 0%, 100%, 1), hsla(0, 0%, 100%, 0));
 }
 
 strong,
@@ -112,7 +115,7 @@ h1 a b:nth-child(2) { color: hsl(210, 66%, 63%); }
 h1 a b:nth-child(3) { color: hsl(260, 66%, 66%); }
 h1 a b:nth-child(4) { color: hsl(310, 66%, 66%); }
 
-pre, code {
+pre, code, var {
   background: hsla(0, 0%, 100%, 1);
   box-shadow: 0px 0px 1px hsla(0, 0%, 50%, 0.25);
 }
@@ -162,14 +165,12 @@ a[href]:visited {
   color: hsl(310, 66%, 46%);
 }
 
-
 /* Layout ----------------------------- */
 
 body {
   position:relative;
   padding: 30px 60px;
   max-width: 960px;
-  /*min-width: 800px;*/
   outline: 1px solid hsla(0, 0%, 0%, 0.1);
 }
 
@@ -179,7 +180,7 @@ h3 { margin: 30px 0 -15px; }
 p  { margin: 20px 0; }
 ul { margin: 20px 0; }
 
-code, tt { padding: 1px 5px; }
+code, tt, var { padding: 1px 5px; }
 
 article { padding: 15px 0px; }
 article > div { padding: 15px 0px; }
@@ -229,15 +230,12 @@ body > header:first-child h1 svg {
   top: 5px;
 }
 
-
 /* Navigation ------------------------- */
 
 #page_nav div { margin: 0px 0px 15px; }
 #page_nav div a:before { content: "• "; position: relative; opacity: 0.5; top: 1px; }
-
-#page_nav div.public_domain a:before {
-  display: none;
-}
+#page_nav div.public_domain { margin: 0; }
+#page_nav div.public_domain a:before { display: none; }
 
 @media screen and (min-width: 960px) {
   body {
@@ -245,7 +243,6 @@ body > header:first-child h1 svg {
   }
   #page_nav {
     position: fixed;
-    /*outline: 1px solid hsla(0, 0%, 0%, 0.1);*/
     overflow: auto;
     left: 0; top: 0; bottom: 0;
     width: 180px;
@@ -364,7 +361,6 @@ div.example a[href] img {
 /* ------------------------------------ */
 
 body.annotated_code {
-  /*margin: 0 0 0 180px;*/
   max-width: none;
   /*min-width: 1200px;*/
   outline: none;
@@ -403,4 +399,7 @@ body.annotated_code div.code pre {
 
 .error_strings {
   margin-right: -50px;
+}
+.error_strings var {
+  color: initial;
 }

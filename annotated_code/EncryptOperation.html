@@ -43,17 +43,26 @@
 
   <span class="hljs-attribute">start</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> =&gt;</span>
     <span class="hljs-property">@callback</span> = callback <span class="hljs-keyword">if</span> callback?
-    <span class="hljs-keyword">if</span> (<span class="hljs-property">@keys</span>?.publicKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">or</span> (<span class="hljs-property">@keys</span>?.secretKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>)
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without keys."</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@miniLockIDs</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without miniLockIDs."</span>
-    <span class="hljs-keyword">if</span> (<span class="hljs-property">@data</span> <span class="hljs-keyword">instanceof</span> Blob) <span class="hljs-keyword">is</span> <span class="hljs-literal">false</span>
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without data."</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> <span class="hljs-property">@callback</span> <span class="hljs-keyword">isnt</span> <span class="hljs-string">"function"</span>
-      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start miniLockLib.<span class="hljs-subst">#{<span class="hljs-property">@constructor</span>.name}</span> without a callback."</span>
-    <span class="hljs-property">@startedAt</span> = Date.now()
-    <span class="hljs-property">@time</span> = <span class="hljs-property">@startedAt</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@time</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
-    <span class="hljs-property">@run</span>()
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@callback</span>?.constructor <span class="hljs-keyword">isnt</span> Function
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start encrypt operation without callback function."</span>
+    <span class="hljs-keyword">switch</span>
+      <span class="hljs-keyword">when</span> (<span class="hljs-property">@data</span> <span class="hljs-keyword">instanceof</span> Blob) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt without a Blob of data."</span>
+      <span class="hljs-keyword">when</span> (<span class="hljs-property">@keys</span>?.publicKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">or</span> (<span class="hljs-property">@keys</span>?.secretKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>)
+        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt without a set of keys."</span>
+      <span class="hljs-keyword">when</span> (<span class="hljs-property">@miniLockIDs</span> <span class="hljs-keyword">instanceof</span> Array) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt without an Array of miniLock IDs."</span>
+      <span class="hljs-keyword">when</span> <span class="hljs-property">@name</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@name</span>.length &gt; <span class="hljs-number">256</span>
+        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt because file name is too long. 256-characters max please."</span>
+      <span class="hljs-keyword">when</span> <span class="hljs-property">@type</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@type</span>.length &gt; <span class="hljs-number">128</span>
+        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt because media type is too long. 128-characters max please."</span>
+      <span class="hljs-keyword">when</span> (<span class="hljs-property">@version</span> <span class="hljs-keyword">in</span> [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt because version <span class="hljs-subst">#{<span class="hljs-property">@version</span>}</span> is not supported. Version 1 or 2 please."</span>
+      <span class="hljs-keyword">else</span>
+        <span class="hljs-property">@startedAt</span> = Date.now()
+        <span class="hljs-property">@time</span> = <span class="hljs-property">@startedAt</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@time</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+        <span class="hljs-property">@run</span>()
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
 
   <span class="hljs-attribute">run</span>:<span class="hljs-function"> -&gt;</span>
     <span class="hljs-property">@encryptAttributes</span>(<span class="hljs-property">@version</span>)
@@ -123,7 +132,7 @@
         <span class="hljs-keyword">else</span>
           <span class="hljs-property">@encryptData</span>(position+<span class="hljs-property">@chunkSize</span>, callback)
       <span class="hljs-keyword">else</span>
-        callback <span class="hljs-string">"EncryptOperation failed to encrypt file data."</span>
+        callback <span class="hljs-string">"Failed to encrypt slice of data at [<span class="hljs-subst">#{position}</span>..<span class="hljs-subst">#{position+<span class="hljs-property">@chunkSize</span>}</span>]"</span>
 
   <span class="hljs-attribute">constructHeader</span>:<span class="hljs-function"> -&gt;</span>
     <span class="hljs-property">@header</span> =
@@ -143,7 +152,7 @@
     <span class="hljs-keyword">if</span> <span class="hljs-property">@name</span>
       decodedName = NaCl.util.decodeUTF8(<span class="hljs-property">@name</span>)
       <span class="hljs-keyword">if</span> decodedName.length &gt; fixedSize.length
-        <span class="hljs-keyword">throw</span> <span class="hljs-string">"EncryptOperation file name is too long. 256-characters max please."</span>
+        <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t set fixed size decoded name because input is too long."</span>
       fixedSize.set(decodedName)
     <span class="hljs-keyword">return</span> fixedSize
 
@@ -152,7 +161,7 @@
     <span class="hljs-keyword">if</span> <span class="hljs-property">@type</span>
       decodedType = NaCl.util.decodeUTF8(<span class="hljs-property">@type</span>)
       <span class="hljs-keyword">if</span> decodedType.length &gt; fixedSize.length
-        <span class="hljs-keyword">throw</span> <span class="hljs-string">"EncryptOperation media type is too long. 128-characters max please."</span>
+        <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t set fixed size decoded type because input is too long."</span>
       fixedSize.set(decodedType)
     <span class="hljs-keyword">return</span> fixedSize
 

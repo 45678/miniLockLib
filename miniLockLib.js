@@ -163,21 +163,25 @@
     }
 
     DecryptOperation.prototype.start = function(callback) {
-      var _ref1;
+      var _ref1, _ref2;
       if (callback != null) {
         this.callback = callback;
       }
-      if (this.data === void 0) {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without data.";
+      if (((_ref1 = this.callback) != null ? _ref1.constructor : void 0) !== Function) {
+        throw "Can’t start decrypt operation without a callback function.";
       }
-      if (((_ref1 = this.keys) != null ? _ref1.secretKey : void 0) === void 0) {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without keys.";
+      switch (false) {
+        case this.data !== void 0:
+          this.callback("Can’t decrypt without a Blob of data.");
+          break;
+        case ((_ref2 = this.keys) != null ? _ref2.secretKey : void 0) !== void 0:
+          this.callback("Can’t decrypt without a set of keys.");
+          break;
+        default:
+          this.startedAt = Date.now();
+          this.run();
       }
-      if (typeof this.callback !== "function") {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
-      }
-      this.startedAt = Date.now();
-      return this.run();
+      return this;
     };
 
     DecryptOperation.prototype.run = function() {
@@ -266,7 +270,7 @@
                 };
                 return callback(void 0, attributes, end);
               } else {
-                return callback("DecryptOperation failed to decrypt version 1 attributes.");
+                return callback("Failed to decrypt version 1 file attributes.");
               }
             });
           });
@@ -337,7 +341,7 @@
                 };
                 return callback(void 0, attributes, end);
               } else {
-                return callback("DecryptOperation failed to decrypt version 2 attributes.");
+                return callback("Failed to decrypt version 2 file attributes.");
               }
             });
           });
@@ -366,7 +370,7 @@
                 return _this.decryptData(endPosition, callback);
               }
             } else {
-              return callback("DecryptOperation failed to decrypt file data.");
+              return callback("Failed to decrypt slice of data at [" + startPosition + ".." + endPosition + "]");
             }
           });
         };
@@ -437,7 +441,7 @@
               uniqueNonce = returned[0], permit = returned[1];
               return callback(void 0, uniqueNonce, permit);
             } else {
-              return callback("File is not encrypted for this recipient");
+              return callback("Can’t decrypt this file with this set of keys.");
             }
           }
         };
@@ -583,27 +587,40 @@
     }
 
     EncryptOperation.prototype.start = function(callback) {
-      var _ref, _ref1;
+      var _ref, _ref1, _ref2, _ref3;
       if (callback != null) {
         this.callback = callback;
       }
-      if ((((_ref = this.keys) != null ? _ref.publicKey : void 0) === void 0) || (((_ref1 = this.keys) != null ? _ref1.secretKey : void 0) === void 0)) {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without keys.";
+      if (((_ref = this.callback) != null ? _ref.constructor : void 0) !== Function) {
+        throw "Can’t start encrypt operation without callback function.";
       }
-      if (this.miniLockIDs === void 0) {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without miniLockIDs.";
+      switch (false) {
+        case (this.data instanceof Blob) !== false:
+          this.callback("Can’t encrypt without a Blob of data.");
+          break;
+        case !((((_ref1 = this.keys) != null ? _ref1.publicKey : void 0) === void 0) || (((_ref2 = this.keys) != null ? _ref2.secretKey : void 0) === void 0)):
+          this.callback("Can’t encrypt without a set of keys.");
+          break;
+        case (this.miniLockIDs instanceof Array) !== false:
+          this.callback("Can’t encrypt without an Array of miniLock IDs.");
+          break;
+        case !(this.name && this.name.length > 256):
+          this.callback("Can’t encrypt because file name is too long. 256-characters max please.");
+          break;
+        case !(this.type && this.type.length > 128):
+          this.callback("Can’t encrypt because media type is too long. 128-characters max please.");
+          break;
+        case ((_ref3 = this.version) === 1 || _ref3 === 2) !== false:
+          this.callback("Can’t encrypt because version " + this.version + " is not supported. Version 1 or 2 please.");
+          break;
+        default:
+          this.startedAt = Date.now();
+          if (this.time === void 0) {
+            this.time = this.startedAt;
+          }
+          this.run();
       }
-      if ((this.data instanceof Blob) === false) {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without data.";
-      }
-      if (typeof this.callback !== "function") {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
-      }
-      this.startedAt = Date.now();
-      if (this.time === void 0) {
-        this.time = this.startedAt;
-      }
-      return this.run();
+      return this;
     };
 
     EncryptOperation.prototype.run = function() {
@@ -701,7 +718,7 @@
               return _this.encryptData(position + _this.chunkSize, callback);
             }
           } else {
-            return callback("EncryptOperation failed to encrypt file data.");
+            return callback("Failed to encrypt slice of data at [" + position + ".." + (position + _this.chunkSize) + "]");
           }
         };
       })(this));
@@ -730,7 +747,7 @@
       if (this.name) {
         decodedName = NaCl.util.decodeUTF8(this.name);
         if (decodedName.length > fixedSize.length) {
-          throw "EncryptOperation file name is too long. 256-characters max please.";
+          throw "Can’t set fixed size decoded name because input is too long.";
         }
         fixedSize.set(decodedName);
       }
@@ -743,7 +760,7 @@
       if (this.type) {
         decodedType = NaCl.util.decodeUTF8(this.type);
         if (decodedType.length > fixedSize.length) {
-          throw "EncryptOperation media type is too long. 128-characters max please.";
+          throw "Can’t set fixed size decoded type because input is too long.";
         }
         fixedSize.set(decodedType);
       }

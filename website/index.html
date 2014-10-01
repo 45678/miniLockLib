@@ -88,8 +88,8 @@
   Your <code>callback</code> should be prepared to receive a set of <code>keys</code> or an <code>error</code>.
 </p>
 <pre class="ecmascript">
-secretPhrase = document.getElementById("secret_phrase_input").value
-emailAddress = document.getElementById("email_address_input").value
+secretPhrase = document.querySelector("#secret_phrase_input").value
+emailAddress = document.querySelector("#email_address_input").value
 
 miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
   if (keys) {

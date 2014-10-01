@@ -208,6 +208,21 @@ pre.html {
   margin: 0px;
 }
 
+ul.error_strings {
+  margin-right: -50px;
+}
+ul.error_strings li {
+  margin-left: 15px;
+}
+ul.error_strings li:before {
+  content: "✖︎";
+  opacity: 0.33;
+  position: absolute;
+  left: -15px;
+  font-size: 15px;
+  top: 0px;
+}
+
 body > footer {
   margin-top: 30px;
 }
@@ -391,12 +406,4 @@ body.annotated_code div.code pre {
   box-shadow: none;
   padding: 0;
   margin: 0;
-}
-
-.error_strings {
-  margin-right: -50px;
-}
-.error_strings li:before {
-  content: "✖︎ ";
-  opacity: 0.5;
 }

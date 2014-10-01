@@ -84,11 +84,11 @@
   <code>miniLockLib.makeKeyPair(secretPhrase, emailAddress, callback)</code>
 </header>
 <p>
-  Generates a public–secret key pair from a <code>secretPhrase</code> and <code>emailAddress</code>.
+  Generates a key pair from a <code>secretPhrase</code> and <code>emailAddress</code>.
   Returns an instance of <a href="#KeyPairOperation"><code>KeyPairOperation</code></a>.
   Your <code>callback</code> should be prepared to receive a set of <code>keys</code> or an <code>error</code>.
 </p>
-<pre>
+<pre class="ecmascript">
 secretPhrase = document.getElementById("secret_phrase_input").value
 emailAddress = document.getElementById("email_address_input").value
 
@@ -129,7 +129,7 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
   Make a miniLock file.
   Returns an instance of <a href="#EncryptOperation"><code>EncryptOperation</code></a>.
 </p>
-<pre>
+<pre class="ecmascript">
 miniLockLib.encrypt({
   data: new Blob(["Hello World"]),
   name: 'Secret Greeting.txt'
@@ -193,7 +193,7 @@ miniLockLib.encrypt({
   Unlock a miniLock file.
   Returns an instance of <a href="#DecryptOperation"><code>DecryptOperation</code></a>.
 </p>
-<pre>
+<pre class="ecmascript">
 miniLockLib.decrypt({
   data: encrypted.data,
   keys: {publicKey: Uint8Array, secretKey: Uint8Array},
@@ -376,7 +376,7 @@ miniLockLib.decrypt({
   <p>
     Start the operation and define a <code>callback</code> that will receive <code>encrypted.data</code> when the operation is complete or an <code>error</code> when there is a failure.
   </p>
-  <pre>
+  <pre class="ecmascript">
 encryptOperation.start(function(error, decrypted){
   if (decrypted) {
     encrypted.data is a Blob
@@ -488,14 +488,21 @@ decryptOperation.start(function(error, decrypted){
     Key pair operations generate a set of keys from a secret phrase and email address.
   </p>
   <p>
-    The constructor accepts <code>secretPhrase</code> and <code>emailAddress</code> parameters
-    or you may define on the instance before calling <code>start</code>.
+    The constructor accepts <code>secretPhrase</code> and <code>emailAddress</code> input parameters.
   </p>
-  <pre>
+  <pre class="ecmascript">
 keyPairOperation = new miniLockLib.KeyPairOperation({
   secretPhrase: "lions and tigers are not the only ones i am worried about"
   emailAddress: "alice@example.com"
 })</pre>
+  <p>
+    Or you may define them on the instance before calling <code>start</code>.
+  </p>
+  <pre class="ecmascript">
+keyPairOperation = new miniLockLib.KeyPairOperation
+keyPairOperation.secretPhrase = "lions and tigers are not the only ones i am worried about"
+keyPairOperation.emailAddress = "alice@example.com"
+keyPairOperation.start(...)</pre>
 </div>
 <div class="member">
   <header class="function">
@@ -506,6 +513,7 @@ keyPairOperation = new miniLockLib.KeyPairOperation({
   <p>
     Should be a <code>String</code>.
     Becomes the secret that is used to derive a set of keys.
+    The phrase must be at least 32 characters long and it must contain at least 100 bits of entropy.
   </p>
 </div>
 <div class="member">
@@ -528,7 +536,7 @@ keyPairOperation = new miniLockLib.KeyPairOperation({
   <p>
     Start the operation and define a <code>callback</code> that will receive a set of <code>keys</code> when the operation is complete or an <code>error</code> when there is a failure.
   </p>
-  <pre>
+  <pre class="ecmascript">
 keyPairOperation.start(function(error, keys){
   if (keys) {
     keys.publicKey is a Uint8Array
@@ -539,7 +547,6 @@ keyPairOperation.start(function(error, keys){
 })</pre>
   <p>
     The <code>secretPhrase</code> and <code>emailAddress</code> inputs are both tested at startup to ensure they meet <a href="https://github.com/kaepora/miniLock/blob/master/README.md#2-key-derivation">miniLock’s requirements</a>.
-    The phrase must be at least 32 characters long and it must contain at least 100 bits of entropy.
     The address musn’t be invalid.
     If either input is unacceptable your <code>callback</code> will receive one of the following <code>error</code> strings:
   </p>

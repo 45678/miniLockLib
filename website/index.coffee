@@ -2,7 +2,9 @@ if location.hostname is "45678.github.io" and location.protocol isnt "https:"
   window.location = location.toString().replace("http:", "https:")
 
 $(document).ready (event) ->
-  hljs.highlightBlock(pre) for pre in document.querySelectorAll("pre")
+  for pre in document.querySelectorAll("pre")
+    pre.classList.add("js") if pre.classList.contains("ecmascript")
+    hljs.highlightBlock(pre)
 
 $(document).ready (event) ->
   if location.hash

@@ -103,8 +103,7 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
 </pre>
 <p>
   <code>secretPhrase</code> and <code>emailAddress</code> are both tested to ensure they meet <a href="https://github.com/kaepora/miniLock/blob/master/README.md#2-key-derivation">miniLock’s input requirements</a>.
-  The phrase must be at least 32 characters long and it must contain at least 100 bits of entropy.
-  The address musn’t be invalid.
+
   If either input is unacceptable your <code>callback</code> will receive one of the following <code>error</code> strings:
 </p>
 <ul class="error_strings">
@@ -250,6 +249,7 @@ miniLockLib.decrypt({
   <p>
     Validates a secret phrase input <code>String</code>.
     Returns <code>true</code> or <code>false</code>.
+    The <code>secretPhrase</code> must be at least 32 characters long and it must contain at least 100 bits of entropy.
   </p>
 </div>
 </article>
@@ -543,7 +543,6 @@ keyPairOperation.start(function(error, keys){
 })</pre>
   <p>
     The <code>secretPhrase</code> and <code>emailAddress</code> inputs are both tested at startup to ensure they meet <a href="https://github.com/kaepora/miniLock/blob/master/README.md#2-key-derivation">miniLock’s requirements</a>.
-    The address musn’t be invalid.
     If either input is unacceptable your <code>callback</code> will receive one of the following <code>error</code> strings:
   </p>
   <ul class="error_strings">

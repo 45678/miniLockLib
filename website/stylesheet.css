@@ -95,13 +95,12 @@ body.consolas pre strong {
 
 /* Paint ------------------------------ */
 
-html {
-  background: hsla(60, 0%, 95%, 1);
-  color: hsla(0, 0%, 33%, 1);
-}
+html { background: hsla(60, 0%, 95%, 1); }
+body { background: radial-gradient(1200px at 100px 100px, hsla(0, 0%, 100%, 1), hsla(0, 0%, 100%, 0)); }
 
-body {
-  background: radial-gradient(1200px at 100px 100px, hsla(0, 0%, 100%, 1), hsla(0, 0%, 100%, 0));
+html,
+.error_strings code var {
+  color: hsla(0, 0%, 33%, 1);
 }
 
 strong,
@@ -130,11 +129,7 @@ h2 {
 
 article h1.selected,
 article h2.selected,
-#page_nav a[href].selected,
-#introduction strong,
-#examples strong,
-#setup strong,
-pre.html strong {
+#page_nav a[href].selected {
   color: black;
 }
 
@@ -399,7 +394,4 @@ body.annotated_code div.code pre {
 
 .error_strings {
   margin-right: -50px;
-}
-.error_strings var {
-  color: initial;
 }

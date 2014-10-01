@@ -95,7 +95,6 @@ body.consolas pre strong {
 
 /* Paint ------------------------------ */
 
-
 html {
   background: hsla(60, 0%, 95%, 1);
   color: hsla(0, 0%, 33%, 1);
@@ -166,14 +165,12 @@ a[href]:visited {
   color: hsl(310, 66%, 46%);
 }
 
-
 /* Layout ----------------------------- */
 
 body {
   position:relative;
   padding: 30px 60px;
   max-width: 960px;
-  /*min-width: 800px;*/
   outline: 1px solid hsla(0, 0%, 0%, 0.1);
 }
 
@@ -233,7 +230,6 @@ body > header:first-child h1 svg {
   top: 5px;
 }
 
-
 /* Navigation ------------------------- */
 
 #page_nav div { margin: 0px 0px 15px; }
@@ -249,7 +245,6 @@ body > header:first-child h1 svg {
   }
   #page_nav {
     position: fixed;
-    /*outline: 1px solid hsla(0, 0%, 0%, 0.1);*/
     overflow: auto;
     left: 0; top: 0; bottom: 0;
     width: 180px;
@@ -368,7 +363,6 @@ div.example a[href] img {
 /* ------------------------------------ */
 
 body.annotated_code {
-  /*margin: 0 0 0 180px;*/
   max-width: none;
   /*min-width: 1200px;*/
   outline: none;

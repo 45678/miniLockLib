@@ -12,6 +12,9 @@
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       pre = _ref[_i];
+      if (pre.classList.contains("ecmascript")) {
+        pre.classList.add("js");
+      }
       _results.push(hljs.highlightBlock(pre));
     }
     return _results;

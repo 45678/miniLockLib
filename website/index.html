@@ -131,16 +131,15 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
 </p>
 <pre class="ecmascript">
 miniLockLib.encrypt({
-  data: new Blob(["Hello World"]),
+  data: new <span class="hljs-built_in">Blob</span>(["Hello World"]),
   name: 'Secret Greeting.txt'
   keys: {publicKey: Uint8Array, secretKey: Uint8Array},
   miniLockIDs: [aliceID, bobbyID, ...]
   callback: function(error, encrypted) {
     if (encrypted) {
-      encrypted.data is a new Blob
+      encrypted.data is a <span class="hljs-built_in">Blob</span>
       encrypted.data.name is 'Secret Greeting.txt.minilock'
       encrypted.data.type is 'application/minilock'
-      encrypted.data.size is the Number of bytes
       encrypted.senderID identifies the owner of the encryption keys
     } else {
       error is a String
@@ -199,8 +198,7 @@ miniLockLib.decrypt({
   keys: {publicKey: Uint8Array, secretKey: Uint8Array},
   callback: function(error, decrypted) {
     if (decrypted) {
-      decrypted.data is a Blob
-      decrypted.data.size is the Number of bytes
+      decrypted.data is a <span class="hljs-built_in">Blob</span>
       decrypted.name is the filename as a String
       decrypted.senderID identifies the author of the encrypted file
     } else {
@@ -379,8 +377,7 @@ miniLockLib.decrypt({
   <pre class="ecmascript">
 encryptOperation.start(function(error, decrypted){
   if (decrypted) {
-    encrypted.data is a Blob
-    encrypted.data.size is the Number of bytes
+    encrypted.data is a <span class="hljs-built_in">Blob</span>
     encrypted.name is the filename as a String
     encrypted.senderID identifies the author of the encrypted file.
   } else {
@@ -418,7 +415,7 @@ encryptOperation.start(function(error, decrypted){
   </p>
   <pre>
 decryptOperation = new miniLockLib.DecryptOperation({
-  data: new Blob
+  data: new <span class="hljs-built_in">Blob</span>
   keys: {publicKey:, secretKey:}
 })</pre>
 </div>
@@ -455,8 +452,7 @@ decryptOperation = new miniLockLib.DecryptOperation({
   <pre>
 decryptOperation.start(function(error, decrypted){
   if (decrypted) {
-    decrypted.data is a Blob
-    decrypted.data.size is the Number of bytes
+    decrypted.data is a <span class="hljs-built_in">Blob</span>
     decrypted.name is the filename as a String
     decrypted.senderID identifies the author of the encrypted file.
   } else {

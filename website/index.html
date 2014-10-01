@@ -109,9 +109,9 @@ miniLockLib.makeKeyPair(secretPhrase, emailAddress, function(error, keys){
 </p>
 <ul class="error_strings">
   <li><code class="hljs-string">"Can’t make keys without a secret phrase."</code></li>
-  <li><code class="hljs-string">"Can’t make keys because <code>secretPhrase</code> is not an acceptable secret phrase."</code></li>
+  <li><code class="hljs-string">"Can’t make keys because <var>secretPhrase</var> is not an acceptable secret phrase."</code></li>
   <li><code class="hljs-string">"Can’t make keys without an email address."</code></li>
-  <li><code class="hljs-string">"Can’t make keys because <code>emailAddress</code> is not an acceptable email address."</code></li>
+  <li><code class="hljs-string">"Can’t make keys because <var>emailAddress</var> is not an acceptable email address."</code></li>
 </ul>
 <p>
   If all the input is OK your <code>callback</code> will receive a set of <code>keys</code> when the operation is complete.
@@ -530,9 +530,9 @@ keyPairOperation.start(function(error, keys){
   </p>
   <ul class="error_strings">
     <li><code class="hljs-string">"Can’t make keys without a secret phrase."</code></li>
-    <li><code class="hljs-string">"Can’t make keys because <code>secretPhrase</code> is not an acceptable secret phrase."</code></li>
+    <li><code class="hljs-string">"Can’t make keys because <var>secretPhrase</var> is not an acceptable secret phrase."</code></li>
     <li><code class="hljs-string">"Can’t make keys without an email address."</code></li>
-    <li><code class="hljs-string">"Can’t make keys because <code>emailAddress</code> is not an acceptable email address."</code></li>
+    <li><code class="hljs-string">"Can’t make keys because <var>emailAddress</var> is not an acceptable email address."</code></li>
   </ul>
   <p>
     If boths inputs are OK your <code>callback</code> will receive a set of <code>keys</code> when the operation is complete.

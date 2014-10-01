@@ -357,8 +357,9 @@ div.example a[href] img {
 
 body.annotated_code {
   max-width: none;
-  /*min-width: 1200px;*/
   outline: none;
+  background: none;
+  /*min-width: 1200px;*/
 }
 body.annotated_code section {
   margin: 30px -25px;

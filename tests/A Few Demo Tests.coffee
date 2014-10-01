@@ -69,8 +69,8 @@ tape "Bobby can’t decrypt file that was only encrypted for Alice", (test) ->
       data: blob
       keys: Bobby.keys
       callback: (error, decrypted) ->
-        test.equal "File is not encrypted for this recipient", error
-        test.equal undefined, decrypted
+        test.same error, "Can’t decrypt this file with this set of keys."
+        test.same decrypted, undefined
         test.end()
 
 tape "Encrypt a file for Alice & Bobby", (test) ->

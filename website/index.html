@@ -459,10 +459,12 @@ decryptOperation.start(function(error, decrypted){
     If the operation fails your <code>callback</code> will receive one of the following <code>error</code> strings:
   </p>
   <ul class="error_strings">
-    <li><code class="hljs-string">"DecryptOperation failed to decrypt version 1 attributes."</code></li>
-    <li><code class="hljs-string">"DecryptOperation failed to decrypt version 2 attributes."</code></li>
-    <li><code class="hljs-string">"DecryptOperation failed to decrypt file data."</code></li>
-    <li><code class="hljs-string">"File is not encrypted for this recipient."</code></li>
+    <li><code class="hljs-string">"Can’t decrypt without a Blob of data."</code></li>
+    <li><code class="hljs-string">"Can’t decrypt without a set of keys."</code></li>
+    <li><code class="hljs-string">"Can’t decrypt this file with this set of keys."</code></li>
+    <li><code class="hljs-string">"Failed to decrypt version 1 file attributes."</code></li>
+    <li><code class="hljs-string">"Failed to decrypt version 2 file attributes."</code></li>
+    <li><code class="hljs-string">"Failed to decrypt slice of data at [<var>startOfSlice</var>..<var>endOfSlice</var>]"</code></li>
   </ul>
 </div>
 </article>

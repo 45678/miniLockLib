@@ -29,26 +29,26 @@ tape "or define the callback when start is called if you prefer", (test) ->
     test.end()
   operation.start(callbackSpecifiedOnStart)
 
+tape "can’t start a decrypt operation without a callback function", (test) ->
+  operation = new miniLockLib.DecryptOperation
+  test.throws operation.start, "Can’t start decrypt operation without a callback function."
+  test.end()
+
 tape "can’t start a decrypt operation without data", (test) ->
   operation = new miniLockLib.DecryptOperation
     keys: Alice.keys
-    callback: yes
-  test.throws operation.start, 'Can’t start miniLockLib.DecryptOperation without data.'
-  test.end()
+  operation.start (error, decrypted) ->
+    test.same error, "Can’t decrypt without a Blob of data."
+    test.same decrypted, undefined
+    test.end()
 
 tape "can’t start a decrypt operation without keys", (test) ->
   operation = new miniLockLib.DecryptOperation
-    data: yes
-    callback: yes
-  test.throws operation.start, 'Can’t start miniLockLib.DecryptOperation without keys.'
-  test.end()
-
-tape "can’t start a decrypt operation without a callback", (test) ->
-  operation = new miniLockLib.DecryptOperation
-    data: yes
-    keys: Alice.keys
-  test.throws operation.start, 'Can’t start miniLockLib.DecryptOperation without a callback.'
-  test.end()
+    data: new Blob
+  operation.start (error, decrypted) ->
+    test.same error, "Can’t decrypt without a set of keys."
+    test.same decrypted, undefined
+    test.end()
 
 tape "construct map of byte addresses in a file", (test) ->
   read "alice.txt.minilock", (blob) ->

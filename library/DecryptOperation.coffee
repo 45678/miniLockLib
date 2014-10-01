@@ -13,14 +13,17 @@ module.exports = class DecryptOperation
 
   start: (callback) =>
     @callback = callback if callback?
-    if @data is undefined
-      throw "Can’t start miniLockLib.#{@constructor.name} without data."
-    if @keys?.secretKey is undefined
-      throw "Can’t start miniLockLib.#{@constructor.name} without keys."
-    if typeof @callback isnt "function"
-      throw "Can’t start miniLockLib.#{@constructor.name} without a callback."
-    @startedAt = Date.now()
-    @run()
+    if @callback?.constructor isnt Function
+      throw "Can’t start decrypt operation without a callback function."
+    switch
+      when @data is undefined
+        @callback "Can’t decrypt without a Blob of data."
+      when @keys?.secretKey is undefined
+        @callback "Can’t decrypt without a set of keys."
+      else
+        @startedAt = Date.now()
+        @run()
+    return this
 
   run: ->
     @readHeader (error, header, sizeOfHeader) =>
@@ -73,9 +76,9 @@ module.exports = class DecryptOperation
             nameAsBytes = (byte for byte in decryptedBytes when byte isnt 0)
             attributes =
               name: encodeUTF8(nameAsBytes)
-            callback(undefined, attributes, end)
+            callback undefined, attributes, end
           else
-            callback("DecryptOperation failed to decrypt version 1 attributes.")
+            callback "Failed to decrypt version 1 file attributes."
 
   decryptVersion2Attributes: (callback) ->
     @constructMap (error, map) =>
@@ -98,9 +101,9 @@ module.exports = class DecryptOperation
               name: encodeUTF8(nameAsBytes)
               type: encodeUTF8(typeAsBytes)
               time: encodeUTF8(timeAsBytes)
-            callback(undefined, attributes, end)
+            callback undefined, attributes, end
           else
-            callback("DecryptOperation failed to decrypt version 2 attributes.")
+            callback "Failed to decrypt version 2 file attributes."
 
   decryptData: (position, callback) ->
     @constructStreamDecryptor (error) =>
@@ -117,7 +120,7 @@ module.exports = class DecryptOperation
           else
             @decryptData(endPosition, callback)
         else
-          callback("DecryptOperation failed to decrypt file data.")
+          callback "Failed to decrypt slice of data at [#{startPosition}..#{endPosition}]"
 
   constructMap: (callback) ->
     @readHeader (error, header, sizeOfHeader) =>
@@ -149,9 +152,9 @@ module.exports = class DecryptOperation
         returned = @findUniqueNonceAndPermit(header)
         if returned
           [uniqueNonce, permit] = returned
-          callback(undefined, uniqueNonce, permit)
+          callback undefined, uniqueNonce, permit
         else
-          callback("File is not encrypted for this recipient")
+          callback "Can’t decrypt this file with this set of keys."
 
   findUniqueNonceAndPermit: (header) ->
     ephemeral = decodeBase64(header.ephemeral)

@@ -163,21 +163,25 @@
     }
 
     DecryptOperation.prototype.start = function(callback) {
-      var _ref1;
+      var _ref1, _ref2;
       if (callback != null) {
         this.callback = callback;
       }
-      if (this.data === void 0) {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without data.";
+      if (((_ref1 = this.callback) != null ? _ref1.constructor : void 0) !== Function) {
+        throw "Can’t start decrypt operation without a callback function.";
       }
-      if (((_ref1 = this.keys) != null ? _ref1.secretKey : void 0) === void 0) {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without keys.";
+      switch (false) {
+        case this.data !== void 0:
+          this.callback("Can’t decrypt without a Blob of data.");
+          break;
+        case ((_ref2 = this.keys) != null ? _ref2.secretKey : void 0) !== void 0:
+          this.callback("Can’t decrypt without a set of keys.");
+          break;
+        default:
+          this.startedAt = Date.now();
+          this.run();
       }
-      if (typeof this.callback !== "function") {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
-      }
-      this.startedAt = Date.now();
-      return this.run();
+      return this;
     };
 
     DecryptOperation.prototype.run = function() {
@@ -266,7 +270,7 @@
                 };
                 return callback(void 0, attributes, end);
               } else {
-                return callback("DecryptOperation failed to decrypt version 1 attributes.");
+                return callback("Failed to decrypt version 1 file attributes.");
               }
             });
           });
@@ -337,7 +341,7 @@
                 };
                 return callback(void 0, attributes, end);
               } else {
-                return callback("DecryptOperation failed to decrypt version 2 attributes.");
+                return callback("Failed to decrypt version 2 file attributes.");
               }
             });
           });
@@ -366,7 +370,7 @@
                 return _this.decryptData(endPosition, callback);
               }
             } else {
-              return callback("DecryptOperation failed to decrypt file data.");
+              return callback("Failed to decrypt slice of data at [" + startPosition + ".." + endPosition + "]");
             }
           });
         };
@@ -437,7 +441,7 @@
               uniqueNonce = returned[0], permit = returned[1];
               return callback(void 0, uniqueNonce, permit);
             } else {
-              return callback("File is not encrypted for this recipient");
+              return callback("Can’t decrypt this file with this set of keys.");
             }
           }
         };

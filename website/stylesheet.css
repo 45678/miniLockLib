@@ -96,9 +96,13 @@ body.consolas pre strong {
 /* Paint ------------------------------ */
 
 
-body {
+html {
   background: hsla(60, 0%, 95%, 1);
   color: hsla(0, 0%, 33%, 1);
+}
+
+body {
+  background: radial-gradient(1200px at 100px 100px, hsla(0, 0%, 100%, 1), hsla(0, 0%, 100%, 0));
 }
 
 strong,

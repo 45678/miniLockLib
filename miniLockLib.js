@@ -583,11 +583,14 @@
     }
 
     EncryptOperation.prototype.start = function(callback) {
-      var _ref, _ref1;
+      var _ref, _ref1, _ref2;
       if (callback != null) {
         this.callback = callback;
       }
-      if ((((_ref = this.keys) != null ? _ref.publicKey : void 0) === void 0) || (((_ref1 = this.keys) != null ? _ref1.secretKey : void 0) === void 0)) {
+      if (((_ref = this.callback) != null ? _ref.constructor : void 0) !== Function) {
+        throw "Can’t start encrypt operation without callback function.";
+      }
+      if ((((_ref1 = this.keys) != null ? _ref1.publicKey : void 0) === void 0) || (((_ref2 = this.keys) != null ? _ref2.secretKey : void 0) === void 0)) {
         throw "Can’t start miniLockLib." + this.constructor.name + " without keys.";
       }
       if (this.miniLockIDs === void 0) {
@@ -595,9 +598,6 @@
       }
       if ((this.data instanceof Blob) === false) {
         throw "Can’t start miniLockLib." + this.constructor.name + " without data.";
-      }
-      if (typeof this.callback !== "function") {
-        throw "Can’t start miniLockLib." + this.constructor.name + " without a callback.";
       }
       this.startedAt = Date.now();
       if (this.time === void 0) {

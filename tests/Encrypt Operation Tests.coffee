@@ -33,6 +33,11 @@ tape "define version, data, name, type, time, miniLockIDs, keys and callback whe
   test.same operation.callback, callback
   test.end()
 
+tape "can’t start encrypt operation without callback function", (test) ->
+  operation = new miniLockLib.EncryptOperation
+  test.throws operation.start, 'Can’t start encrypt operation without callback function.'
+  test.end()
+
 tape "can’t start an encrypt operation without data", (test) ->
   operation = new miniLockLib.EncryptOperation
     keys: Alice.keys

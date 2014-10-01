@@ -18,14 +18,14 @@ module.exports = class EncryptOperation
 
   start: (callback) =>
     @callback = callback if callback?
+    if @callback?.constructor isnt Function
+      throw "Can’t start encrypt operation without callback function."
     if (@keys?.publicKey is undefined) or (@keys?.secretKey is undefined)
       throw "Can’t start miniLockLib.#{@constructor.name} without keys."
     if @miniLockIDs is undefined
       throw "Can’t start miniLockLib.#{@constructor.name} without miniLockIDs."
     if (@data instanceof Blob) is false
       throw "Can’t start miniLockLib.#{@constructor.name} without data."
-    if typeof @callback isnt "function"
-      throw "Can’t start miniLockLib.#{@constructor.name} without a callback."
     @startedAt = Date.now()
     @time = @startedAt if @time is undefined
     @run()

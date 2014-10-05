@@ -1,4 +1,4 @@
-miniLockLib = module.exports = {}
+miniLockLib = module.exports
 
 # Start a [key pair operation](KeyPairOperation.html) to make a set of keys.
 miniLockLib.makeKeyPair = (secretPhrase, emailAddress, callback) ->

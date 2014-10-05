@@ -990,7 +990,7 @@
 (function() {
   var miniLockLib;
 
-  miniLockLib = module.exports = {};
+  miniLockLib = module.exports;
 
   miniLockLib.makeKeyPair = function(secretPhrase, emailAddress, callback) {
     var operation;

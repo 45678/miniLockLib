@@ -15,20 +15,20 @@ miniLockLib.decrypt = (params, callback) ->
   operation = new miniLockLib.DecryptOperation params
   operation.start(callback)
 
-# Expose [secret phrase](SecretPhrase.html) and
-# [email address](EmailAddress.html) acceptance tests.
+# Exports the [secret phrase](SecretPhrase.html) and
+# [email address](EmailAddress.html) modules.
 miniLockLib.SecretPhrase = require "./SecretPhrase"
 miniLockLib.EmailAddress = require "./EmailAddress"
 
-# Expose [identification](ID.html) functions.
+# Exports the [identification](ID.html) module.
 miniLockLib.ID = require "./ID"
 
-# Expose crypto operation constructors.
+# Exports the miniLock crypto operation constructors.
 miniLockLib.KeyPairOperation = require "./KeyPairOperation"
 miniLockLib.EncryptOperation = require "./EncryptOperation"
 miniLockLib.DecryptOperation = require "./DecryptOperation"
 
-# Expose special extras.
+# Exports special extras.
 miniLockLib.Base58  = require "./Base58"
 miniLockLib.BLAKE2s = require "./BLAKE2s"
 miniLockLib.NaCl    = require "./NaCl"

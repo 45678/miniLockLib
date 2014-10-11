@@ -7,13 +7,18 @@ miniLockLib.js: website/miniLockLib.js
 	cp website/miniLockLib.js miniLockLib.js
 
 # Create a standalone copy of miniLockLib.js in the website folder.
-website/miniLockLib.js: library/%.coffee library.compiled/scrypt-async.js library.compiled/zxcvbn.js
+website/miniLockLib.js: library/%.coffee library.compiled/Base58.js library.compiled/scrypt-async.js library.compiled/zxcvbn.js
 	browserify library.compiled/index.js --standalone miniLockLib > website/miniLockLib.js
 
 # Compile CoffeeScript library files to the library.compiled folder.
 library/%.coffee:
 	mkdir -p library.compiled
 	coffee --compile --output library.compiled library/*.coffee
+
+# Download base58.js and save it in the library.compiled folder.
+library.compiled/Base58.js:
+	curl -s https://raw.githubusercontent.com/45678/base58/master/Base58.js \
+		> library.compiled/Base58.js
 
 # Download scrypt-async.js and save it in the library.compiled folder.
 library.compiled/scrypt-async.js:

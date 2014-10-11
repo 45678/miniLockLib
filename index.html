@@ -568,8 +568,7 @@ keyPairOperation.start(function(error, keys){
   <a id="Base58"></a>
   <h2>Base58</h2>
   <p>
-    <code>miniLockLib.Base58</code> is a modified copy of the <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs bs58 library</a>.
-    It has been modified to work in a web agent <code>window</code> instead of working only in a Node.js environment.
+    <code>miniLockLib.Base58</code> is a copy of <a href="https://github.com/45678/base58">undefined’s Base58 package</a> which is a derivative of <a href="https://github.com/cryptocoinjs/bs58">cryptocoinjs’s bs58</a>.
     <code>Base58</code> is used to encode and decode miniLock IDs.
   </p>
 </div><div>
@@ -591,7 +590,7 @@ keyPairOperation.start(function(error, keys){
   <a id="scrypt"></a>
   <h2>scrypt</h2>
   <p>
-    <code>miniLockLib.scrypt</code> is an unmodified copy of <code>scrypt-async.js</code>
+    <code>miniLockLib.scrypt</code> is a copy of <code>scrypt-async.js</code>
     from the <a href="https://github.com/dchest/scrypt-async-js">scrypt-async-js</a> project
     written by Mr. Chestnykh once again.
     <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.

@@ -579,6 +579,13 @@ keyPairOperation.start(function(error, keys){
     miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
   </p>
 </div><div>
+  <a id="Entropizer"></a>
+  <h2>Entropizer</h2>
+  <p>
+    <code>miniLockLib.Entropizer</code> is Jonathan Rees’s <a href="https://github.com/jreesuk/entropizer">tiny password entropy calculator</a>.
+    miniLockLib relies on <code>Entropizer</code> to measure entropy in secret phrases.
+  </p>
+</div><div>
   <a id="NaCl"></a>
   <h2>NaCl</h2>
   <p>
@@ -595,14 +602,6 @@ keyPairOperation.start(function(error, keys){
     written by Mr. Chestnykh once again.
     <code>scrypt</code> derives a key pair from a secret and a salt with the curve25519 encryption scheme.
     miniLockLib relies on <code>scrypt</code> to make key pairs.
-  </p>
-</div><div>
-  <a id="zxcvbn"></a>
-  <h2>zxcvbn</h2>
-  <p>
-    <code>miniLockLib.zxcvbn</code> is a modified copy of Dropbox’s <a href="https://github.com/dropbox/zxcvbn">zxcvbn password strength estimator</a>.
-    The original script is modified so that it exports a module instead of defining itself on <code>window</code>.
-    miniLockLib relies on <code>zxcvbn</code> to measure entropy in secret phrases.
   </p>
 </div>
 </article>
@@ -693,9 +692,9 @@ keyPairOperation.start(function(error, keys){
   <div>
     <a href="#Base58">Base58</a><br>
     <a href="#BLAKE2s">BLAKE2s</a><br>
+    <a href="#Entropizer">Entropizer</a><br>
     <a href="#NaCl">NaCl</a><br>
     <a href="#scrypt">scrypt</a><br>
-    <a href="#zxcvbn">zxcvbn</a><br>
   </div>
 
   <a href="#Giants">Friendly Giants</a><br>

@@ -1,7 +1,8 @@
 # An acceptable secret phrase is at least 32 characters long
-# and has at least 100 bits of entropy according to `zxcvbn`.
+# and has at least 200 bits of entropy according to `Entropizer`.
 
 exports.isAcceptable = (secretPhrase) ->
-  secretPhrase?.length >= 32 and zxcvbn(secretPhrase).entropy >= 100
+  secretPhrase?.length >= 32 and entropizer.evaluate(secretPhrase) >= 200
 
-zxcvbn = require "./zxcvbn"
+Entropizer = require "entropizer"
+entropizer = new Entropizer

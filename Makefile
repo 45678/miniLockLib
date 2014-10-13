@@ -7,7 +7,7 @@ miniLockLib.js: website/miniLockLib.js
 	cp website/miniLockLib.js miniLockLib.js
 
 # Create a standalone copy of miniLockLib.js in the website folder.
-website/miniLockLib.js: library/%.coffee library.compiled/Base58.js library.compiled/scrypt-async.js library.compiled/zxcvbn.js
+website/miniLockLib.js: library/%.coffee library.compiled/Base58.js library.compiled/scrypt-async.js
 	browserify library.compiled/index.js --standalone miniLockLib > website/miniLockLib.js
 
 # Compile CoffeeScript library files to the library.compiled folder.
@@ -24,12 +24,6 @@ library.compiled/Base58.js:
 library.compiled/scrypt-async.js:
 	curl -s https://raw.githubusercontent.com/dchest/scrypt-async-js/master/scrypt-async.js \
 		> library.compiled/scrypt-async.js
-
-# Make a copy of zxcvbn.js that exports a module instead of defining itself on `window`.
-library.compiled/zxcvbn.js:
-	cat node_modules/zxcvbn/zxcvbn.js \
-		| sed "s/window.zxcvbn=o/module.exports=o/" \
-		> library.compiled/zxcvbn.js
 
 # # Tests
 

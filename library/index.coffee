@@ -29,8 +29,8 @@ miniLockLib.EncryptOperation = require "./EncryptOperation"
 miniLockLib.DecryptOperation = require "./DecryptOperation"
 
 # Exports special extras.
-miniLockLib.Base58  = require "./Base58"
-miniLockLib.BLAKE2s = require "./BLAKE2s"
-miniLockLib.NaCl    = require "./NaCl"
-miniLockLib.scrypt  = require "./scrypt-async"
-miniLockLib.zxcvbn  = require "./zxcvbn"
+miniLockLib.Base58     = require "./Base58"
+miniLockLib.BLAKE2s    = require "./BLAKE2s"
+miniLockLib.Entropizer = require "entropizer"
+miniLockLib.NaCl       = require "./NaCl"
+miniLockLib.scrypt     = require "./scrypt-async"

@@ -3,6 +3,11 @@ tape = require "./tape_test_harness"
 
 tape "Make Keys", (test) -> test.end()
 
+tape "returns an key pair operation that has started", (test) ->
+  operation = miniLockLib.makeKeyPair Alice.secretPhrase, Alice.emailAddress, (error, keys) ->
+    test.ok operation?.hashDigestOfSecret
+    test.end()
+
 tape "make a pair of keys for Alice", (test) ->
   miniLockLib.makeKeyPair Alice.secretPhrase, Alice.emailAddress, (error, keys) ->
     test.ok Object.keys(keys).length is 2

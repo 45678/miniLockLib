@@ -24,20 +24,24 @@ module.exports = class KeyPairOperation
   # Start the operation.
   # `callback` receives `error` or `keys` when the operation is complete.
   start: (callback) ->
-    switch
-      when callback?.constructor isnt Function
-        return "Can’t make keys without a callback function."
-      when @secretPhrase is undefined
-        callback "Can’t make keys without a secret phrase."
-      when SecretPhrase.isAcceptable(@secretPhrase) is no
-        callback "Can’t make keys because '#{@secretPhrase}' is not an acceptable secret phrase."
-      when @emailAddress is undefined
-        callback "Can’t make keys without an email address."
-      when EmailAddress.isAcceptable(@emailAddress) is no
-        callback "Can’t make keys because '#{@emailAddress}' is not an acceptable email address."
-      when @secretPhrase and @emailAddress and callback
-        calculateCurve25519KeyPair @hashDigestOfSecret(), @salt(), (keys) ->
-          callback(undefined, keys)
+    if callback?.constructor isnt Function
+      return "Can’t make keys without a callback function."
+    if @secretPhrase is undefined
+      callback "Can’t make keys without a secret phrase."
+      return no
+    if SecretPhrase.isAcceptable(@secretPhrase) is no
+      callback "Can’t make keys because '#{@secretPhrase}' is not an acceptable secret phrase."
+      return no
+    if @emailAddress is undefined
+      callback "Can’t make keys without an email address."
+      return no
+    if EmailAddress.isAcceptable(@emailAddress) is no
+      callback "Can’t make keys because '#{@emailAddress}' is not an acceptable email address."
+      return no
+    if @secretPhrase and @emailAddress and callback
+      calculateCurve25519KeyPair @hashDigestOfSecret(), @salt(), (keys) ->
+        callback(undefined, keys)
+      return this
 
   # Calculate a curve25519 key pair for the given `secret` and `salt`.
   calculateCurve25519KeyPair = (secret, salt, callback) ->

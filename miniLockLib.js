@@ -916,7 +916,7 @@
 
     KeyPairOperation.prototype.start = function(callback) {
       if ((callback != null ? callback.constructor : void 0) !== Function) {
-        return "Can’t make keys without a callback function.";
+        throw "Can’t make keys without a callback function.";
       }
       if (this.secretPhrase === void 0) {
         callback("Can’t make keys without a secret phrase.");

@@ -25,7 +25,7 @@ module.exports = class KeyPairOperation
   # `callback` receives `error` or `keys` when the operation is complete.
   start: (callback) ->
     if callback?.constructor isnt Function
-      return "Can’t make keys without a callback function."
+      throw "Can’t make keys without a callback function."
     if @secretPhrase is undefined
       callback "Can’t make keys without a secret phrase."
       return no

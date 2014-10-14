@@ -23,10 +23,8 @@ tape "make a pair of keys for Bobby", (test) ->
     test.end()
 
 tape "can’t make keys without a callback", (test) ->
-  returned = miniLockLib.makeKeyPair()
-  test.same returned, "Can’t make keys without a callback function."
-  returned = miniLockLib.makeKeyPair(Bobby.secretPhrase, Bobby.emailAddress)
-  test.same returned, "Can’t make keys without a callback function."
+  noCanDo = -> miniLockLib.makeKeyPair()
+  test.throws noCanDo, "Can’t make keys without a callback function."
   test.end()
 
 tape "can’t make keys without a secret phrase", (test) ->

@@ -28,6 +28,11 @@
 
 tape <span class="hljs-string">"Make Keys"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span> test.end()
 
+tape <span class="hljs-string">"returns an key pair operation that has started"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
+  operation = miniLockLib.makeKeyPair Alice.secretPhrase, Alice.emailAddress, <span class="hljs-function"><span class="hljs-params">(error, keys)</span> -&gt;</span>
+    test.ok operation?.hashDigestOfSecret
+    test.end()
+
 tape <span class="hljs-string">"make a pair of keys for Alice"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   miniLockLib.makeKeyPair Alice.secretPhrase, Alice.emailAddress, <span class="hljs-function"><span class="hljs-params">(error, keys)</span> -&gt;</span>
     test.ok Object.keys(keys).length <span class="hljs-keyword">is</span> <span class="hljs-number">2</span>
@@ -43,10 +48,8 @@ tape <span class="hljs-string">"make a pair of keys for Bobby"</span>, <span cla
     test.end()
 
 tape <span class="hljs-string">"can’t make keys without a callback"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
-  returned = miniLockLib.makeKeyPair()
-  test.same returned, <span class="hljs-string">"Can’t make keys without a callback function."</span>
-  returned = miniLockLib.makeKeyPair(Bobby.secretPhrase, Bobby.emailAddress)
-  test.same returned, <span class="hljs-string">"Can’t make keys without a callback function."</span>
+<span class="hljs-function">  <span class="hljs-title">noCanDo</span> = -&gt;</span> miniLockLib.makeKeyPair()
+  test.throws noCanDo, <span class="hljs-string">"Can’t make keys without a callback function."</span>
   test.end()
 
 tape <span class="hljs-string">"can’t make keys without a secret phrase"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>

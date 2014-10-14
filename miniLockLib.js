@@ -915,21 +915,30 @@
     };
 
     KeyPairOperation.prototype.start = function(callback) {
-      switch (false) {
-        case (callback != null ? callback.constructor : void 0) === Function:
-          return "Can’t make keys without a callback function.";
-        case this.secretPhrase !== void 0:
-          return callback("Can’t make keys without a secret phrase.");
-        case SecretPhrase.isAcceptable(this.secretPhrase) !== false:
-          return callback("Can’t make keys because '" + this.secretPhrase + "' is not an acceptable secret phrase.");
-        case this.emailAddress !== void 0:
-          return callback("Can’t make keys without an email address.");
-        case EmailAddress.isAcceptable(this.emailAddress) !== false:
-          return callback("Can’t make keys because '" + this.emailAddress + "' is not an acceptable email address.");
-        case !(this.secretPhrase && this.emailAddress && callback):
-          return calculateCurve25519KeyPair(this.hashDigestOfSecret(), this.salt(), function(keys) {
-            return callback(void 0, keys);
-          });
+      if ((callback != null ? callback.constructor : void 0) !== Function) {
+        throw "Can’t make keys without a callback function.";
+      }
+      if (this.secretPhrase === void 0) {
+        callback("Can’t make keys without a secret phrase.");
+        return false;
+      }
+      if (SecretPhrase.isAcceptable(this.secretPhrase) === false) {
+        callback("Can’t make keys because '" + this.secretPhrase + "' is not an acceptable secret phrase.");
+        return false;
+      }
+      if (this.emailAddress === void 0) {
+        callback("Can’t make keys without an email address.");
+        return false;
+      }
+      if (EmailAddress.isAcceptable(this.emailAddress) === false) {
+        callback("Can’t make keys because '" + this.emailAddress + "' is not an acceptable email address.");
+        return false;
+      }
+      if (this.secretPhrase && this.emailAddress && callback) {
+        calculateCurve25519KeyPair(this.hashDigestOfSecret(), this.salt(), function(keys) {
+          return callback(void 0, keys);
+        });
+        return this;
       }
     };
 

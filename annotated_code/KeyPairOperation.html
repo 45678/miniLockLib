@@ -65,20 +65,24 @@
 <code>callback</code> receives <code>error</code> or <code>keys</code> when the operation is complete.</p>
 </div>
   <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">start</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
-    <span class="hljs-keyword">switch</span>
-      <span class="hljs-keyword">when</span> callback?.constructor <span class="hljs-keyword">isnt</span> Function
-        <span class="hljs-keyword">return</span> <span class="hljs-string">"Can’t make keys without a callback function."</span>
-      <span class="hljs-keyword">when</span> <span class="hljs-property">@secretPhrase</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
-        callback <span class="hljs-string">"Can’t make keys without a secret phrase."</span>
-      <span class="hljs-keyword">when</span> SecretPhrase.isAcceptable(<span class="hljs-property">@secretPhrase</span>) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
-        callback <span class="hljs-string">"Can’t make keys because '<span class="hljs-subst">#{<span class="hljs-property">@secretPhrase</span>}</span>' is not an acceptable secret phrase."</span>
-      <span class="hljs-keyword">when</span> <span class="hljs-property">@emailAddress</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
-        callback <span class="hljs-string">"Can’t make keys without an email address."</span>
-      <span class="hljs-keyword">when</span> EmailAddress.isAcceptable(<span class="hljs-property">@emailAddress</span>) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
-        callback <span class="hljs-string">"Can’t make keys because '<span class="hljs-subst">#{<span class="hljs-property">@emailAddress</span>}</span>' is not an acceptable email address."</span>
-      <span class="hljs-keyword">when</span> <span class="hljs-property">@secretPhrase</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@emailAddress</span> <span class="hljs-keyword">and</span> callback
-        calculateCurve25519KeyPair <span class="hljs-property">@hashDigestOfSecret</span>(), <span class="hljs-property">@salt</span>(), <span class="hljs-function"><span class="hljs-params">(keys)</span> -&gt;</span>
-          callback(<span class="hljs-literal">undefined</span>, keys)</pre></div></div>
+    <span class="hljs-keyword">if</span> callback?.constructor <span class="hljs-keyword">isnt</span> Function
+      <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t make keys without a callback function."</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@secretPhrase</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+      callback <span class="hljs-string">"Can’t make keys without a secret phrase."</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span>
+    <span class="hljs-keyword">if</span> SecretPhrase.isAcceptable(<span class="hljs-property">@secretPhrase</span>) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+      callback <span class="hljs-string">"Can’t make keys because '<span class="hljs-subst">#{<span class="hljs-property">@secretPhrase</span>}</span>' is not an acceptable secret phrase."</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@emailAddress</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+      callback <span class="hljs-string">"Can’t make keys without an email address."</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span>
+    <span class="hljs-keyword">if</span> EmailAddress.isAcceptable(<span class="hljs-property">@emailAddress</span>) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+      callback <span class="hljs-string">"Can’t make keys because '<span class="hljs-subst">#{<span class="hljs-property">@emailAddress</span>}</span>' is not an acceptable email address."</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-property">@secretPhrase</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@emailAddress</span> <span class="hljs-keyword">and</span> callback
+      calculateCurve25519KeyPair <span class="hljs-property">@hashDigestOfSecret</span>(), <span class="hljs-property">@salt</span>(), <span class="hljs-function"><span class="hljs-params">(keys)</span> -&gt;</span>
+        callback(<span class="hljs-literal">undefined</span>, keys)
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></pre></div></div>
 </section>
 
 

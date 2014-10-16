@@ -1,1 +1,1 @@
-module.exports = require("./miniLockLib.js")
+module.exports = require("./library.compiled/index.js")

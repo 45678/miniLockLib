@@ -1,8 +1,8 @@
 .DS_Store
+gh-pages
 node_modules
 website/annotated_code
 website/annotated_code.js
 website/index.js
 website/miniLockLib.js
 website/tests.js
-gh-pages

@@ -1,6 +1,6 @@
 [<img src="https://raw.githubusercontent.com/45678/miniLockLib/master/website/poster.png">](https://45678.github.io/miniLockLib/)
 
-Get [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/master/miniLockLib.js) and add it to your web page with a script tag:
+Get [`miniLockLib.js`](https://45678.github.io/miniLockLib/miniLockLib.js) and add it to your web page with a script tag:
 
     <script src="miniLockLib.js" charset="utf-8"></script>
 

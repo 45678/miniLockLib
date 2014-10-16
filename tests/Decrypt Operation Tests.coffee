@@ -1,4 +1,5 @@
-tape = require "./tape_test_harness"
+{tape, miniLockLib} = require "./test_setup"
+Blob = window?.Blob or require "../library.compiled/Blob"
 {Alice, Bobby, read, readFromNetwork} = require "./fixtures"
 
 tape "DecryptOperation", (test) -> test.end()

@@ -1,4 +1,4 @@
-tape = require "./tape_test_harness"
+{tape, miniLockLib} = require "./test_setup"
 {Alice, Bobby, read, readFromNetwork} = require "./fixtures"
 
 tape "Identification", (test) -> test.end()

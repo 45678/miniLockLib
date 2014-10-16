@@ -1,4 +1,6 @@
 Base58 = require "base58"
+Blob = window?.Blob or require "../library.compiled/Blob"
+miniLockLib = window?.miniLockLib or require "../library.compiled/index.js"
 
 Alice = exports.Alice = {}
 Alice.secretPhrase = "lions and tigers are not the only ones i am worried about"
@@ -60,12 +62,17 @@ read.files =
       miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
       'callback': callback
 
-exports.readFromNetwork = (name, callback) ->
-  request = new XMLHttpRequest
-  path = "fixtures/" + name
-  request.open "GET", path, true
-  request.responseType = "blob"
-  request.onreadystatechange = (event) ->
-    if request.readyState is 4
-      callback request.response
-  request.send()
+if window?.XMLHttpRequest
+  exports.readFromNetwork = (name, callback) ->
+    request = new XMLHttpRequest
+    path = "fixtures/" + name
+    request.open "GET", path, true
+    request.responseType = "blob"
+    request.onreadystatechange = (event) ->
+      if request.readyState is 4
+        callback request.response
+    request.send()
+else
+  exports.readFromNetwork = (name, callback) ->
+    require("fs").readFile "website/fixtures/#{name}", (error, buffer) ->
+      callback new Blob buffer

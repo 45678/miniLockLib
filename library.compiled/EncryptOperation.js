@@ -5,7 +5,7 @@
     __slice = [].slice;
 
   module.exports = EncryptOperation = (function() {
-    var BLAKE2s, ID, NaCl, numberToByteArray;
+    var BLAKE2s, Blob, ID, NaCl, numberToByteArray;
 
     NaCl = require("tweetnacl");
 
@@ -16,6 +16,8 @@
     ID = require("./ID");
 
     numberToByteArray = require("./util").numberToByteArray;
+
+    Blob = (typeof window !== "undefined" && window !== null ? window.Blob : void 0) || require("./Blob");
 
     EncryptOperation.prototype.chunkSize = 1024 * 1024;
 

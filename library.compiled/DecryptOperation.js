@@ -4,7 +4,7 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   module.exports = DecryptOperation = (function() {
-    var ID, NaCl, byteArrayToNumber, decodeBase64, encodeUTF8, _ref;
+    var Blob, ID, NaCl, byteArrayToNumber, decodeBase64, encodeUTF8, _ref;
 
     NaCl = require("tweetnacl");
 
@@ -15,6 +15,8 @@
     ID = require("./ID");
 
     byteArrayToNumber = require("./util").byteArrayToNumber;
+
+    Blob = (typeof window !== "undefined" && window !== null ? window.Blob : void 0) || require("./Blob");
 
     DecryptOperation.prototype.chunkSize = 1024 * 1024;
 

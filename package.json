@@ -20,6 +20,8 @@
   },
   "scripts": {
     "start": "make; wr 'make' library/*.coffee tests/*.coffee website/*.coffee website/*.jst",
-    "test": "make; open http://minilocklib.dev/tests.html"
+    "test": "npm run window.tests; npm run node.tests",
+    "window.tests": "make; open http://minilocklib.dev/tests.html",
+    "node.tests": "make; tape tests.compiled/*Tests.js"
   }
 }

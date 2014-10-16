@@ -1,4 +1,4 @@
-tape = require "./tape_test_harness"
+{tape, miniLockLib} = require "./test_setup"
 {Alice, Bobby, read} = require "./fixtures"
 
 tape "A demo of miniLockLib.encrypt & miniLockLib.decrypt", (test) -> test.end()
@@ -14,7 +14,7 @@ tape "Encrypt a version 1 file for Alice", (test) ->
       callback: (error, encrypted) ->
         if error? then return test.end(error)
         test.ok encrypted.name is "alice.txt.v1.minilock"
-        test.ok encrypted.data.size is 962
+        test.same encrypted.data.size, 962
         test.ok encrypted.data.type is "application/minilock"
         test.ok encrypted.senderID is Alice.miniLockID
         test.end()

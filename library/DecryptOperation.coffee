@@ -4,6 +4,7 @@ module.exports = class DecryptOperation
   {encodeUTF8, decodeBase64} = NaCl.util
   ID = require "./ID"
   {byteArrayToNumber} = require "./util"
+  Blob = window?.Blob or require "./Blob"
 
   chunkSize: 1024 * 1024
   readSliceOfData: require "./readSliceOfData"

@@ -1,24 +1,13 @@
-if location.hostname is "45678.github.io" and location.protocol isnt "https:"
-  window.location = location.toString().replace("http:", "https:")
-
-tape = require("tape")
-module.exports = tape.createHarness()
+module.exports = require("tape").createHarness()
 
 testTemplate = document.getElementById("test_template")
 failureTemplate = document.getElementById("failure_template")
 assertionTemplate = document.getElementById("assertion_template")
 numberOfTests = document.getElementById("number_of_tests")
 numberOfFailedTests = document.getElementById("number_of_failed_tests")
-body = document.body
 idOfCurrentlyRunningTest = undefined
-untouched = true
+untouched = yes
 failedTests = []
-
-window.onmousewheel = ->
-  window.onmousewheel = undefined
-  untouched = false
-
-delay = (amount, callback) -> setTimeout(callback, amount)
 
 module.exports.createStream(objectMode:yes).on "data", (data) ->
   switch
@@ -43,7 +32,12 @@ module.exports.createStream(objectMode:yes).on "data", (data) ->
     else
       console.info("Unhandled", data)
 
+window.onmousewheel = ->
+  delete window.onmousewheel
+  untouched = no
+
 renderBodyElement = (data) ->
+  body = document.body
   body.className = body.className.replace("undefined", "")
   body.className = switch
     when data.type is "test"
@@ -98,11 +92,10 @@ insertFailure = (element, data) ->
   if data.error?
     failureEl.querySelector("pre.error_stack").innerText = data.error.stack
   element.appendChild(failureEl)
-  if failedTests.length is 1
-    if untouched is true
-      delay 1, ->
-        untouched = false
-        element.scrollIntoView(true)
+  # Scroll the first error into view unless the page has already been touched.
+  if (failedTests.length is 1) and untouched
+    untouched = false
+    setTimeout (-> element.scrollIntoView(true)), 1
 
 fixBrokenThrowsOperatorData = (data) ->
   if (data.operator is "throws") and (data.name isnt data.actual)

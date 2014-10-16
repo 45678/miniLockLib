@@ -4,6 +4,7 @@ module.exports = class EncryptOperation
   BLAKE2s = require "./BLAKE2s"
   ID = require "./ID"
   {numberToByteArray} = require "./util"
+  Blob = window?.Blob or require "./Blob"
 
   chunkSize: 1024 * 1024
   readSliceOfData: require "./readSliceOfData"

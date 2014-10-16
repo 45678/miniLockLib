@@ -4,7 +4,7 @@ Get [`miniLockLib.js`](https://raw.githubusercontent.com/45678/miniLockLib/maste
 
     <script src="miniLockLib.js" charset="utf-8"></script>
 
-Or `npm install 45678/miniLockLib.git` and require it in your computer program with:
+Or `npm install 45678/miniLockLib` and require it in your computer program with:
 
     miniLockLib = require('miniLockLib')
 

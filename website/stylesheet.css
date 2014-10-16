@@ -294,7 +294,7 @@ div.example a[href] img {
   transition: all 500ms ease-in-out;
 }
 
-@media screen and (max-width: 1400px) {
+/*@media screen and (max-width: 1400px) {*/
   #examples {
     height: 330px;
     margin: 30px 0 60px;
@@ -339,9 +339,9 @@ div.example a[href] img {
   div.example:nth-child(4) a.window {
     max-height: 290px;
   }
-}
+/*}*/
 
-@media screen and (min-width: 1400px) {
+/*@media screen and (min-width: 1400px) {
   #examples {
     margin: 0;
     position: fixed;
@@ -366,7 +366,7 @@ div.example a[href] img {
     left: 0;
     top: 0;
   }
-}
+}*/
 
 /* ------------------------------------ */
 

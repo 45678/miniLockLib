@@ -1,6 +1,8 @@
-default: website/miniLockLib.js website/tests.js website/index.js website/annotated_code.js website/annotated_code
+default: miniLockLib.js website/miniLockLib.js website/tests.js website/index.js website/annotated_code.js website/annotated_code
 
 # # Library
+miniLockLib.js: website/miniLockLib.js
+	ditto website/miniLockLib.js miniLockLib.js
 
 # Create a standalone copy of miniLockLib.js in the website folder.
 website/miniLockLib.js: library/%.coffee library.compiled/scrypt-async.js
@@ -49,6 +51,7 @@ website/annotated_code: library/%.coffee tests/%.coffee website/annotated_code.h
 
 # Remove all compiled Javascript code and annotated code pages.
 clean:
+	rm -f miniLockLib.js
 	rm -f library.compiled/*.js
 	rm -f tests.compiled/*.js
 	rm -f website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js

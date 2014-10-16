@@ -2,6 +2,7 @@ module.exports = class DecryptOperation
   NaCl = require "tweetnacl"
   NaCl.stream = require("nacl-stream").stream
   {encodeUTF8, decodeBase64} = NaCl.util
+  ID = require "./ID"
   {byteArrayToNumber} = require "./util"
 
   chunkSize: 1024 * 1024
@@ -172,7 +173,7 @@ module.exports = class DecryptOperation
       decryptedPermitAsString = encodeUTF8(decryptedPermitAsBytes)
       decryptedPermit = JSON.parse(decryptedPermitAsString)
       decodedEncryptedFileInfo = decodeBase64(decryptedPermit.fileInfo)
-      senderPublicKey = miniLockLib.ID.decode(decryptedPermit.senderID)
+      senderPublicKey = ID.decode(decryptedPermit.senderID)
       decryptedPermit.fileInfo = @decryptFileInfo(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey)
       return decryptedPermit
     else

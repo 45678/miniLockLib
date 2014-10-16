@@ -4,13 +4,15 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   module.exports = DecryptOperation = (function() {
-    var NaCl, byteArrayToNumber, decodeBase64, encodeUTF8, _ref;
+    var ID, NaCl, byteArrayToNumber, decodeBase64, encodeUTF8, _ref;
 
     NaCl = require("tweetnacl");
 
     NaCl.stream = require("nacl-stream").stream;
 
     _ref = NaCl.util, encodeUTF8 = _ref.encodeUTF8, decodeBase64 = _ref.decodeBase64;
+
+    ID = require("./ID");
 
     byteArrayToNumber = require("./util").byteArrayToNumber;
 
@@ -339,7 +341,7 @@
         decryptedPermitAsString = encodeUTF8(decryptedPermitAsBytes);
         decryptedPermit = JSON.parse(decryptedPermitAsString);
         decodedEncryptedFileInfo = decodeBase64(decryptedPermit.fileInfo);
-        senderPublicKey = miniLockLib.ID.decode(decryptedPermit.senderID);
+        senderPublicKey = ID.decode(decryptedPermit.senderID);
         decryptedPermit.fileInfo = this.decryptFileInfo(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey);
         return decryptedPermit;
       } else {

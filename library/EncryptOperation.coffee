@@ -2,6 +2,7 @@ module.exports = class EncryptOperation
   NaCl = require "tweetnacl"
   NaCl.stream = require("nacl-stream").stream
   BLAKE2s = require "./BLAKE2s"
+  ID = require "./ID"
   {numberToByteArray} = require "./util"
 
   chunkSize: 1024 * 1024
@@ -70,7 +71,7 @@ module.exports = class EncryptOperation
       name: @name + ".minilock"
       type: @type
       time: @time
-      senderID: miniLockLib.ID.encode(@keys.publicKey)
+      senderID: ID.encode(@keys.publicKey)
       duration: @duration
       startedAt: @startedAt
       endedAt: @endedAt
@@ -160,21 +161,21 @@ module.exports = class EncryptOperation
   encryptedPermit: (miniLockID) ->
     [uniqueNonce, permit] = @permit(miniLockID)
     decodedPermitJSON = NaCl.util.decodeUTF8(JSON.stringify(permit))
-    recipientPublicKey = miniLockLib.ID.decode(miniLockID)
+    recipientPublicKey = ID.decode(miniLockID)
     encryptedPermit = NaCl.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, @ephemeral.secretKey)
     [uniqueNonce, encryptedPermit]
 
   permit: (miniLockID) ->
     uniqueNonce = NaCl.randomBytes(24)
     [uniqueNonce, {
-      senderID: miniLockLib.ID.encode(@keys.publicKey)
+      senderID: ID.encode(@keys.publicKey)
       recipientID: miniLockID
       fileInfo: NaCl.util.encodeBase64(@encryptedFileInfo(miniLockID, uniqueNonce))
     }]
 
   encryptedFileInfo: (miniLockID, uniqueNonce) ->
     decodedFileInfoJSON = NaCl.util.decodeUTF8(JSON.stringify(@permitFileInfo()))
-    recipientPublicKey = miniLockLib.ID.decode(miniLockID)
+    recipientPublicKey = ID.decode(miniLockID)
     NaCl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, @keys.secretKey)
 
   permitFileInfo: ->

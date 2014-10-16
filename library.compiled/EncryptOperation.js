@@ -5,13 +5,15 @@
     __slice = [].slice;
 
   module.exports = EncryptOperation = (function() {
-    var BLAKE2s, NaCl, numberToByteArray;
+    var BLAKE2s, ID, NaCl, numberToByteArray;
 
     NaCl = require("tweetnacl");
 
     NaCl.stream = require("nacl-stream").stream;
 
     BLAKE2s = require("./BLAKE2s");
+
+    ID = require("./ID");
 
     numberToByteArray = require("./util").numberToByteArray;
 
@@ -113,7 +115,7 @@
         name: this.name + ".minilock",
         type: this.type,
         time: this.time,
-        senderID: miniLockLib.ID.encode(this.keys.publicKey),
+        senderID: ID.encode(this.keys.publicKey),
         duration: this.duration,
         startedAt: this.startedAt,
         endedAt: this.endedAt
@@ -248,7 +250,7 @@
       var decodedPermitJSON, encryptedPermit, permit, recipientPublicKey, uniqueNonce, _ref;
       _ref = this.permit(miniLockID), uniqueNonce = _ref[0], permit = _ref[1];
       decodedPermitJSON = NaCl.util.decodeUTF8(JSON.stringify(permit));
-      recipientPublicKey = miniLockLib.ID.decode(miniLockID);
+      recipientPublicKey = ID.decode(miniLockID);
       encryptedPermit = NaCl.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, this.ephemeral.secretKey);
       return [uniqueNonce, encryptedPermit];
     };
@@ -258,7 +260,7 @@
       uniqueNonce = NaCl.randomBytes(24);
       return [
         uniqueNonce, {
-          senderID: miniLockLib.ID.encode(this.keys.publicKey),
+          senderID: ID.encode(this.keys.publicKey),
           recipientID: miniLockID,
           fileInfo: NaCl.util.encodeBase64(this.encryptedFileInfo(miniLockID, uniqueNonce))
         }
@@ -268,7 +270,7 @@
     EncryptOperation.prototype.encryptedFileInfo = function(miniLockID, uniqueNonce) {
       var decodedFileInfoJSON, recipientPublicKey;
       decodedFileInfoJSON = NaCl.util.decodeUTF8(JSON.stringify(this.permitFileInfo()));
-      recipientPublicKey = miniLockLib.ID.decode(miniLockID);
+      recipientPublicKey = ID.decode(miniLockID);
       return NaCl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, this.keys.secretKey);
     };
 

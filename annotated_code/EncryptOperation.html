@@ -24,8 +24,10 @@
 <section id="section-1">
   <div class="annotation"></div>
   <div class="code"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EncryptOperation</span></span>
-  NaCl = <span class="hljs-built_in">require</span> <span class="hljs-string">"./NaCl"</span>
+  NaCl = <span class="hljs-built_in">require</span> <span class="hljs-string">"tweetnacl"</span>
+  NaCl.stream = <span class="hljs-built_in">require</span>(<span class="hljs-string">"nacl-stream"</span>).stream
   BLAKE2s = <span class="hljs-built_in">require</span> <span class="hljs-string">"./BLAKE2s"</span>
+  ID = <span class="hljs-built_in">require</span> <span class="hljs-string">"./ID"</span>
   {numberToByteArray} = <span class="hljs-built_in">require</span> <span class="hljs-string">"./util"</span>
 
   <span class="hljs-attribute">chunkSize</span>: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>
@@ -94,7 +96,7 @@
       <span class="hljs-attribute">name</span>: <span class="hljs-property">@name</span> + <span class="hljs-string">".minilock"</span>
       <span class="hljs-attribute">type</span>: <span class="hljs-property">@type</span>
       <span class="hljs-attribute">time</span>: <span class="hljs-property">@time</span>
-      <span class="hljs-attribute">senderID</span>: miniLockLib.ID.encode(<span class="hljs-property">@keys</span>.publicKey)
+      <span class="hljs-attribute">senderID</span>: ID.encode(<span class="hljs-property">@keys</span>.publicKey)
       <span class="hljs-attribute">duration</span>: <span class="hljs-property">@duration</span>
       <span class="hljs-attribute">startedAt</span>: <span class="hljs-property">@startedAt</span>
       <span class="hljs-attribute">endedAt</span>: <span class="hljs-property">@endedAt</span>
@@ -184,21 +186,21 @@
   <span class="hljs-attribute">encryptedPermit</span>: <span class="hljs-function"><span class="hljs-params">(miniLockID)</span> -&gt;</span>
     [uniqueNonce, permit] = <span class="hljs-property">@permit</span>(miniLockID)
     decodedPermitJSON = NaCl.util.decodeUTF8(JSON.stringify(permit))
-    recipientPublicKey = miniLockLib.ID.decode(miniLockID)
+    recipientPublicKey = ID.decode(miniLockID)
     encryptedPermit = NaCl.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, <span class="hljs-property">@ephemeral</span>.secretKey)
     [uniqueNonce, encryptedPermit]
 
   <span class="hljs-attribute">permit</span>: <span class="hljs-function"><span class="hljs-params">(miniLockID)</span> -&gt;</span>
     uniqueNonce = NaCl.randomBytes(<span class="hljs-number">24</span>)
     [uniqueNonce, {
-      <span class="hljs-attribute">senderID</span>: miniLockLib.ID.encode(<span class="hljs-property">@keys</span>.publicKey)
+      <span class="hljs-attribute">senderID</span>: ID.encode(<span class="hljs-property">@keys</span>.publicKey)
       <span class="hljs-attribute">recipientID</span>: miniLockID
       <span class="hljs-attribute">fileInfo</span>: NaCl.util.encodeBase64(<span class="hljs-property">@encryptedFileInfo</span>(miniLockID, uniqueNonce))
     }]
 
   <span class="hljs-attribute">encryptedFileInfo</span>: <span class="hljs-function"><span class="hljs-params">(miniLockID, uniqueNonce)</span> -&gt;</span>
     decodedFileInfoJSON = NaCl.util.decodeUTF8(JSON.stringify(<span class="hljs-property">@permitFileInfo</span>()))
-    recipientPublicKey = miniLockLib.ID.decode(miniLockID)
+    recipientPublicKey = ID.decode(miniLockID)
     NaCl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, <span class="hljs-property">@keys</span>.secretKey)
 
   <span class="hljs-attribute">permitFileInfo</span>:<span class="hljs-function"> -&gt;</span>
@@ -245,12 +247,6 @@
   
   <br>
   <a href="KeyPairOperation.html">library/KeyPairOperation<span class="ext">.coffee</span></a>
-  
-  
-  
-  
-  <br>
-  <a href="NaCl.html">library/NaCl<span class="ext">.coffee</span></a>
   
   
   

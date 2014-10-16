@@ -24,8 +24,10 @@
 <section id="section-1">
   <div class="annotation"></div>
   <div class="code"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">DecryptOperation</span></span>
-  NaCl = <span class="hljs-built_in">require</span> <span class="hljs-string">"./NaCl"</span>
+  NaCl = <span class="hljs-built_in">require</span> <span class="hljs-string">"tweetnacl"</span>
+  NaCl.stream = <span class="hljs-built_in">require</span>(<span class="hljs-string">"nacl-stream"</span>).stream
   {encodeUTF8, decodeBase64} = NaCl.util
+  ID = <span class="hljs-built_in">require</span> <span class="hljs-string">"./ID"</span>
   {byteArrayToNumber} = <span class="hljs-built_in">require</span> <span class="hljs-string">"./util"</span>
 
   <span class="hljs-attribute">chunkSize</span>: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>
@@ -196,7 +198,7 @@
       decryptedPermitAsString = encodeUTF8(decryptedPermitAsBytes)
       decryptedPermit = JSON.parse(decryptedPermitAsString)
       decodedEncryptedFileInfo = decodeBase64(decryptedPermit.fileInfo)
-      senderPublicKey = miniLockLib.ID.decode(decryptedPermit.senderID)
+      senderPublicKey = ID.decode(decryptedPermit.senderID)
       decryptedPermit.fileInfo = <span class="hljs-property">@decryptFileInfo</span>(decodedEncryptedFileInfo, uniqueNonce, senderPublicKey)
       <span class="hljs-keyword">return</span> decryptedPermit
     <span class="hljs-keyword">else</span>
@@ -269,12 +271,6 @@
   
   <br>
   <a href="KeyPairOperation.html">library/KeyPairOperation<span class="ext">.coffee</span></a>
-  
-  
-  
-  
-  <br>
-  <a href="NaCl.html">library/NaCl<span class="ext">.coffee</span></a>
   
   
   

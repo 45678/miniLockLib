@@ -82,11 +82,12 @@ miniLockLib.DecryptOperation = <span class="hljs-built_in">require</span> <span 
 <section id="section-8">
   <div class="annotation"><p>Exports special extras.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>miniLockLib.Base58     = <span class="hljs-built_in">require</span> <span class="hljs-string">"./Base58"</span>
-miniLockLib.BLAKE2s    = <span class="hljs-built_in">require</span> <span class="hljs-string">"./BLAKE2s"</span>
-miniLockLib.Entropizer = <span class="hljs-built_in">require</span> <span class="hljs-string">"entropizer"</span>
-miniLockLib.NaCl       = <span class="hljs-built_in">require</span> <span class="hljs-string">"./NaCl"</span>
-miniLockLib.scrypt     = <span class="hljs-built_in">require</span> <span class="hljs-string">"./scrypt-async"</span></pre></div></div>
+  <div class="code"><div class='highlight'><pre>miniLockLib.Base58      = <span class="hljs-built_in">require</span> <span class="hljs-string">"base58"</span>
+miniLockLib.BLAKE2s     = <span class="hljs-built_in">require</span> <span class="hljs-string">"./BLAKE2s"</span>
+miniLockLib.Entropizer  = <span class="hljs-built_in">require</span> <span class="hljs-string">"entropizer"</span>
+miniLockLib.NaCl        = <span class="hljs-built_in">require</span> <span class="hljs-string">"tweetnacl"</span>
+miniLockLib.NaCl.stream = <span class="hljs-built_in">require</span>(<span class="hljs-string">"nacl-stream"</span>).stream
+miniLockLib.scrypt      = <span class="hljs-built_in">require</span> <span class="hljs-string">"./scrypt-async"</span></pre></div></div>
 </section>
 
 
@@ -127,12 +128,6 @@ miniLockLib.scrypt     = <span class="hljs-built_in">require</span> <span class=
   
   <br>
   <a href="KeyPairOperation.html">library/KeyPairOperation<span class="ext">.coffee</span></a>
-  
-  
-  
-  
-  <br>
-  <a href="NaCl.html">library/NaCl<span class="ext">.coffee</span></a>
   
   
   

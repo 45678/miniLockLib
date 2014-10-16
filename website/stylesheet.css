@@ -166,6 +166,8 @@ body {
   position:relative;
   padding: 30px 60px;
   max-width: 960px;
+
+  margin: 0;
   outline: 1px solid hsla(0, 0%, 0%, 0.1);
 }
 
@@ -247,15 +249,16 @@ body > header:first-child h1 svg {
 #page_nav div.public_domain { margin: 0; }
 #page_nav div.public_domain a:before { display: none; }
 
-@media screen and (min-width: 960px) {
+@media screen and (min-width: 1200px) {
   body {
-    margin: 0 0 0 180px;
+    margin: 0 auto 0 5%;
   }
   #page_nav {
     position: fixed;
     overflow: auto;
-    left: 0; top: 0; bottom: 0;
-    width: 180px;
+    right: 0; top: 0; bottom: 0;
+    left: 960px;
+    margin-left: 5%;
     padding: 15px;
   }
   #page_nav em {
@@ -263,14 +266,12 @@ body > header:first-child h1 svg {
   }
 }
 
-@media screen and (min-height: 1024px) and (min-width: 960px) {
+@media screen and (min-height: 960px) and (min-width: 1200px) {
   #page_nav div.public_domain {
-    position:fixed;
-    left: 0;
-    bottom: 0;
+    position: fixed; left: 960px; bottom: 0;
+    margin-left: 5%;
     padding: 15px;
-    margin: 0px;
-    width: 180px;
+    max-width: 180px;
   }
 }
 

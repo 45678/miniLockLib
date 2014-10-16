@@ -1,5 +1,6 @@
 module.exports = class EncryptOperation
-  NaCl = require "./NaCl"
+  NaCl = require "tweetnacl"
+  NaCl.stream = require("nacl-stream").stream
   BLAKE2s = require "./BLAKE2s"
   {numberToByteArray} = require "./util"
 

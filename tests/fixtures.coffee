@@ -1,4 +1,4 @@
-Base58 = require "../library.compiled/Base58"
+Base58 = require "base58"
 
 Alice = exports.Alice = {}
 Alice.secretPhrase = "lions and tigers are not the only ones i am worried about"

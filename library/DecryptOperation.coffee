@@ -1,5 +1,6 @@
 module.exports = class DecryptOperation
-  NaCl = require "./NaCl"
+  NaCl = require "tweetnacl"
+  NaCl.stream = require("nacl-stream").stream
   {encodeUTF8, decodeBase64} = NaCl.util
   {byteArrayToNumber} = require "./util"
 

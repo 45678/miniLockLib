@@ -165,9 +165,8 @@ a[href]:visited {
 body {
   position:relative;
   padding: 30px 60px;
-  max-width: 960px;
-
-  margin: 0;
+  max-width: 900px;
+  margin: 0 auto;
   outline: 1px solid hsla(0, 0%, 0%, 0.1);
 }
 
@@ -249,16 +248,16 @@ body > header:first-child h1 svg {
 #page_nav div.public_domain { margin: 0; }
 #page_nav div.public_domain a:before { display: none; }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1350px) {
   body {
-    margin: 0 auto 0 5%;
+    margin: 0 225px;
   }
   #page_nav {
     position: fixed;
     overflow: auto;
-    right: 0; top: 0; bottom: 0;
-    left: 960px;
-    margin-left: 5%;
+    top: 0; bottom: 0;
+    left: 1125px;
+    width: 225px;
     padding: 15px;
   }
   #page_nav em {
@@ -266,10 +265,10 @@ body > header:first-child h1 svg {
   }
 }
 
-@media screen and (min-height: 960px) and (min-width: 1200px) {
+@media screen and (min-height: 960px) and (min-width: 1350px) {
   #page_nav div.public_domain {
-    position: fixed; left: 960px; bottom: 0;
-    margin-left: 5%;
+    position: fixed; left: 900px; bottom: 0;
+    margin-left: 225px;
     padding: 15px;
     max-width: 180px;
   }
@@ -372,22 +371,47 @@ div.example a[href] img {
 /* ------------------------------------ */
 
 body.annotated_code {
-  max-width: none;
+  /*max-width: none;*/
   outline: none;
   background: none;
-  /*min-width: 1200px;*/
 }
+
 body.annotated_code section {
-  margin: 30px -25px;
+  margin: 30px -25px 30px 225px;
   padding: 0px 25px;
-  border-left: 1px solid hsla(0, 0%, 0%, 0.25);
+  border-left: 1px solid hsla(0, 0%, 0%, 0.1);
 }
+
+body.annotated_code #section-1 div.annotation {
+  border-top: 5px solid hsla(0, 0%, 0%, 0.1);
+}
+
+body.annotated_code > header {
+  white-space: nowrap;
+}
+
+@media screen and (min-width: 1350px) {
+  body.annotated_code {
+    max-width: none;
+  }
+  body.annotated_code section {
+    margin: 30px -25px;
+  }
+  body.annotated_code > header {
+    border-bottom: none;
+    margin-bottom: none;
+  }
+  body.annotated_code #section-1 div.annotation {
+    border-top: none;
+  }
+}
+
 
 body.annotated_code div.annotation {
   position: absolute;
   top: 0;
-  left: -215px;
-  width: 215px;
+  left: -225px;
+  width: 225px;
   padding: 0px 15px;
   text-align: right;
 }

@@ -23,7 +23,7 @@
 
 <section id="section-1">
   <div class="annotation"></div>
-  <div class="code"><div class='highlight'><pre>tape = <span class="hljs-built_in">require</span> <span class="hljs-string">"./tape_test_harness"</span>
+  <div class="code"><div class='highlight'><pre>{tape, miniLockLib} = <span class="hljs-built_in">require</span> <span class="hljs-string">"./test_setup"</span>
 {Alice, Bobby} = <span class="hljs-built_in">require</span> <span class="hljs-string">"./fixtures"</span>
 
 tape <span class="hljs-string">"Make Keys"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span> test.end()
@@ -81,6 +81,12 @@ tape <span class="hljs-string">"can’t make keys with unacceptable email addres
   
   <br>
   <a href="BLAKE2s.html">library/BLAKE2s<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="Blob.html">library/Blob<span class="ext">.coffee</span></a>
   
   
   
@@ -185,7 +191,13 @@ tape <span class="hljs-string">"can’t make keys with unacceptable email addres
   
   
   <br>
-  <a href="tape_test_harness.html">tests/tape_test_harness<span class="ext">.coffee</span></a>
+  <a href="test_setup.html">tests/test_setup<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="window_test_harness.html">tests/window_test_harness<span class="ext">.coffee</span></a>
   
   
 </nav>

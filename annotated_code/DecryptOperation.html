@@ -29,6 +29,7 @@
   {encodeUTF8, decodeBase64} = NaCl.util
   ID = <span class="hljs-built_in">require</span> <span class="hljs-string">"./ID"</span>
   {byteArrayToNumber} = <span class="hljs-built_in">require</span> <span class="hljs-string">"./util"</span>
+  Blob = <span class="hljs-built_in">window</span>?.Blob <span class="hljs-keyword">or</span> <span class="hljs-built_in">require</span> <span class="hljs-string">"./Blob"</span>
 
   <span class="hljs-attribute">chunkSize</span>: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>
   <span class="hljs-attribute">readSliceOfData</span>: <span class="hljs-built_in">require</span> <span class="hljs-string">"./readSliceOfData"</span>
@@ -246,6 +247,12 @@
   
   
   <br>
+  <a href="Blob.html">library/Blob<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
   <a >library/DecryptOperation<span class="ext">.coffee</span></a>
   
   
@@ -345,7 +352,13 @@
   
   
   <br>
-  <a href="tape_test_harness.html">tests/tape_test_harness<span class="ext">.coffee</span></a>
+  <a href="test_setup.html">tests/test_setup<span class="ext">.coffee</span></a>
+  
+  
+  
+  
+  <br>
+  <a href="window_test_harness.html">tests/window_test_harness<span class="ext">.coffee</span></a>
   
   
 </nav>

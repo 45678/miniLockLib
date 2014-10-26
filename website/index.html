@@ -28,7 +28,7 @@
     for <a href="https://en.wikipedia.org/wiki/ECMAScript">ECMAScript</a>.
     It supplies you with a set of functions
     to perform miniLock encryption operations
-    in a web agent <code>window</code><!-- or a <a href="http://nodejs.org">Node.js</a> environment -->.
+    in a web agent <code>window</code> or a <a href="http://nodejs.org">Node.js</a> environment.
   </p>
   <p>
     The <a href="http://github.com/45678/miniLockLib/">source code repository</a> is hosted at GitHub
@@ -59,20 +59,31 @@
   </div>
 </div>
 
-<div id="setup">
+<div id="html_setup">
+  <h3>HTML Setup</h3>
   <p>
-    <em>Go get <a href="https://45678.github.io/miniLockLib/miniLockLib.js">miniLockLib.js</a></em>
-    and add it to your web page with a script tag:
+    Get <a href="https://45678.github.io/miniLockLib/miniLockLib.js">miniLockLib.js</a>
+    and add it to your web page with a <code>&lt;script&gt;</code> tag:
   </p>
-  <pre class="html">
-&lt;head&gt;
+  <pre class="html">&lt;head&gt;
   &lt;title&gt;Untitled&lt;/title&gt;
-  <strong>&lt;script src="miniLockLib.js" charset="utf-8"&gt;&lt;/script&gt;</strong>
+  <strong>&lt;script src="miniLockLib.js" charset="UTF-8"&gt;&lt;/script&gt;</strong>
   &lt;link rel="stylesheet" href="stylesheet.css"&gt;
 &lt;/head&gt;</pre>
   <p>
-    When the script loads <code>miniLockLib</code> is defined in your <code>window</code>.
-    And then you can do encryption operations on your web page!
+    <code>miniLockLib</code> is defined on <code>window</code> when the script loads.
+  </p>
+</div>
+
+<div id="node_setup">
+  <h3>Node.js Setup</h3>
+  <p>
+    Run <tt>npm install minilocklib</tt> to add the package to your project.
+    Once it is installed you can require the module in your program like so:
+  </p>
+  <pre class="ecmascript">miniLockLib = require("minilocklib")</pre>
+  <p>
+    Now you are all ready to perform miniLock encryption operations!
   </p>
 </div>
 

@@ -27,6 +27,8 @@ h2 {
 
 pre,
 .error_strings,
+p tt,
+p code,
 article header.function code {
   font-size: 19px;
   line-height: 25px;
@@ -129,6 +131,7 @@ h2 {
 
 article h1.selected,
 article h2.selected,
+h3,
 #page_nav a[href].selected {
   color: black;
 }
@@ -172,7 +175,7 @@ body {
 
 h1 { margin: -30px 0 0; line-height: 45px; }
 h2 { margin: 30px 0 0; }
-h3 { margin: 30px 0 -15px; }
+h3 { margin: 30px 0 0; }
 p  { margin: 20px 0; }
 ul { margin: 20px 0; }
 

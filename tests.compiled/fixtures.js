@@ -2,7 +2,7 @@
 (function() {
   var Alice, Base58, Blob, Bobby, miniLockLib, read;
 
-  Base58 = require("base58");
+  Base58 = require("base-58");
 
   Blob = (typeof window !== "undefined" && window !== null ? window.Blob : void 0) || require("../library.compiled/Blob");
 

@@ -2,7 +2,7 @@
 (function() {
   var BLAKE2s, Base58;
 
-  Base58 = require("base58");
+  Base58 = require("base-58");
 
   BLAKE2s = require("./BLAKE2s");
 

@@ -2,11 +2,10 @@
   "name": "miniLockLib",
   "description": "Do miniLock encryption operations on a web page of your own.",
   "version": "0.0.0",
-  "author": "45678 <undefined@undefined>",
   "license": "Public Domain",
   "repository": "git+https://github.com/45678/miniLockLib.git",
   "dependencies": {
-    "base58": "45678/base58",
+    "base-58": "0.0.x",
     "blake2s-js": "1.0.3",
     "entropizer": "^0.1.3",
     "nacl-stream": "0.3.3",

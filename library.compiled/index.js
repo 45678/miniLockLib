@@ -37,7 +37,7 @@
 
   miniLockLib.DecryptOperation = require("./DecryptOperation");
 
-  miniLockLib.Base58 = require("base58");
+  miniLockLib.Base58 = require("base-58");
 
   miniLockLib.BLAKE2s = require("./BLAKE2s");
 

@@ -1,4 +1,4 @@
-Base58 = require "base58"
+Base58 = require "base-58"
 Blob = window?.Blob or require "../library.compiled/Blob"
 miniLockLib = window?.miniLockLib or require "../library.compiled/index.js"
 

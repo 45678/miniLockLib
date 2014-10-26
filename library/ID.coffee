@@ -1,4 +1,4 @@
-Base58 = require "base58"
+Base58 = require "base-58"
 BLAKE2s = require "./BLAKE2s"
 
 # Encode a public key as a miniLock ID.

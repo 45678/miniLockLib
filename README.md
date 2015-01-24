@@ -63,10 +63,24 @@ Pass `data` and `keys` when you `decrypt` a file:
 
 __Digging In__
 
+`brew install node` to install NodeJS and the `npm` package manager.
+
 `git clone https://github.com/45678/miniLockLib.git` to get the source code.
+
+`cd miniLockLib`
+
+`npm install -g browserify` which is needed to run `make`.
+
+`npm install -g docco` which is needed to run `make`.
+
+`npm install` to install local packages needed to run `make` tasks.
 
 `make` to compile [CoffeeScript](http://www.coffeescript.org/) files into [ECMAScript](http://www.ecmascript.org/) files in the `library.compiled`, `tests.compiled` and `website` folders.
 
-`make clean` to start over.
+`make clean` to remove all generated files and start over.
 
-`npm run tests` to open the test suite in a web agent `window`.
+`curl get.pow.cx | sh` to install the [Pow](http://pow.cx/) (OS X Only) local web application server.
+
+`make pow` to link the miniLockLib website into Pow for testing.
+
+`npm run test` to open the test suite in a web agent `window` using the Pow web server to host a local copy of the miniLockLib website and tests.

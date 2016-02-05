@@ -1,4 +1,4 @@
-if process?.argv?[0] is "node"
+if typeof window is "undefined"
   module.exports = (start, end, callback) ->
     blob = @data.slice(start, end)
     sliceOfBytes = new Uint8Array blob.buffer

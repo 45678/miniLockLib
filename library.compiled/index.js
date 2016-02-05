@@ -47,6 +47,6 @@
 
   miniLockLib.NaCl.stream = require("nacl-stream").stream;
 
-  miniLockLib.scrypt = require("./scrypt-async");
+  miniLockLib.scrypt = require("scrypt-async");
 
 }).call(this);

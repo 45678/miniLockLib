@@ -1,17 +1,12 @@
 default: website/miniLockLib.js website/tests.js website/index.js website/annotated_code.js website/annotated_code
 
 # Create a standalone copy of miniLockLib.js in the website folder for use in web agent windows.
-website/miniLockLib.js: library/%.coffee library.compiled/scrypt-async.js
+website/miniLockLib.js: library/%.coffee
 	browserify library.compiled/index.js --standalone miniLockLib > website/miniLockLib.js
 
 # Compile CoffeeScript library files to the library.compiled folder.
 library/%.coffee:
 	coffee --compile --output library.compiled library/*.coffee
-
-# Download scrypt-async.js and save it in the library.compiled folder.
-library.compiled/scrypt-async.js:
-	curl -s https://raw.githubusercontent.com/dchest/scrypt-async-js/master/scrypt-async.js \
-		> library.compiled/scrypt-async.js
 
 # # Tests
 

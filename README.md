@@ -65,6 +65,9 @@ __Digging In__
 
 `brew install node` to install NodeJS and the `npm` package manager.
 
+`brew install caddy` to install [Caddy web server](https://caddyserver.com) for
+simple testing.
+
 `git clone https://github.com/45678/miniLockLib.git` to get the source code.
 
 `cd miniLockLib`
@@ -79,8 +82,9 @@ __Digging In__
 
 `make clean` to remove all generated files and start over.
 
-`curl get.pow.cx | sh` to install the [Pow](http://pow.cx/) (OS X Only) local web application server.
+Open a new terminal, and `cd miniLockLib` and start Caddy webserver by
+running `caddy` which will start server on port `8888`.
 
-`make pow` to link the miniLockLib website into Pow for testing.
-
-`npm run test` to open the test suite in a web agent `window` using the Pow web server to host a local copy of the miniLockLib website and tests.
+`npm run test` in the original terminal to run both the NodeJS and Browser test
+suites. A new browser window, using your default browser, will be opened and the
+NodeJS tests will run in the console.

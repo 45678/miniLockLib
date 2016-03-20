@@ -69,8 +69,6 @@ You will need [GNU Make](https://www.gnu.org/software/make/) and [Node.js](https
 
 `cd miniLockLib`
 
-`npm install -g browserify` which is needed to run `make`.
-
 `npm install -g docco` which is needed to run `make`.
 
 `npm install` to install local packages needed to run `make` tasks.

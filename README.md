@@ -69,8 +69,6 @@ You will need [GNU Make](https://www.gnu.org/software/make/) and [Node.js](https
 
 `cd miniLockLib`
 
-`npm install -g docco` which is needed to run `make`.
-
 `npm install` to install local packages needed to run `make` tasks.
 
 `make` to compile [CoffeeScript](http://www.coffeescript.org/) files into [ECMAScript](http://www.ecmascript.org/) files in the `library.compiled`, `tests.compiled` and `website` folders.

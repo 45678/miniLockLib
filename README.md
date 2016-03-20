@@ -69,4 +69,12 @@ __Digging In__
 
 `make clean` to start over.
 
-`npm run tests` to open the test suite in a web agent `window`.
+`npm start` to automatically re-compile source files as you make changes.
+
+`npm run node.tests` to run the test suite in Node.js and see the output on the command line.
+
+`npm run window.tests` to run the test suite in a web agent `window`. This command expects a webserver to serve the `website/tests.html` file from [http://localhost:45678/tests.html]. The `npm run webserver` command will start the webserver that you need for this. Or, if you prefer to use another webserver, you can revise the `.window_tests_address` config file to specify a different address. `.window_tests_address` is created automatically the first time you run `make`.
+
+`npm test` to run node tests and window tests.
+
+`npm run webserver` to serve the `website` folder at the address [http://localhost:45678].

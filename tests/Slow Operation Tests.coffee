@@ -16,7 +16,6 @@ tape "decrypt 1MB file for Alice", (test) ->
       test.ok decrypted.senderID is Alice.miniLockID
       test.ok decrypted.recipientID is Alice.miniLockID
       test.end()
-      console.info("decrypted", decrypted.name, decrypted)
 
 tape "decrypt 4MB file for Alice", (test) ->
   readFromNetwork "4MB.tiff.for.Alice.minilock", (blob) ->
@@ -30,7 +29,6 @@ tape "decrypt 4MB file for Alice", (test) ->
       test.ok decrypted.senderID is Alice.miniLockID
       test.ok decrypted.recipientID is Alice.miniLockID
       test.end()
-      console.info("decrypted", decrypted.name, decrypted)
 
 tape "encrypt 1MB file for Alice", (test) ->
   readFromNetwork "1MB.tiff", (blob) ->
@@ -45,7 +43,6 @@ tape "encrypt 1MB file for Alice", (test) ->
       test.ok encrypted.name is "alice.1MB.tiff.minilock"
       test.ok encrypted.senderID is Alice.miniLockID
       test.end()
-      console.info("encrypted", encrypted.name, encrypted)
 
 tape "encrypt 4MB file for Alice", (test) ->
   readFromNetwork "4MB.tiff", (blob) ->
@@ -60,4 +57,3 @@ tape "encrypt 4MB file for Alice", (test) ->
       test.ok encrypted.name is "alice.4MB.tiff.minilock"
       test.ok encrypted.senderID is Alice.miniLockID
       test.end()
-      console.info("encrypted", encrypted.name, encrypted)

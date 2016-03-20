@@ -10,7 +10,7 @@
     __extends(BLAKE2s, _super);
 
     function BLAKE2s(params) {
-      OriginalBLAKE2s.call(this, params.length);
+      OriginalBLAKE2s.call(this, params.length, params.key);
     }
 
     BLAKE2s.prototype.update = function(input) {

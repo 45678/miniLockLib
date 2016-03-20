@@ -1,5 +1,5 @@
 .DS_Store
-.window_test_address
+.window_tests_address
 gh-pages
 node_modules
 website/annotated_code

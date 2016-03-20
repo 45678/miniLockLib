@@ -30,7 +30,7 @@ module.exports.createStream(objectMode:yes).on "data", (data) ->
       numberOfTests.innerText = data.test
       renderBodyElement(data)
     else
-      console.info("Unhandled", data)
+      console.error("Unhandled", data)
 
 window.onmousewheel = ->
   delete window.onmousewheel

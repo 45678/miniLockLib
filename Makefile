@@ -1,4 +1,4 @@
-default: website/miniLockLib.js website/tests.js website/index.js website/annotated_code.js website/annotated_code
+default: website/miniLockLib.js website/tests.js website/index.js website/annotated_code.js website/annotated_code .window_tests_address
 
 # Create a standalone copy of miniLockLib.js in the website folder for use in web agent windows.
 website/miniLockLib.js: library/%.coffee
@@ -35,8 +35,6 @@ website/annotated_code: library/%.coffee tests/%.coffee website/annotated_code.h
 	docco --output website/annotated_code --template website/annotated_code.html.jst --css website/stylesheet.css library/*.coffee tests/*.coffee
 	rm website/annotated_code/stylesheet.css
 
-
-
 # # Misc
 
 # Remove all compiled Javascript code and annotated code pages.
@@ -46,6 +44,10 @@ clean:
 	rm -f tests.compiled/*.js
 	rm -f website/miniLockLib.js website/tests.js website/annotated_code.js website/index.js
 	rm -rf website/annotated_code
+
+# Make default config file for the address of the test window.
+.window_tests_address:
+	echo "http://localhost:45678/tests.html" >> .window_tests_address
 
 # Establish a link with [Pow](http://pow.cx/) to serve the `website` folder at `http://minilocklib.dev/`.
 pow:

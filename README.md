@@ -75,8 +75,12 @@ You will need [GNU Make](https://www.gnu.org/software/make/) and [Node.js](https
 
 `make clean` to remove all generated files and start over.
 
-`curl get.pow.cx | sh` to install the [Pow](http://pow.cx/) (OS X Only) local web application server.
+`npm start` to automatically re-compile source files as you make changes.
 
-`make pow` to link the miniLockLib website into Pow for testing.
+`npm run node.tests` to run the test suite in Node.js and see the output on the command line.
 
-`npm run test` to open the test suite in a web agent `window` using the Pow web server to host a local copy of the miniLockLib website and tests.
+`npm run window.tests` to run the test suite in a web agent `window`. This command expects a webserver to serve the `website/tests.html` file from [http://localhost:45678/tests.html]. The `npm run webserver` command will start the webserver that you need for this. Or, if you prefer to use another webserver, you can revise the `.window_tests_address` config file to specify a different address. `.window_tests_address` is created automatically the first time you run `make`.
+
+`npm test` to run node tests and window tests.
+
+`npm run webserver` to serve the `website` folder at the address [http://localhost:45678].

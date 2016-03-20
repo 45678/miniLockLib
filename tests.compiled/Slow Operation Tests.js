@@ -27,8 +27,7 @@
         test.ok(decrypted.name === "1MB.tiff");
         test.ok(decrypted.senderID === Alice.miniLockID);
         test.ok(decrypted.recipientID === Alice.miniLockID);
-        test.end();
-        return console.info("decrypted", decrypted.name, decrypted);
+        return test.end();
       });
     });
   });
@@ -48,8 +47,7 @@
         test.ok(decrypted.name === "4MB.tiff");
         test.ok(decrypted.senderID === Alice.miniLockID);
         test.ok(decrypted.recipientID === Alice.miniLockID);
-        test.end();
-        return console.info("decrypted", decrypted.name, decrypted);
+        return test.end();
       });
     });
   });
@@ -70,8 +68,7 @@
         test.ok(encrypted.data.size === 1049788);
         test.ok(encrypted.name === "alice.1MB.tiff.minilock");
         test.ok(encrypted.senderID === Alice.miniLockID);
-        test.end();
-        return console.info("encrypted", encrypted.name, encrypted);
+        return test.end();
       });
     });
   });
@@ -92,8 +89,7 @@
         test.ok(encrypted.data.size === 4195768);
         test.ok(encrypted.name === "alice.4MB.tiff.minilock");
         test.ok(encrypted.senderID === Alice.miniLockID);
-        test.end();
-        return console.info("encrypted", encrypted.name, encrypted);
+        return test.end();
       });
     });
   });

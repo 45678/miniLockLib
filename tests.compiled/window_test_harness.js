@@ -53,7 +53,7 @@
         numberOfTests.innerText = data.test;
         return renderBodyElement(data);
       default:
-        return console.info("Unhandled", data);
+        return console.error("Unhandled", data);
     }
   });
 

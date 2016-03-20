@@ -63,7 +63,7 @@ Pass `data` and `keys` when you `decrypt` a file:
 
 __Digging In__
 
-`brew install node` to install NodeJS and the `npm` package manager.
+You will need [GNU Make](https://www.gnu.org/software/make/) and [Node.js](https://nodejs.org/en/) on your computer to compile, run and test the code in this project. If you can run `make --version` and `node --version` without errors on the command line then you should be all set. If you don’t already have a copy Node.js, we recommend you [download the installer for your operating system](https://nodejs.org/en/download/) from the official website.
 
 `brew install caddy` to install [Caddy web server](https://caddyserver.com) for
 simple testing.

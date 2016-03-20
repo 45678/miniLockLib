@@ -63,11 +63,17 @@ Pass `data` and `keys` when you `decrypt` a file:
 
 __Digging In__
 
+You will need [GNU Make](https://www.gnu.org/software/make/) and [Node.js](https://nodejs.org/en/) on your computer to compile, run and test the code in this project. If you can run `make --version` and `node --version` without errors on the command line then you should be all set. If you don’t already have a copy Node.js, we recommend you [download the installer for your operating system](https://nodejs.org/en/download/) from the official website.
+
 `git clone https://github.com/45678/miniLockLib.git` to get the source code.
+
+`cd miniLockLib`
+
+`npm install` to download the dependencies defined in `package.json`.
 
 `make` to compile [CoffeeScript](http://www.coffeescript.org/) files into [ECMAScript](http://www.ecmascript.org/) files in the `library.compiled`, `tests.compiled` and `website` folders.
 
-`make clean` to start over.
+`make clean` to remove all generated files and start over.
 
 `npm start` to automatically re-compile source files as you make changes.
 

@@ -9,7 +9,7 @@
 
     NaCl = require("tweetnacl");
 
-    scrypt = require("./scrypt-async");
+    scrypt = require("scrypt-async");
 
     EmailAddress = require("./EmailAddress");
 

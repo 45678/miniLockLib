@@ -34,4 +34,4 @@ miniLockLib.BLAKE2s     = require "./BLAKE2s"
 miniLockLib.Entropizer  = require "entropizer"
 miniLockLib.NaCl        = require "tweetnacl"
 miniLockLib.NaCl.stream = require("nacl-stream").stream
-miniLockLib.scrypt      = require "./scrypt-async"
+miniLockLib.scrypt      = require "scrypt-async"

@@ -2,7 +2,7 @@
   "name": "miniLockLib",
   "description": "Do miniLock encryption operations on a web page of your own.",
   "version": "0.0.0",
-  "license": "Public Domain",
+  "license": "Unlicense",
   "repository": "git+https://github.com/45678/miniLockLib.git",
   "dependencies": {
     "base-58": "0.0.x",

@@ -23,22 +23,22 @@
 
 <section id="section-1">
   <div class="annotation"></div>
-  <div class="code"><div class='highlight'><pre><span class="hljs-keyword">if</span> process?.argv?[<span class="hljs-number">0</span>] <span class="hljs-keyword">is</span> <span class="hljs-string">"node"</span>
-  <span class="hljs-built_in">module</span>.e<span class="hljs-function"><span class="hljs-title">xports</span> = <span class="hljs-params">(start, end, callback)</span> -&gt;</span>
-    blob = <span class="hljs-property">@data</span>.slice(start, end)
+  <div class="code"><div class='highlight'><pre><span class="hljs-keyword">if</span> <span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span> <span class="hljs-keyword">is</span> <span class="hljs-string">"undefined"</span>
+  <span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-params">(start, end, callback)</span> -&gt;</span>
+    blob = @data.slice(start, end)
     sliceOfBytes = <span class="hljs-keyword">new</span> Uint8Array blob.buffer
-    process.nextTick <span class="hljs-function">-&gt;</span> callback(<span class="hljs-literal">undefined</span>, sliceOfBytes)
+    process.nextTick -&gt; callback(<span class="hljs-literal">undefined</span>, sliceOfBytes)
 <span class="hljs-keyword">else</span>
-  <span class="hljs-built_in">module</span>.e<span class="hljs-function"><span class="hljs-title">xports</span> = <span class="hljs-params">(start, end, callback)</span> -&gt;</span>
-    <span class="hljs-property">@fileReader</span> ?= <span class="hljs-keyword">new</span> FileReader
-    <span class="hljs-property">@fileReader</span>.readAsArrayBuffer(<span class="hljs-property">@data</span>.slice(start, end))
-    <span class="hljs-property">@fileReader</span>.o<span class="hljs-function"><span class="hljs-title">nabort</span> = <span class="hljs-params">(event)</span> -&gt;</span>
+  <span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-params">(start, end, callback)</span> -&gt;</span>
+    @fileReader ?= <span class="hljs-keyword">new</span> FileReader
+    @fileReader.readAsArrayBuffer(@data.slice(start, end))
+    @fileReader.onabort = <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
       <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"@fileReader.onabort"</span>, event)
       callback <span class="hljs-string">"File read abort."</span>
-    <span class="hljs-property">@fileReader</span>.o<span class="hljs-function"><span class="hljs-title">nerror</span> = <span class="hljs-params">(event)</span> -&gt;</span>
+    @fileReader.onerror = <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
       <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"@fileReader.onerror"</span>, event)
       callback <span class="hljs-string">"File read error."</span>
-    <span class="hljs-property">@fileReader</span>.o<span class="hljs-function"><span class="hljs-title">nload</span> = <span class="hljs-params">(event)</span> -&gt;</span>
+    @fileReader.onload = <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
       sliceOfBytes = <span class="hljs-keyword">new</span> Uint8Array(event.target.result)
       callback(<span class="hljs-literal">undefined</span>, sliceOfBytes)</pre></div></div>
 </section>

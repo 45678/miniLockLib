@@ -33,7 +33,7 @@ Alice.emailAddress = <span class="hljs-string">"alice@example.com"</span>
 Alice.miniLockID   = <span class="hljs-string">"CeF5fM7SEdphjktdUbAXaMGm13m6mTZtbprtghvsMRYgw"</span>
 Alice.publicKey    = Base58.decode(<span class="hljs-string">"3dz7VdGxZYTDQHHgXij2wgV3GRBu4GzJ8SLuwmAVB4kR"</span>)
 Alice.secretKey    = Base58.decode(<span class="hljs-string">"DsMtZntcp7riiWy9ng1xZ29tMPZQ9ioHNzk2i1UyChkF"</span>)
-Alice.keys         = {<span class="hljs-attribute">publicKey</span>: Alice.publicKey, <span class="hljs-attribute">secretKey</span>: Alice.secretKey}
+Alice.keys         = {publicKey: Alice.publicKey, secretKey: Alice.secretKey}
 
 Bobby = exports.Bobby = {}
 Bobby.secretPhrase = <span class="hljs-string">"No I also got a quesadilla, it’s from the value menu"</span>
@@ -41,64 +41,64 @@ Bobby.emailAddress = <span class="hljs-string">"bobby@example.com"</span>
 Bobby.miniLockID   = <span class="hljs-string">"2CtUp8U3iGykxaqyEDkGJjgZTsEtzzYQCd8NVmLspM4i2b"</span>
 Bobby.publicKey    = Base58.decode(<span class="hljs-string">"GqNFkqGZv1dExFGTZLmhiqqbBUcoDarD9e1nwTFgj9zn"</span>)
 Bobby.secretKey    = Base58.decode(<span class="hljs-string">"A699ac6jesP643rkM71jAxs33wY9mk6VoYDQrG9B3Kw7"</span>)
-Bobby.keys         = {<span class="hljs-attribute">publicKey</span>: Bobby.publicKey, <span class="hljs-attribute">secretKey</span>: Bobby.secretKey}
+Bobby.keys         = {publicKey: Bobby.publicKey, secretKey: Bobby.secretKey}
 
-read = exports.r<span class="hljs-function"><span class="hljs-title">ead</span> = <span class="hljs-params">(name, callback)</span> -&gt;</span>
-  read.files[name] <span class="hljs-function"><span class="hljs-params">(error, processed)</span> -&gt;</span>
+read = exports.read = <span class="hljs-function"><span class="hljs-params">(name, callback)</span> -&gt;</span>
+  read.files[name] (error, processed) -&gt;
     <span class="hljs-keyword">if</span> error <span class="hljs-keyword">then</span> <span class="hljs-keyword">throw</span> error
     callback(processed.data)
 
 read.files =
   <span class="hljs-string">"basic.txt"</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     callback <span class="hljs-literal">undefined</span>,
-      <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
-      <span class="hljs-attribute">name</span>: <span class="hljs-string">"basic.txt"</span>
+      data: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], type: <span class="hljs-string">"text/plain"</span>
+      name: <span class="hljs-string">"basic.txt"</span>
   <span class="hljs-string">"alice.txt.minilock"</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     miniLockLib.encrypt
-      <span class="hljs-attribute">version</span>: <span class="hljs-number">1</span>
-      <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
-      <span class="hljs-attribute">name</span>: <span class="hljs-string">"alice.txt"</span>
-      <span class="hljs-attribute">keys</span>: Alice.keys
-      <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID]
+      version: <span class="hljs-number">1</span>
+      data: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], type: <span class="hljs-string">"text/plain"</span>
+      name: <span class="hljs-string">"alice.txt"</span>
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
       <span class="hljs-string">'callback'</span>: callback
   <span class="hljs-string">"alice.txt.v1.minilock"</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     miniLockLib.encrypt
-      <span class="hljs-attribute">version</span>: <span class="hljs-number">1</span>
-      <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
-      <span class="hljs-attribute">name</span>: <span class="hljs-string">"alice.txt.v1"</span>
-      <span class="hljs-attribute">keys</span>: Alice.keys
-      <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID]
+      version: <span class="hljs-number">1</span>
+      data: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], type: <span class="hljs-string">"text/plain"</span>
+      name: <span class="hljs-string">"alice.txt.v1"</span>
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
       <span class="hljs-string">'callback'</span>: callback
   <span class="hljs-string">"alice.txt.v2.minilock"</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     miniLockLib.encrypt
-      <span class="hljs-attribute">version</span>: <span class="hljs-number">2</span>
-      <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
-      <span class="hljs-attribute">name</span>: <span class="hljs-string">"alice.txt.v2"</span>
-      <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
-      <span class="hljs-attribute">time</span>: (<span class="hljs-keyword">new</span> Date <span class="hljs-string">"2014-08-17T07:06:50.095Z"</span>).getTime()
-      <span class="hljs-attribute">keys</span>: Alice.keys
-      <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID]
+      version: <span class="hljs-number">2</span>
+      data: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], type: <span class="hljs-string">"text/plain"</span>
+      name: <span class="hljs-string">"alice.txt.v2"</span>
+      type: <span class="hljs-string">"text/plain"</span>
+      time: (<span class="hljs-keyword">new</span> Date <span class="hljs-string">"2014-08-17T07:06:50.095Z"</span>).getTime()
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
       <span class="hljs-string">'callback'</span>: callback
   <span class="hljs-string">"alice_and_bobby.txt.minilock"</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     miniLockLib.encrypt
-      <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
-      <span class="hljs-attribute">name</span>: <span class="hljs-string">"alice_and_bobby.txt"</span>
-      <span class="hljs-attribute">keys</span>: Alice.keys
-      <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID, Bobby.miniLockID]
+      data: <span class="hljs-keyword">new</span> Blob [<span class="hljs-string">"This is only a test!"</span>], type: <span class="hljs-string">"text/plain"</span>
+      name: <span class="hljs-string">"alice_and_bobby.txt"</span>
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID, Bobby.miniLockID]
       <span class="hljs-string">'callback'</span>: callback
 
 <span class="hljs-keyword">if</span> <span class="hljs-built_in">window</span>?.XMLHttpRequest
-  exports.r<span class="hljs-function"><span class="hljs-title">eadFromNetwork</span> = <span class="hljs-params">(name, callback)</span> -&gt;</span>
+  exports.readFromNetwork = <span class="hljs-function"><span class="hljs-params">(name, callback)</span> -&gt;</span>
     request = <span class="hljs-keyword">new</span> XMLHttpRequest
     path = <span class="hljs-string">"fixtures/"</span> + name
     request.open <span class="hljs-string">"GET"</span>, path, <span class="hljs-literal">true</span>
     request.responseType = <span class="hljs-string">"blob"</span>
-    request.o<span class="hljs-function"><span class="hljs-title">nreadystatechange</span> = <span class="hljs-params">(event)</span> -&gt;</span>
+    request.onreadystatechange = <span class="hljs-function"><span class="hljs-params">(event)</span> -&gt;</span>
       <span class="hljs-keyword">if</span> request.readyState <span class="hljs-keyword">is</span> <span class="hljs-number">4</span>
         callback request.response
     request.send()
 <span class="hljs-keyword">else</span>
-  exports.r<span class="hljs-function"><span class="hljs-title">eadFromNetwork</span> = <span class="hljs-params">(name, callback)</span> -&gt;</span>
+  exports.readFromNetwork = <span class="hljs-function"><span class="hljs-params">(name, callback)</span> -&gt;</span>
     <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs"</span>).readFile <span class="hljs-string">"website/fixtures/<span class="hljs-subst">#{name}</span>"</span>, <span class="hljs-function"><span class="hljs-params">(error, buffer)</span> -&gt;</span>
       callback <span class="hljs-keyword">new</span> Blob buffer</pre></div></div>
 </section>

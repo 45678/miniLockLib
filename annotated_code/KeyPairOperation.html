@@ -26,36 +26,36 @@
   <div class="code"><div class='highlight'><pre><span class="hljs-built_in">module</span>.exports = <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">KeyPairOperation</span></span>
   BLAKE2s = <span class="hljs-built_in">require</span> <span class="hljs-string">"./BLAKE2s"</span>
   NaCl = <span class="hljs-built_in">require</span> <span class="hljs-string">"tweetnacl"</span>
-  scrypt = <span class="hljs-built_in">require</span> <span class="hljs-string">"./scrypt-async"</span>
+  scrypt = <span class="hljs-built_in">require</span> <span class="hljs-string">"scrypt-async"</span>
   EmailAddress = <span class="hljs-built_in">require</span> <span class="hljs-string">"./EmailAddress"</span>
   SecretPhrase = <span class="hljs-built_in">require</span> <span class="hljs-string">"./SecretPhrase"</span>
 
-  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(params)</span> -&gt;</span>
-    {<span class="hljs-property">@secretPhrase</span>, <span class="hljs-property">@emailAddress</span>} = params</pre></div></div>
+  constructor: <span class="hljs-function"><span class="hljs-params">(params)</span> -&gt;</span>
+    {@secretPhrase, @emailAddress} = params</pre></div></div>
 </section>
 
 
 <section id="section-2">
   <div class="annotation"><p>Decode secret phrase input string into a <code>Uint8Array</code> of bytes.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">secret</span>:<span class="hljs-function"> -&gt;</span>
-    NaCl.util.decodeUTF8(<span class="hljs-property">@secretPhrase</span>)</pre></div></div>
+  <div class="code"><div class='highlight'><pre>  secret: <span class="hljs-function">-&gt;</span>
+    NaCl.util.decodeUTF8(@secretPhrase)</pre></div></div>
 </section>
 
 
 <section id="section-3">
   <div class="annotation"><p>Decode email address input string into a <code>Uint8Array</code> of bytes.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">salt</span>:<span class="hljs-function"> -&gt;</span>
-    NaCl.util.decodeUTF8(<span class="hljs-property">@emailAddress</span>)</pre></div></div>
+  <div class="code"><div class='highlight'><pre>  salt: <span class="hljs-function">-&gt;</span>
+    NaCl.util.decodeUTF8(@emailAddress)</pre></div></div>
 </section>
 
 
 <section id="section-4">
   <div class="annotation"><p>Hash digest of the <code>secret()</code> to increase its potential complexity.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">hashDigestOfSecret</span>:<span class="hljs-function"> -&gt;</span>
-    (<span class="hljs-keyword">new</span> BLAKE2s <span class="hljs-attribute">length</span>: <span class="hljs-number">32</span>).update(<span class="hljs-property">@secret</span>()).digest()</pre></div></div>
+  <div class="code"><div class='highlight'><pre>  hashDigestOfSecret: <span class="hljs-function">-&gt;</span>
+    (<span class="hljs-keyword">new</span> BLAKE2s length: <span class="hljs-number">32</span>).update(@secret()).digest()</pre></div></div>
 </section>
 
 
@@ -63,23 +63,23 @@
   <div class="annotation"><p>Start the operation.
 <code>callback</code> receives <code>error</code> or <code>keys</code> when the operation is complete.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>  <span class="hljs-attribute">start</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
+  <div class="code"><div class='highlight'><pre>  start: <span class="hljs-function"><span class="hljs-params">(callback)</span> -&gt;</span>
     <span class="hljs-keyword">if</span> callback?.constructor <span class="hljs-keyword">isnt</span> Function
       <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t make keys without a callback function."</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@secretPhrase</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+    <span class="hljs-keyword">if</span> @secretPhrase <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
       callback <span class="hljs-string">"Can’t make keys without a secret phrase."</span>
       <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span>
-    <span class="hljs-keyword">if</span> SecretPhrase.isAcceptable(<span class="hljs-property">@secretPhrase</span>) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
-      callback <span class="hljs-string">"Can’t make keys because '<span class="hljs-subst">#{<span class="hljs-property">@secretPhrase</span>}</span>' is not an acceptable secret phrase."</span>
+    <span class="hljs-keyword">if</span> SecretPhrase.isAcceptable(@secretPhrase) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+      callback <span class="hljs-string">"Can’t make keys because '<span class="hljs-subst">#{@secretPhrase}</span>' is not an acceptable secret phrase."</span>
       <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@emailAddress</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+    <span class="hljs-keyword">if</span> @emailAddress <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
       callback <span class="hljs-string">"Can’t make keys without an email address."</span>
       <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span>
-    <span class="hljs-keyword">if</span> EmailAddress.isAcceptable(<span class="hljs-property">@emailAddress</span>) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
-      callback <span class="hljs-string">"Can’t make keys because '<span class="hljs-subst">#{<span class="hljs-property">@emailAddress</span>}</span>' is not an acceptable email address."</span>
+    <span class="hljs-keyword">if</span> EmailAddress.isAcceptable(@emailAddress) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+      callback <span class="hljs-string">"Can’t make keys because '<span class="hljs-subst">#{@emailAddress}</span>' is not an acceptable email address."</span>
       <span class="hljs-keyword">return</span> <span class="hljs-literal">no</span>
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@secretPhrase</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@emailAddress</span> <span class="hljs-keyword">and</span> callback
-      calculateCurve25519KeyPair <span class="hljs-property">@hashDigestOfSecret</span>(), <span class="hljs-property">@salt</span>(), <span class="hljs-function"><span class="hljs-params">(keys)</span> -&gt;</span>
+    <span class="hljs-keyword">if</span> @secretPhrase <span class="hljs-keyword">and</span> @emailAddress <span class="hljs-keyword">and</span> callback
+      calculateCurve25519KeyPair @hashDigestOfSecret(), @salt(), <span class="hljs-function"><span class="hljs-params">(keys)</span> -&gt;</span>
         callback(<span class="hljs-literal">undefined</span>, keys)
       <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></pre></div></div>
 </section>

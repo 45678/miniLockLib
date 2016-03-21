@@ -30,7 +30,7 @@
 <section id="section-2">
   <div class="annotation"><p>Start a <a href="KeyPairOperation.html">key pair operation</a> to make a set of keys.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>miniLockLib.m<span class="hljs-function"><span class="hljs-title">akeKeyPair</span> = <span class="hljs-params">(secretPhrase, emailAddress, callback)</span> -&gt;</span>
+  <div class="code"><div class='highlight'><pre>miniLockLib.makeKeyPair = <span class="hljs-function"><span class="hljs-params">(secretPhrase, emailAddress, callback)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.KeyPairOperation {secretPhrase, emailAddress}
   operation.start(callback)</pre></div></div>
 </section>
@@ -39,7 +39,7 @@
 <section id="section-3">
   <div class="annotation"><p>Start an <a href="EncryptOperation.html">encrypt operation</a> to make a miniLock file.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>miniLockLib.e<span class="hljs-function"><span class="hljs-title">ncrypt</span> = <span class="hljs-params">(params, callback)</span> -&gt;</span>
+  <div class="code"><div class='highlight'><pre>miniLockLib.encrypt = <span class="hljs-function"><span class="hljs-params">(params, callback)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation params
   operation.start(callback)</pre></div></div>
 </section>
@@ -48,7 +48,7 @@
 <section id="section-4">
   <div class="annotation"><p>Start a <a href="DecryptOperation.html">decrypt operation</a> to unlock a miniLock file.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>miniLockLib.d<span class="hljs-function"><span class="hljs-title">ecrypt</span> = <span class="hljs-params">(params, callback)</span> -&gt;</span>
+  <div class="code"><div class='highlight'><pre>miniLockLib.decrypt = <span class="hljs-function"><span class="hljs-params">(params, callback)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation params
   operation.start(callback)</pre></div></div>
 </section>
@@ -87,7 +87,7 @@ miniLockLib.BLAKE2s     = <span class="hljs-built_in">require</span> <span class
 miniLockLib.Entropizer  = <span class="hljs-built_in">require</span> <span class="hljs-string">"entropizer"</span>
 miniLockLib.NaCl        = <span class="hljs-built_in">require</span> <span class="hljs-string">"tweetnacl"</span>
 miniLockLib.NaCl.stream = <span class="hljs-built_in">require</span>(<span class="hljs-string">"nacl-stream"</span>).stream
-miniLockLib.scrypt      = <span class="hljs-built_in">require</span> <span class="hljs-string">"./scrypt-async"</span></pre></div></div>
+miniLockLib.scrypt      = <span class="hljs-built_in">require</span> <span class="hljs-string">"scrypt-async"</span></pre></div></div>
 </section>
 
 

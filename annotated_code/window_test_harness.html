@@ -34,7 +34,7 @@ idOfCurrentlyRunningTest = <span class="hljs-literal">undefined</span>
 untouched = <span class="hljs-literal">yes</span>
 failedTests = []
 
-<span class="hljs-built_in">module</span>.exports.createStream(<span class="hljs-attribute">objectMode</span>:<span class="hljs-literal">yes</span>).<span class="hljs-literal">on</span> <span class="hljs-string">"data"</span>, <span class="hljs-function"><span class="hljs-params">(data)</span> -&gt;</span>
+<span class="hljs-built_in">module</span>.exports.createStream(objectMode:<span class="hljs-literal">yes</span>).<span class="hljs-literal">on</span> <span class="hljs-string">"data"</span>, <span class="hljs-function"><span class="hljs-params">(data)</span> -&gt;</span>
   <span class="hljs-keyword">switch</span>
     <span class="hljs-keyword">when</span> data.type <span class="hljs-keyword">is</span> <span class="hljs-string">"test"</span>
       idOfCurrentlyRunningTest = data.id
@@ -55,9 +55,9 @@ failedTests = []
       numberOfTests.innerText = data.test
       renderBodyElement(data)
     <span class="hljs-keyword">else</span>
-      <span class="hljs-built_in">console</span>.info(<span class="hljs-string">"Unhandled"</span>, data)
+      <span class="hljs-built_in">console</span>.error(<span class="hljs-string">"Unhandled"</span>, data)
 
-<span class="hljs-built_in">window</span>.o<span class="hljs-function"><span class="hljs-title">nmousewheel</span> = -&gt;</span>
+<span class="hljs-built_in">window</span>.onmousewheel = <span class="hljs-function">-&gt;</span>
   <span class="hljs-keyword">delete</span> <span class="hljs-built_in">window</span>.onmousewheel
   untouched = <span class="hljs-literal">no</span>
 <span class="hljs-function">
@@ -71,7 +71,7 @@ failedTests = []
       body.className.replace(<span class="hljs-string">"running"</span>, <span class="hljs-string">"stopped"</span>)
     <span class="hljs-keyword">else</span>
       body.className
-  <span class="hljs-keyword">if</span> failedTests.length <span class="hljs-keyword">is</span> <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> body.className.indexOf(<span class="hljs-string">"fail"</span>) <span class="hljs-keyword">is</span> -<span class="hljs-number">1</span>
+  <span class="hljs-keyword">if</span> failedTests.length <span class="hljs-keyword">is</span> <span class="hljs-number">1</span> <span class="hljs-keyword">and</span> body.className.indexOf(<span class="hljs-string">"fail"</span>) <span class="hljs-keyword">is</span> <span class="hljs-number">-1</span>
     body.className += <span class="hljs-string">" failures"</span>
 <span class="hljs-function">
 <span class="hljs-title">insertTestElement</span> = <span class="hljs-params">(data)</span> -&gt;</span>

@@ -31,183 +31,183 @@
   {numberToByteArray} = <span class="hljs-built_in">require</span> <span class="hljs-string">"./util"</span>
   Blob = <span class="hljs-built_in">window</span>?.Blob <span class="hljs-keyword">or</span> <span class="hljs-built_in">require</span> <span class="hljs-string">"./Blob"</span>
 
-  <span class="hljs-attribute">chunkSize</span>: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>
-  <span class="hljs-attribute">readSliceOfData</span>: <span class="hljs-built_in">require</span> <span class="hljs-string">"./readSliceOfData"</span>
+  chunkSize: <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>
+  readSliceOfData: <span class="hljs-built_in">require</span> <span class="hljs-string">"./readSliceOfData"</span>
 
-  <span class="hljs-attribute">constructor</span>: <span class="hljs-function"><span class="hljs-params">(params={})</span>-&gt;</span>
-    {<span class="hljs-property">@data</span>, <span class="hljs-property">@keys</span>, <span class="hljs-property">@name</span>, <span class="hljs-property">@type</span>, <span class="hljs-property">@time</span>, <span class="hljs-property">@miniLockIDs</span>, <span class="hljs-property">@version</span>, <span class="hljs-property">@callback</span>} = params
-    <span class="hljs-property">@version</span> = <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@version</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
-    <span class="hljs-property">@ephemeral</span> = NaCl.box.keyPair()
-    <span class="hljs-property">@fileKey</span> = NaCl.randomBytes(<span class="hljs-number">32</span>)
-    <span class="hljs-property">@fileNonce</span> = NaCl.randomBytes(<span class="hljs-number">24</span>).subarray(<span class="hljs-number">0</span>, <span class="hljs-number">16</span>)
-    <span class="hljs-property">@hash</span> = <span class="hljs-keyword">new</span> BLAKE2s(<span class="hljs-number">32</span>)
-    <span class="hljs-property">@ciphertextBytes</span> = []
-    <span class="hljs-property">@start</span>() <span class="hljs-keyword">if</span> params.start?
+  constructor: <span class="hljs-function"><span class="hljs-params">(params={})</span>-&gt;</span>
+    {@data, @keys, @name, @type, @time, @miniLockIDs, @version, @callback} = params
+    @version = <span class="hljs-number">1</span> <span class="hljs-keyword">if</span> @version <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+    @ephemeral = NaCl.box.keyPair()
+    @fileKey = NaCl.randomBytes(<span class="hljs-number">32</span>)
+    @fileNonce = NaCl.randomBytes(<span class="hljs-number">24</span>).subarray(<span class="hljs-number">0</span>, <span class="hljs-number">16</span>)
+    @hash = <span class="hljs-keyword">new</span> BLAKE2s(<span class="hljs-number">32</span>)
+    @ciphertextBytes = []
+    @start() <span class="hljs-keyword">if</span> params.start?
 
-  <span class="hljs-attribute">start</span>: <span class="hljs-function"><span class="hljs-params">(callback)</span> =&gt;</span>
-    <span class="hljs-property">@callback</span> = callback <span class="hljs-keyword">if</span> callback?
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@callback</span>?.constructor <span class="hljs-keyword">isnt</span> Function
+  start: <span class="hljs-function"><span class="hljs-params">(callback)</span> =&gt;</span>
+    @callback = callback <span class="hljs-keyword">if</span> callback?
+    <span class="hljs-keyword">if</span> @callback?.constructor <span class="hljs-keyword">isnt</span> Function
       <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t start encrypt operation without callback function."</span>
     <span class="hljs-keyword">switch</span>
-      <span class="hljs-keyword">when</span> (<span class="hljs-property">@data</span> <span class="hljs-keyword">instanceof</span> Blob) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
-        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt without a Blob of data."</span>
-      <span class="hljs-keyword">when</span> (<span class="hljs-property">@keys</span>?.publicKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">or</span> (<span class="hljs-property">@keys</span>?.secretKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>)
-        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt without a set of keys."</span>
-      <span class="hljs-keyword">when</span> (<span class="hljs-property">@miniLockIDs</span> <span class="hljs-keyword">instanceof</span> Array) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
-        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt without an Array of miniLock IDs."</span>
-      <span class="hljs-keyword">when</span> <span class="hljs-property">@name</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@name</span>.length &gt; <span class="hljs-number">256</span>
-        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt because file name is too long. 256-characters max please."</span>
-      <span class="hljs-keyword">when</span> <span class="hljs-property">@type</span> <span class="hljs-keyword">and</span> <span class="hljs-property">@type</span>.length &gt; <span class="hljs-number">128</span>
-        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt because media type is too long. 128-characters max please."</span>
-      <span class="hljs-keyword">when</span> (<span class="hljs-property">@version</span> <span class="hljs-keyword">in</span> [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
-        <span class="hljs-property">@callback</span> <span class="hljs-string">"Can’t encrypt because version <span class="hljs-subst">#{<span class="hljs-property">@version</span>}</span> is not supported. Version 1 or 2 please."</span>
+      <span class="hljs-keyword">when</span> (@data <span class="hljs-keyword">instanceof</span> Blob) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+        @callback <span class="hljs-string">"Can’t encrypt without a Blob of data."</span>
+      <span class="hljs-keyword">when</span> (@keys?.publicKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">or</span> (@keys?.secretKey <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>)
+        @callback <span class="hljs-string">"Can’t encrypt without a set of keys."</span>
+      <span class="hljs-keyword">when</span> (@miniLockIDs <span class="hljs-keyword">instanceof</span> Array) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+        @callback <span class="hljs-string">"Can’t encrypt without an Array of miniLock IDs."</span>
+      <span class="hljs-keyword">when</span> @name <span class="hljs-keyword">and</span> @name.length &gt; <span class="hljs-number">256</span>
+        @callback <span class="hljs-string">"Can’t encrypt because file name is too long. 256-characters max please."</span>
+      <span class="hljs-keyword">when</span> @type <span class="hljs-keyword">and</span> @type.length &gt; <span class="hljs-number">128</span>
+        @callback <span class="hljs-string">"Can’t encrypt because media type is too long. 128-characters max please."</span>
+      <span class="hljs-keyword">when</span> (@version <span class="hljs-keyword">in</span> [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]) <span class="hljs-keyword">is</span> <span class="hljs-literal">no</span>
+        @callback <span class="hljs-string">"Can’t encrypt because version <span class="hljs-subst">#{@version}</span> is not supported. Version 1 or 2 please."</span>
       <span class="hljs-keyword">else</span>
-        <span class="hljs-property">@startedAt</span> = Date.now()
-        <span class="hljs-property">@time</span> = <span class="hljs-property">@startedAt</span> <span class="hljs-keyword">if</span> <span class="hljs-property">@time</span> <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
-        <span class="hljs-property">@run</span>()
+        @startedAt = Date.now()
+        @time = @startedAt <span class="hljs-keyword">if</span> @time <span class="hljs-keyword">is</span> <span class="hljs-literal">undefined</span>
+        @run()
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>
 
-  <span class="hljs-attribute">run</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@encryptAttributes</span>(<span class="hljs-property">@version</span>)
-    <span class="hljs-property">@encryptData</span> <span class="hljs-number">0</span>, <span class="hljs-function"><span class="hljs-params">(error, dataWasEncrypted)</span> =&gt;</span>
+  run: <span class="hljs-function">-&gt;</span>
+    @encryptAttributes(@version)
+    @encryptData <span class="hljs-number">0</span>, <span class="hljs-function"><span class="hljs-params">(error, dataWasEncrypted)</span> =&gt;</span>
       <span class="hljs-keyword">if</span> dataWasEncrypted?
-        <span class="hljs-property">@constructHeader</span>()
+        @constructHeader()
         fileFormat = [
           <span class="hljs-string">"miniLock"</span>
-          <span class="hljs-property">@sizeOfHeaderIn4Bytes</span>
-          <span class="hljs-property">@headerJSONBytes</span>
-          <span class="hljs-property">@ciphertextBytes</span>...
+          @sizeOfHeaderIn4Bytes
+          @headerJSONBytes
+          @ciphertextBytes...
         ]
-        <span class="hljs-property">@end</span>(error, <span class="hljs-keyword">new</span> Blob fileFormat, <span class="hljs-attribute">type</span>: <span class="hljs-string">"application/minilock"</span>)
+        @end(error, <span class="hljs-keyword">new</span> Blob fileFormat, type: <span class="hljs-string">"application/minilock"</span>)
       <span class="hljs-keyword">else</span>
-        <span class="hljs-property">@end</span>(error)
+        @end(error)
 
-  <span class="hljs-attribute">end</span>: <span class="hljs-function"><span class="hljs-params">(error, blob)</span> =&gt;</span>
-    <span class="hljs-property">@streamEncryptor</span>.clean() <span class="hljs-keyword">if</span> <span class="hljs-property">@streamEncryptor</span>?
-    <span class="hljs-property">@endedAt</span> = Date.now()
-    <span class="hljs-property">@duration</span> = <span class="hljs-property">@endedAt</span> - <span class="hljs-property">@startedAt</span>
+  end: <span class="hljs-function"><span class="hljs-params">(error, blob)</span> =&gt;</span>
+    @streamEncryptor.clean() <span class="hljs-keyword">if</span> @streamEncryptor?
+    @endedAt = Date.now()
+    @duration = @endedAt - @startedAt
     <span class="hljs-keyword">if</span> error
-      <span class="hljs-property">@onerror</span>(error)
+      @onerror(error)
     <span class="hljs-keyword">else</span>
-      <span class="hljs-property">@oncomplete</span>(blob)
+      @oncomplete(blob)
 
-  <span class="hljs-attribute">oncomplete</span>: <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
-    <span class="hljs-property">@callback</span>(<span class="hljs-literal">undefined</span>, {
-      <span class="hljs-attribute">data</span>: blob
-      <span class="hljs-attribute">name</span>: <span class="hljs-property">@name</span> + <span class="hljs-string">".minilock"</span>
-      <span class="hljs-attribute">type</span>: <span class="hljs-property">@type</span>
-      <span class="hljs-attribute">time</span>: <span class="hljs-property">@time</span>
-      <span class="hljs-attribute">senderID</span>: ID.encode(<span class="hljs-property">@keys</span>.publicKey)
-      <span class="hljs-attribute">duration</span>: <span class="hljs-property">@duration</span>
-      <span class="hljs-attribute">startedAt</span>: <span class="hljs-property">@startedAt</span>
-      <span class="hljs-attribute">endedAt</span>: <span class="hljs-property">@endedAt</span>
+  oncomplete: <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
+    @callback(<span class="hljs-literal">undefined</span>, {
+      data: blob
+      name: @name + <span class="hljs-string">".minilock"</span>
+      type: @type
+      time: @time
+      senderID: ID.encode(@keys.publicKey)
+      duration: @duration
+      startedAt: @startedAt
+      endedAt: @endedAt
     })
 
-  <span class="hljs-attribute">onerror</span>: <span class="hljs-function"><span class="hljs-params">(error)</span> -&gt;</span>
-    <span class="hljs-property">@callback</span>(error)
+  onerror: <span class="hljs-function"><span class="hljs-params">(error)</span> -&gt;</span>
+    @callback(error)
 
-  <span class="hljs-attribute">encryptAttributes</span>: <span class="hljs-function"><span class="hljs-params">(version)</span> -&gt;</span>
-    <span class="hljs-property">@constructStreamEncryptor</span>()
+  encryptAttributes: <span class="hljs-function"><span class="hljs-params">(version)</span> -&gt;</span>
+    @constructStreamEncryptor()
     bytes = <span class="hljs-keyword">switch</span> version
       <span class="hljs-keyword">when</span> <span class="hljs-number">1</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">new</span> Uint8Array <span class="hljs-number">256</span>
       <span class="hljs-keyword">when</span> <span class="hljs-number">2</span> <span class="hljs-keyword">then</span> <span class="hljs-keyword">new</span> Uint8Array <span class="hljs-number">256</span>+<span class="hljs-number">128</span>+<span class="hljs-number">24</span>
       <span class="hljs-keyword">else</span> <span class="hljs-keyword">throw</span> <span class="hljs-string">"EncryptOperation does not support version <span class="hljs-subst">#{version}</span>. Version 1 or 2 please."</span>
-    bytes.set <span class="hljs-property">@fixedSizeDecodedName</span>(), <span class="hljs-number">0</span>
-    bytes.set <span class="hljs-property">@fixedSizeDecodedType</span>(), <span class="hljs-number">256</span> <span class="hljs-keyword">if</span> version <span class="hljs-keyword">is</span> <span class="hljs-number">2</span>
-    bytes.set <span class="hljs-property">@fixedSizeDecodedTime</span>(), <span class="hljs-number">256</span>+<span class="hljs-number">128</span> <span class="hljs-keyword">if</span> version <span class="hljs-keyword">is</span> <span class="hljs-number">2</span>
-    <span class="hljs-keyword">if</span> encryptedBytes = <span class="hljs-property">@streamEncryptor</span>.encryptChunk(bytes, <span class="hljs-literal">no</span>)
-      <span class="hljs-property">@hash</span>.update(encryptedBytes)
-      <span class="hljs-property">@ciphertextBytes</span>.push(encryptedBytes)
+    bytes.set @fixedSizeDecodedName(), <span class="hljs-number">0</span>
+    bytes.set @fixedSizeDecodedType(), <span class="hljs-number">256</span> <span class="hljs-keyword">if</span> version <span class="hljs-keyword">is</span> <span class="hljs-number">2</span>
+    bytes.set @fixedSizeDecodedTime(), <span class="hljs-number">256</span>+<span class="hljs-number">128</span> <span class="hljs-keyword">if</span> version <span class="hljs-keyword">is</span> <span class="hljs-number">2</span>
+    <span class="hljs-keyword">if</span> encryptedBytes = @streamEncryptor.encryptChunk(bytes, <span class="hljs-literal">no</span>)
+      @hash.update(encryptedBytes)
+      @ciphertextBytes.push(encryptedBytes)
     <span class="hljs-keyword">else</span>
       <span class="hljs-keyword">throw</span> <span class="hljs-string">"EncryptOperation failed to record file attributes."</span>
 
-  <span class="hljs-attribute">encryptData</span>: <span class="hljs-function"><span class="hljs-params">(position, callback)</span> -&gt;</span>
-    <span class="hljs-property">@constructStreamEncryptor</span>()
-    <span class="hljs-property">@readSliceOfData</span> position, position+<span class="hljs-property">@chunkSize</span>, <span class="hljs-function"><span class="hljs-params">(error, sliceOfBytes)</span> =&gt;</span>
+  encryptData: <span class="hljs-function"><span class="hljs-params">(position, callback)</span> -&gt;</span>
+    @constructStreamEncryptor()
+    @readSliceOfData position, position+@chunkSize, <span class="hljs-function"><span class="hljs-params">(error, sliceOfBytes)</span> =&gt;</span>
       <span class="hljs-keyword">if</span> error <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> callback(error)
-      isLastSlice = position+sliceOfBytes.length <span class="hljs-keyword">is</span> <span class="hljs-property">@data</span>.size
-      <span class="hljs-keyword">if</span> encryptedBytes = <span class="hljs-property">@streamEncryptor</span>.encryptChunk(sliceOfBytes, isLastSlice)
-        <span class="hljs-property">@hash</span>.update(encryptedBytes)
-        <span class="hljs-property">@ciphertextBytes</span>.push(encryptedBytes)
+      isLastSlice = position+sliceOfBytes.length <span class="hljs-keyword">is</span> @data.size
+      <span class="hljs-keyword">if</span> encryptedBytes = @streamEncryptor.encryptChunk(sliceOfBytes, isLastSlice)
+        @hash.update(encryptedBytes)
+        @ciphertextBytes.push(encryptedBytes)
         <span class="hljs-keyword">if</span> isLastSlice
-          <span class="hljs-property">@hash</span>.digest()
-          callback(<span class="hljs-literal">undefined</span>, <span class="hljs-property">@hash</span>.isFinished)
+          @hash.digest()
+          callback(<span class="hljs-literal">undefined</span>, @hash.isFinished)
         <span class="hljs-keyword">else</span>
-          <span class="hljs-property">@encryptData</span>(position+<span class="hljs-property">@chunkSize</span>, callback)
+          @encryptData(position+@chunkSize, callback)
       <span class="hljs-keyword">else</span>
-        callback <span class="hljs-string">"Failed to encrypt slice of data at [<span class="hljs-subst">#{position}</span>..<span class="hljs-subst">#{position+<span class="hljs-property">@chunkSize</span>}</span>]"</span>
+        callback <span class="hljs-string">"Failed to encrypt slice of data at [<span class="hljs-subst">#{position}</span>..<span class="hljs-subst">#{position+@chunkSize}</span>]"</span>
 
-  <span class="hljs-attribute">constructHeader</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@header</span> =
-      <span class="hljs-attribute">version</span>: <span class="hljs-property">@version</span>
-      <span class="hljs-attribute">ephemeral</span>: NaCl.util.encodeBase64(<span class="hljs-property">@ephemeral</span>.publicKey)
-      <span class="hljs-attribute">decryptInfo</span>: <span class="hljs-property">@encodedEncryptedPermits</span>()
-    headerJSON = JSON.stringify(<span class="hljs-property">@header</span>)
-    <span class="hljs-property">@sizeOfHeaderIn4Bytes</span> = numberToByteArray(headerJSON.length)
-    <span class="hljs-property">@headerJSONBytes</span> = NaCl.util.decodeUTF8(headerJSON)
-    <span class="hljs-keyword">return</span> <span class="hljs-property">@header</span>
+  constructHeader: <span class="hljs-function">-&gt;</span>
+    @header =
+      version: @version
+      ephemeral: NaCl.util.encodeBase64(@ephemeral.publicKey)
+      decryptInfo: @encodedEncryptedPermits()
+    headerJSON = JSON.stringify(@header)
+    @sizeOfHeaderIn4Bytes = numberToByteArray(headerJSON.length)
+    @headerJSONBytes = NaCl.util.decodeUTF8(headerJSON)
+    <span class="hljs-keyword">return</span> @header
 
-  <span class="hljs-attribute">constructStreamEncryptor</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-property">@streamEncryptor</span> ?= NaCl.stream.createEncryptor(<span class="hljs-property">@fileKey</span>, <span class="hljs-property">@fileNonce</span>, <span class="hljs-property">@chunkSize</span>)
+  constructStreamEncryptor: <span class="hljs-function">-&gt;</span>
+    @streamEncryptor ?= NaCl.stream.createEncryptor(@fileKey, @fileNonce, @chunkSize)
 
-  <span class="hljs-attribute">fixedSizeDecodedName</span>:<span class="hljs-function"> -&gt;</span>
+  fixedSizeDecodedName: <span class="hljs-function">-&gt;</span>
     fixedSize = <span class="hljs-keyword">new</span> Uint8Array(<span class="hljs-number">256</span>)
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@name</span>
-      decodedName = NaCl.util.decodeUTF8(<span class="hljs-property">@name</span>)
+    <span class="hljs-keyword">if</span> @name
+      decodedName = NaCl.util.decodeUTF8(@name)
       <span class="hljs-keyword">if</span> decodedName.length &gt; fixedSize.length
         <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t set fixed size decoded name because input is too long."</span>
       fixedSize.set(decodedName)
     <span class="hljs-keyword">return</span> fixedSize
 
-  <span class="hljs-attribute">fixedSizeDecodedType</span>:<span class="hljs-function"> -&gt;</span>
+  fixedSizeDecodedType: <span class="hljs-function">-&gt;</span>
     fixedSize = <span class="hljs-keyword">new</span> Uint8Array(<span class="hljs-number">128</span>)
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@type</span>
-      decodedType = NaCl.util.decodeUTF8(<span class="hljs-property">@type</span>)
+    <span class="hljs-keyword">if</span> @type
+      decodedType = NaCl.util.decodeUTF8(@type)
       <span class="hljs-keyword">if</span> decodedType.length &gt; fixedSize.length
         <span class="hljs-keyword">throw</span> <span class="hljs-string">"Can’t set fixed size decoded type because input is too long."</span>
       fixedSize.set(decodedType)
     <span class="hljs-keyword">return</span> fixedSize
 
-  <span class="hljs-attribute">fixedSizeDecodedTime</span>:<span class="hljs-function"> -&gt;</span>
+  fixedSizeDecodedTime: <span class="hljs-function">-&gt;</span>
     fixedSize = <span class="hljs-keyword">new</span> Uint8Array(<span class="hljs-number">24</span>)
-    <span class="hljs-keyword">if</span> <span class="hljs-property">@time</span>
-      timestamp = (<span class="hljs-keyword">new</span> Date(<span class="hljs-property">@time</span>)).toJSON()
+    <span class="hljs-keyword">if</span> @time
+      timestamp = (<span class="hljs-keyword">new</span> Date(@time)).toJSON()
       fixedSize.set(NaCl.util.decodeUTF8(timestamp))
     <span class="hljs-keyword">return</span> fixedSize
 
-  <span class="hljs-attribute">encodedEncryptedPermits</span>:<span class="hljs-function"> -&gt;</span>
+  encodedEncryptedPermits: <span class="hljs-function">-&gt;</span>
     permits = {}
-    <span class="hljs-keyword">for</span> miniLockID <span class="hljs-keyword">in</span> <span class="hljs-property">@miniLockIDs</span>
-      [uniqueNonce, encryptedPermit] = <span class="hljs-property">@encryptedPermit</span>(miniLockID)
+    <span class="hljs-keyword">for</span> miniLockID <span class="hljs-keyword">in</span> @miniLockIDs
+      [uniqueNonce, encryptedPermit] = @encryptedPermit(miniLockID)
       encodedUniqueNonce = NaCl.util.encodeBase64(uniqueNonce)
       encodedEncryptedPermit = NaCl.util.encodeBase64(encryptedPermit)
       permits[encodedUniqueNonce] = encodedEncryptedPermit
     <span class="hljs-keyword">return</span> permits
 
-  <span class="hljs-attribute">encryptedPermit</span>: <span class="hljs-function"><span class="hljs-params">(miniLockID)</span> -&gt;</span>
-    [uniqueNonce, permit] = <span class="hljs-property">@permit</span>(miniLockID)
+  encryptedPermit: <span class="hljs-function"><span class="hljs-params">(miniLockID)</span> -&gt;</span>
+    [uniqueNonce, permit] = @permit(miniLockID)
     decodedPermitJSON = NaCl.util.decodeUTF8(JSON.stringify(permit))
     recipientPublicKey = ID.decode(miniLockID)
-    encryptedPermit = NaCl.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, <span class="hljs-property">@ephemeral</span>.secretKey)
+    encryptedPermit = NaCl.box(decodedPermitJSON, uniqueNonce, recipientPublicKey, @ephemeral.secretKey)
     [uniqueNonce, encryptedPermit]
 
-  <span class="hljs-attribute">permit</span>: <span class="hljs-function"><span class="hljs-params">(miniLockID)</span> -&gt;</span>
+  permit: <span class="hljs-function"><span class="hljs-params">(miniLockID)</span> -&gt;</span>
     uniqueNonce = NaCl.randomBytes(<span class="hljs-number">24</span>)
     [uniqueNonce, {
-      <span class="hljs-attribute">senderID</span>: ID.encode(<span class="hljs-property">@keys</span>.publicKey)
-      <span class="hljs-attribute">recipientID</span>: miniLockID
-      <span class="hljs-attribute">fileInfo</span>: NaCl.util.encodeBase64(<span class="hljs-property">@encryptedFileInfo</span>(miniLockID, uniqueNonce))
+      senderID: ID.encode(@keys.publicKey)
+      recipientID: miniLockID
+      fileInfo: NaCl.util.encodeBase64(@encryptedFileInfo(miniLockID, uniqueNonce))
     }]
 
-  <span class="hljs-attribute">encryptedFileInfo</span>: <span class="hljs-function"><span class="hljs-params">(miniLockID, uniqueNonce)</span> -&gt;</span>
-    decodedFileInfoJSON = NaCl.util.decodeUTF8(JSON.stringify(<span class="hljs-property">@permitFileInfo</span>()))
+  encryptedFileInfo: <span class="hljs-function"><span class="hljs-params">(miniLockID, uniqueNonce)</span> -&gt;</span>
+    decodedFileInfoJSON = NaCl.util.decodeUTF8(JSON.stringify(@permitFileInfo()))
     recipientPublicKey = ID.decode(miniLockID)
-    NaCl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, <span class="hljs-property">@keys</span>.secretKey)
+    NaCl.box(decodedFileInfoJSON, uniqueNonce, recipientPublicKey, @keys.secretKey)
 
-  <span class="hljs-attribute">permitFileInfo</span>:<span class="hljs-function"> -&gt;</span>
-    <span class="hljs-attribute">fileKey</span>:   NaCl.util.encodeBase64(<span class="hljs-property">@fileKey</span>)
-    <span class="hljs-attribute">fileNonce</span>: NaCl.util.encodeBase64(<span class="hljs-property">@fileNonce</span>)
-    <span class="hljs-attribute">fileHash</span>:  NaCl.util.encodeBase64(<span class="hljs-property">@hash</span>.digest())</pre></div></div>
+  permitFileInfo: <span class="hljs-function">-&gt;</span>
+    fileKey:   NaCl.util.encodeBase64(@fileKey)
+    fileNonce: NaCl.util.encodeBase64(@fileNonce)
+    fileHash:  NaCl.util.encodeBase64(@hash.digest())</pre></div></div>
 </section>
 
 

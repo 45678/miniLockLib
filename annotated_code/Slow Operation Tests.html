@@ -32,60 +32,56 @@ tape <span class="hljs-string">"Slow Operations"</span>, <span class="hljs-funct
 tape <span class="hljs-string">"decrypt 1MB file for Alice"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   readFromNetwork <span class="hljs-string">"1MB.tiff.for.Alice.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-      <span class="hljs-attribute">data</span>: blob
-      <span class="hljs-attribute">keys</span>: Alice.keys
-    operation.start <span class="hljs-function"><span class="hljs-params">(error, decrypted)</span> -&gt;</span>
+      data: blob
+      keys: Alice.keys
+    operation.start (error, decrypted) -&gt;
       <span class="hljs-keyword">if</span> error? <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> test.end(error)
       test.ok decrypted.data.size <span class="hljs-keyword">is</span> <span class="hljs-number">1048826</span>
       test.ok decrypted.name <span class="hljs-keyword">is</span> <span class="hljs-string">"1MB.tiff"</span>
       test.ok decrypted.senderID <span class="hljs-keyword">is</span> Alice.miniLockID
       test.ok decrypted.recipientID <span class="hljs-keyword">is</span> Alice.miniLockID
       test.end()
-      <span class="hljs-built_in">console</span>.info(<span class="hljs-string">"decrypted"</span>, decrypted.name, decrypted)
 
 tape <span class="hljs-string">"decrypt 4MB file for Alice"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   readFromNetwork <span class="hljs-string">"4MB.tiff.for.Alice.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-      <span class="hljs-attribute">data</span>: blob
-      <span class="hljs-attribute">keys</span>: Alice.keys
-    operation.start <span class="hljs-function"><span class="hljs-params">(error, decrypted)</span> -&gt;</span>
+      data: blob
+      keys: Alice.keys
+    operation.start (error, decrypted) -&gt;
       <span class="hljs-keyword">if</span> error? <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> test.end(error)
       test.ok decrypted.data.size <span class="hljs-keyword">is</span> <span class="hljs-number">4194746</span>
       test.ok decrypted.name <span class="hljs-keyword">is</span> <span class="hljs-string">"4MB.tiff"</span>
       test.ok decrypted.senderID <span class="hljs-keyword">is</span> Alice.miniLockID
       test.ok decrypted.recipientID <span class="hljs-keyword">is</span> Alice.miniLockID
       test.end()
-      <span class="hljs-built_in">console</span>.info(<span class="hljs-string">"decrypted"</span>, decrypted.name, decrypted)
 
 tape <span class="hljs-string">"encrypt 1MB file for Alice"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   readFromNetwork <span class="hljs-string">"1MB.tiff"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
-      <span class="hljs-attribute">data</span>: blob
-      <span class="hljs-attribute">name</span>: <span class="hljs-string">"alice.1MB.tiff"</span>
-      <span class="hljs-attribute">keys</span>: Alice.keys
-      <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID]
-    operation.start <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+      data: blob
+      name: <span class="hljs-string">"alice.1MB.tiff"</span>
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
+    operation.start (error, encrypted) -&gt;
       <span class="hljs-keyword">if</span> error? <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> test.end(error)
       test.ok encrypted.data.size <span class="hljs-keyword">is</span> <span class="hljs-number">1049788</span>
       test.ok encrypted.name <span class="hljs-keyword">is</span> <span class="hljs-string">"alice.1MB.tiff.minilock"</span>
       test.ok encrypted.senderID <span class="hljs-keyword">is</span> Alice.miniLockID
       test.end()
-      <span class="hljs-built_in">console</span>.info(<span class="hljs-string">"encrypted"</span>, encrypted.name, encrypted)
 
 tape <span class="hljs-string">"encrypt 4MB file for Alice"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   readFromNetwork <span class="hljs-string">"4MB.tiff"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.EncryptOperation
-      <span class="hljs-attribute">data</span>: blob
-      <span class="hljs-attribute">name</span>: <span class="hljs-string">"alice.4MB.tiff"</span>
-      <span class="hljs-attribute">keys</span>: Alice.keys
-      <span class="hljs-attribute">miniLockIDs</span>: [Alice.miniLockID]
-    operation.start <span class="hljs-function"><span class="hljs-params">(error, encrypted)</span> -&gt;</span>
+      data: blob
+      name: <span class="hljs-string">"alice.4MB.tiff"</span>
+      keys: Alice.keys
+      miniLockIDs: [Alice.miniLockID]
+    operation.start (error, encrypted) -&gt;
       <span class="hljs-keyword">if</span> error? <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> test.end(error)
       test.ok encrypted.data.size <span class="hljs-keyword">is</span> <span class="hljs-number">4195768</span>
       test.ok encrypted.name <span class="hljs-keyword">is</span> <span class="hljs-string">"alice.4MB.tiff.minilock"</span>
       test.ok encrypted.senderID <span class="hljs-keyword">is</span> Alice.miniLockID
-      test.end()
-      <span class="hljs-built_in">console</span>.info(<span class="hljs-string">"encrypted"</span>, encrypted.name, encrypted)</pre></div></div>
+      test.end()</pre></div></div>
 </section>
 
 

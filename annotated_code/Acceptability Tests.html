@@ -91,7 +91,7 @@ tape <span class="hljs-string">"Blank ID is unacceptable"</span>, <span class="h
   test.end()
 
 tape <span class="hljs-string">"Truncated ID is unacceptable"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
-  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID.slice(<span class="hljs-number">0</span>, -<span class="hljs-number">1</span>)), <span class="hljs-literal">false</span>
+  test.same miniLockLib.ID.isAcceptable(Alice.miniLockID.slice(<span class="hljs-number">0</span>, <span class="hljs-number">-1</span>)), <span class="hljs-literal">false</span>
   test.same miniLockLib.ID.isAcceptable(Alice.miniLockID.slice(<span class="hljs-number">1</span>)), <span class="hljs-literal">false</span>
   test.end()
 

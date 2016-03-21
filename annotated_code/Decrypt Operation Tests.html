@@ -36,9 +36,9 @@ tape <span class="hljs-string">"construct a blank miniLockLib.DecryptOperation"<
 tape <span class="hljs-string">"define data, keys and callback when decrypt operation is constructed"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
 <span class="hljs-function">  <span class="hljs-title">callback</span> = <span class="hljs-params">(error, decrypted)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-    <span class="hljs-attribute">data</span>: (blob = <span class="hljs-keyword">new</span> Blob)
-    <span class="hljs-attribute">keys</span>: Alice.keys
-    <span class="hljs-attribute">callback</span>: callback
+    data: (blob = <span class="hljs-keyword">new</span> Blob)
+    keys: Alice.keys
+    callback: callback
   test.same operation.data, blob
   test.same operation.keys, Alice.keys
   test.same operation.callback, callback
@@ -47,15 +47,15 @@ tape <span class="hljs-string">"define data, keys and callback when decrypt oper
 tape <span class="hljs-string">"or define the callback when start is called if you prefer"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
 <span class="hljs-function">  <span class="hljs-title">callbackSpecifiedOnStart</span> = -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-    <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
-    <span class="hljs-attribute">keys</span>: Alice.keys</pre></div></div>
+    data: <span class="hljs-keyword">new</span> Blob
+    keys: Alice.keys</pre></div></div>
 </section>
 
 
 <section id="section-2">
   <div class="annotation"><p>Intercept run to verify the expected callback and end the test.</p>
 </div>
-  <div class="code"><div class='highlight'><pre>  operation.r<span class="hljs-function"><span class="hljs-title">un</span> = -&gt;</span>
+  <div class="code"><div class='highlight'><pre>  operation.run = <span class="hljs-function">-&gt;</span>
     test.same operation.callback, callbackSpecifiedOnStart
     test.end()
   operation.start(callbackSpecifiedOnStart)
@@ -67,16 +67,16 @@ tape <span class="hljs-string">"can’t start a decrypt operation without a call
 
 tape <span class="hljs-string">"can’t start a decrypt operation without data"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-    <span class="hljs-attribute">keys</span>: Alice.keys
-  operation.start <span class="hljs-function"><span class="hljs-params">(error, decrypted)</span> -&gt;</span>
+    keys: Alice.keys
+  operation.start (error, decrypted) -&gt;
     test.same error, <span class="hljs-string">"Can’t decrypt without a Blob of data."</span>
     test.same decrypted, <span class="hljs-literal">undefined</span>
     test.end()
 
 tape <span class="hljs-string">"can’t start a decrypt operation without keys"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-    <span class="hljs-attribute">data</span>: <span class="hljs-keyword">new</span> Blob
-  operation.start <span class="hljs-function"><span class="hljs-params">(error, decrypted)</span> -&gt;</span>
+    data: <span class="hljs-keyword">new</span> Blob
+  operation.start (error, decrypted) -&gt;
     test.same error, <span class="hljs-string">"Can’t decrypt without a set of keys."</span>
     test.same decrypted, <span class="hljs-literal">undefined</span>
     test.end()
@@ -84,28 +84,28 @@ tape <span class="hljs-string">"can’t start a decrypt operation without keys"<
 tape <span class="hljs-string">"construct map of byte addresses in a file"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice.txt.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-      <span class="hljs-attribute">data</span>: blob
-    operation.constructMap <span class="hljs-function"><span class="hljs-params">(error, map)</span> -&gt;</span>
-      test.same map.magicBytes, {<span class="hljs-attribute">start</span>: <span class="hljs-number">0</span>, <span class="hljs-attribute">end</span>: <span class="hljs-number">8</span>}
-      test.same map.sizeOfHeaderBytes, {<span class="hljs-attribute">start</span>: <span class="hljs-number">8</span>,   <span class="hljs-attribute">end</span>: <span class="hljs-number">12</span> }
-      test.same map.headerBytes, {<span class="hljs-attribute">start</span>: <span class="hljs-number">12</span>,  <span class="hljs-attribute">end</span>: <span class="hljs-number">646</span>}
-      test.same map.ciphertextBytes, {<span class="hljs-attribute">start</span>: <span class="hljs-number">646</span>, <span class="hljs-attribute">end</span>: <span class="hljs-number">962</span>}
+      data: blob
+    operation.constructMap (error, map) -&gt;
+      test.same map.magicBytes, {start: <span class="hljs-number">0</span>, end: <span class="hljs-number">8</span>}
+      test.same map.sizeOfHeaderBytes, {start: <span class="hljs-number">8</span>,   end: <span class="hljs-number">12</span> }
+      test.same map.headerBytes, {start: <span class="hljs-number">12</span>,  end: <span class="hljs-number">646</span>}
+      test.same map.ciphertextBytes, {start: <span class="hljs-number">646</span>, end: <span class="hljs-number">962</span>}
       test.end(error)
 
 tape <span class="hljs-string">"read size of header"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice.txt.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-      <span class="hljs-attribute">data</span>: blob
-    operation.readSizeOfHeader <span class="hljs-function"><span class="hljs-params">(error, sizeOfHeader)</span> -&gt;</span>
+      data: blob
+    operation.readSizeOfHeader (error, sizeOfHeader) -&gt;
       test.equal sizeOfHeader, <span class="hljs-number">634</span>
       test.end()
 
 tape <span class="hljs-string">"read header of a file with one permit"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice.txt.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-      <span class="hljs-attribute">data</span>: blob
-      <span class="hljs-attribute">keys</span>: Alice.keys
-    operation.readHeader <span class="hljs-function"><span class="hljs-params">(error, header)</span> -&gt;</span>
+      data: blob
+      keys: Alice.keys
+    operation.readHeader (error, header) -&gt;
       <span class="hljs-keyword">if</span> error <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> test.end(error)
       test.ok header.version <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
       test.ok header.ephemeral.constructor <span class="hljs-keyword">is</span> String
@@ -118,8 +118,8 @@ tape <span class="hljs-string">"read header of a file with one permit"</span>, <
 tape <span class="hljs-string">"read header of a file with two permits"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice_and_bobby.txt.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-      <span class="hljs-attribute">data</span>: blob
-    operation.readHeader <span class="hljs-function"><span class="hljs-params">(error, header)</span> -&gt;</span>
+      data: blob
+    operation.readHeader (error, header) -&gt;
       <span class="hljs-keyword">if</span> error <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> test.end(error)
       test.ok header.version <span class="hljs-keyword">is</span> <span class="hljs-number">1</span>
       test.ok header.ephemeral.constructor <span class="hljs-keyword">is</span> String
@@ -133,9 +133,9 @@ tape <span class="hljs-string">"read header of a file with two permits"</span>, 
 tape <span class="hljs-string">"decrypt uniqueNonce and permit"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice.txt.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-      <span class="hljs-attribute">data</span>: blob
-      <span class="hljs-attribute">keys</span>: Alice.keys
-    operation.decryptUniqueNonceAndPermit <span class="hljs-function"><span class="hljs-params">(error, uniqueNonce, permit)</span> -&gt;</span>
+      data: blob
+      keys: Alice.keys
+    operation.decryptUniqueNonceAndPermit (error, uniqueNonce, permit) -&gt;
       <span class="hljs-keyword">if</span> error? <span class="hljs-keyword">then</span> <span class="hljs-keyword">return</span> test.end(error)
       test.ok uniqueNonce
       test.ok uniqueNonce.constructor <span class="hljs-keyword">is</span> Uint8Array
@@ -153,24 +153,24 @@ tape <span class="hljs-string">"decrypt uniqueNonce and permit"</span>, <span cl
 tape <span class="hljs-string">"decrypt version 1 attributes"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice.txt.v1.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-      <span class="hljs-attribute">data</span>: blob
-      <span class="hljs-attribute">keys</span>: Alice.keys
-    operation.decryptVersion1Attributes <span class="hljs-function"><span class="hljs-params">(error, attributes)</span> -&gt;</span>
+      data: blob
+      keys: Alice.keys
+    operation.decryptVersion1Attributes (error, attributes) -&gt;
       test.same attributes, {
-        <span class="hljs-attribute">name</span>: <span class="hljs-string">"alice.txt.v1"</span>
+        name: <span class="hljs-string">"alice.txt.v1"</span>
       }
       test.end(error)
 
 tape <span class="hljs-string">"decrypt version 2 attributes"</span>, <span class="hljs-function"><span class="hljs-params">(test)</span> -&gt;</span>
   read <span class="hljs-string">"alice.txt.v2.minilock"</span>, <span class="hljs-function"><span class="hljs-params">(blob)</span> -&gt;</span>
     operation = <span class="hljs-keyword">new</span> miniLockLib.DecryptOperation
-      <span class="hljs-attribute">data</span>: blob
-      <span class="hljs-attribute">keys</span>: Alice.keys
-    operation.decryptVersion2Attributes <span class="hljs-function"><span class="hljs-params">(error, attributes)</span> -&gt;</span>
+      data: blob
+      keys: Alice.keys
+    operation.decryptVersion2Attributes (error, attributes) -&gt;
       test.same attributes, {
-        <span class="hljs-attribute">name</span>: <span class="hljs-string">"alice.txt.v2"</span>
-        <span class="hljs-attribute">type</span>: <span class="hljs-string">"text/plain"</span>
-        <span class="hljs-attribute">time</span>: <span class="hljs-string">"2014-08-17T07:06:50.095Z"</span>
+        name: <span class="hljs-string">"alice.txt.v2"</span>
+        type: <span class="hljs-string">"text/plain"</span>
+        time: <span class="hljs-string">"2014-08-17T07:06:50.095Z"</span>
       }
       test.end(error)</pre></div></div>
 </section>

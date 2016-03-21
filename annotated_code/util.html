@@ -24,7 +24,7 @@
 <section id="section-1">
   <div class="annotation"><p>Convert a Number to a 4-byte little-endian Uint8Array</p>
 </div>
-  <div class="code"><div class='highlight'><pre>exports.n<span class="hljs-function"><span class="hljs-title">umberToByteArray</span> = <span class="hljs-params">(n)</span> -&gt;</span>
+  <div class="code"><div class='highlight'><pre>exports.numberToByteArray = <span class="hljs-function"><span class="hljs-params">(n)</span> -&gt;</span>
   byteArray = <span class="hljs-keyword">new</span> Uint8Array(<span class="hljs-number">4</span>)
   <span class="hljs-keyword">for</span> index <span class="hljs-keyword">in</span> [<span class="hljs-number">0.</span><span class="hljs-number">.4</span>]
     byteArray[index] = n &amp; <span class="hljs-number">255</span>
@@ -36,7 +36,7 @@
 <section id="section-2">
   <div class="annotation"><p>Convert a 4-byte little-endian Uint8Array to a Number</p>
 </div>
-  <div class="code"><div class='highlight'><pre>exports.b<span class="hljs-function"><span class="hljs-title">yteArrayToNumber</span> = <span class="hljs-params">(byteArray)</span> -&gt;</span>
+  <div class="code"><div class='highlight'><pre>exports.byteArrayToNumber = <span class="hljs-function"><span class="hljs-params">(byteArray)</span> -&gt;</span>
   n = <span class="hljs-number">0</span>
   <span class="hljs-keyword">for</span> index <span class="hljs-keyword">in</span> [<span class="hljs-number">3.</span><span class="hljs-number">.0</span>]
     n += byteArray[index]

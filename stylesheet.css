@@ -1,5 +1,6 @@
 a, b, i, em, strong, code, var, tt { text-decoration: none; font-style: inherit; font-weight: inherit; }
 h1, h2, h3, h4, h5, h6 { font: inherit; }
+li { list-style-type: none; }
 pre { overflow: hidden; white-space: pre-wrap; }
 body, section, article, header, footer, nav, div, pre, ol, ul, li, h1, h2, h3, h4, h5, h6 {
   position: relative;
@@ -29,6 +30,7 @@ pre,
 .error_strings,
 p tt,
 p code,
+li code,
 article header.function code {
   font-size: 19px;
   line-height: 25px;
@@ -178,6 +180,7 @@ h2 { margin: 30px 0 0; }
 h3 { margin: 30px 0 0; }
 p  { margin: 20px 0; }
 ul { margin: 20px 0; }
+ol > li { margin: 20px 0; list-style-type: decimal; }
 
 code, tt, var { padding: 1px 5px; }
 
@@ -193,9 +196,6 @@ article header.function { margin: 0px 0px 0px; }
 article header.function h2 { margin: 0 0 5px; }
 article header.function code { background:transparent; padding: 0; margin: 0; box-shadow: none;}
 
-article li {
-  list-style-type: none;
-}
 code.hljs-string {
   background:transparent; padding: 0; margin: 0; box-shadow: none;
 }

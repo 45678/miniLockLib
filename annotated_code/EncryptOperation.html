@@ -40,7 +40,7 @@
     @ephemeral = NaCl.box.keyPair()
     @fileKey = NaCl.randomBytes(<span class="hljs-number">32</span>)
     @fileNonce = NaCl.randomBytes(<span class="hljs-number">24</span>).subarray(<span class="hljs-number">0</span>, <span class="hljs-number">16</span>)
-    @hash = <span class="hljs-keyword">new</span> BLAKE2s(<span class="hljs-number">32</span>)
+    @hash = <span class="hljs-keyword">new</span> BLAKE2s(length: <span class="hljs-number">32</span>)
     @ciphertextBytes = []
     @start() <span class="hljs-keyword">if</span> params.start?
 

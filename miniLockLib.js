@@ -529,7 +529,9 @@
       this.ephemeral = NaCl.box.keyPair();
       this.fileKey = NaCl.randomBytes(32);
       this.fileNonce = NaCl.randomBytes(24).subarray(0, 16);
-      this.hash = new BLAKE2s(32);
+      this.hash = new BLAKE2s({
+        length: 32
+      });
       this.ciphertextBytes = [];
       if (params.start != null) {
         this.start();

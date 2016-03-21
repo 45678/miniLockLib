@@ -587,8 +587,20 @@ keyPairOperation.start(function(error, keys){
   <h2>BLAKE2s</h2>
   <p>
     <code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
-    miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes.
+    miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes. The interface is identical to Dmitry’s version, with two exceptions:
   </p>
+  <ol>
+    <li>
+      miniLockLib’s BLAKE2s constructor accepts a <code>params</code> object instead of two distinct <code>arguments</code>.
+      Construct a new BLAKE2s instance of with code in this form: <code>hash = new miniLockLib.BLAKE2s({length:Number, key:Uint8Array})</code>.
+      The <code>length</code> parameter should be a <code>Number</code> between <code>1</code> and <code>32</code>.
+      The <code>key</code> parameter is an optional <code>Uint8Array</code> of bytes.
+    </li>
+    <li>
+      Update the instance with <code>hash.update(data)</code> where <code>data</code> is a <code>Uint8Array</code> of bytes.
+      miniLockLib’s version of <code>update</code> returns the <code>hash</code> instance to facilitate method chaining. (Dmitry’s version returns <code>undefined</code>).
+    </li>
+  </ol>
 </div><div>
   <a id="Entropizer"></a>
   <h2>Entropizer</h2>

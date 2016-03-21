@@ -15,7 +15,7 @@ module.exports = class EncryptOperation
     @ephemeral = NaCl.box.keyPair()
     @fileKey = NaCl.randomBytes(32)
     @fileNonce = NaCl.randomBytes(24).subarray(0, 16)
-    @hash = new BLAKE2s(32)
+    @hash = new BLAKE2s(length: 32)
     @ciphertextBytes = []
     @start() if params.start?
 

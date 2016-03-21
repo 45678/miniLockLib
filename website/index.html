@@ -586,8 +586,8 @@ keyPairOperation.start(function(error, keys){
   <a id="BLAKE2s"></a>
   <h2>BLAKE2s</h2>
   <p>
-    <code>miniLockLib.BLAKE2s</code> is a subclass of <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s implementation of the BLAKE2s</a> cryptographic hash function.
-    miniLockLib subclasses the original constructor to expose a modestly more convenient interface for its purposes. The interface is identical to Dmitry’s version, with two exceptions:
+    <code>miniLockLib.BLAKE2s</code> is a wrapper around <a href="https://github.com/dchest/blake2s-js">Dmitry Chestnykh’s BLAKE2s</a> cryptographic hash function.
+    <a href="annotated_code/BLAKE2s.html">miniLockLib extends the original constructor</a> to expose a modestly more convenient interface for its purposes. The interface is identical to Dmitry’s version, with two exceptions:
   </p>
   <ol>
     <li>

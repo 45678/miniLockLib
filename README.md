@@ -79,8 +79,8 @@ You will need [GNU Make](https://www.gnu.org/software/make/) and [Node.js](https
 
 `npm run node.tests` to run the test suite in Node.js and see the output on the command line.
 
-`npm run window.tests` to run the test suite in a web agent `window`. This command expects a webserver to serve the `website/tests.html` file from http://localhost:45678/tests.html. The `npm run webserver` command will start the webserver that you need for this. Or, if you prefer to use another webserver, you can revise the `.window_tests_address` config file to specify a different address. `.window_tests_address` is created automatically the first time you run `make`.
+`npm run window.tests` to run the test suite in a web agent `window`. This command expects a webserver to serve the `website/tests.html` file from [http://localhost:45678/tests.html](http://localhost:45678/tests.html). The `npm run webserver` command will start the webserver that you need for this. Or, if you prefer to use another webserver, you can revise the `.window_tests_address` config file to specify a different address. `.window_tests_address` is created automatically the first time you run `make`.
 
 `npm test` to run node tests and window tests.
 
-`npm run webserver` to serve the `website` folder at the address http://localhost:45678.
+`npm run webserver` to serve the `website` folder at the address [http://localhost:45678](http://localhost:45678).
